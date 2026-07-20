@@ -39,7 +39,7 @@
 <div class="halo-section padding-top-{{ top }} padding-bottom-{{ bottom }} {{ background_color }} {{ border_top }} {{ border_bottom }}" data-section-id="{{ section.id }}" data-section-type="image-with-text-2">
     {% for block in section.blocks %}
         <div class="image-with-text-2{% if block.settings.layout == 'right' %} image-with-text-2--right{% endif %}">
-            <div class="image-with-text-2__image"{% if block.settings.image != blank %} style="background-image: url({{ block.settings.image | img_url: 'master' }});"{% endif %}>
+            <div class="image-with-text-2__image"{% if block.settings.image != blank %} style="background-image: url({{ block.settings.image | image_url: width: 5760 }});"{% endif %}>
                 {% if block.settings.image == blank %}
                     <div class="placeholder-background">
                         {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' }}

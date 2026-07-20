@@ -103,6 +103,36 @@
     </div>
 </div>
 
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "@id": {{ canonical_url | append: '#faq' | json }},
+    "url": {{ canonical_url | json }},
+    "mainEntityOfPage": {
+        "@id": {{ canonical_url | append: '#webpage' | json }}
+    },
+    "mainEntity": [
+        {%- assign faq_index = 0 -%}
+        {%- for block in section.blocks -%}
+            {%- if block.settings.question_faqs != blank -%}
+                {%- if faq_index > 0 -%},{%- endif -%}
+                {
+                    "@type": "Question",
+                    "@id": {{ canonical_url | append: '#faq-' | append: block.id | json }},
+                    "name": {{ block.settings.question_faqs | strip_html | json }},
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": {{ block.settings.answer_faqs | strip_html | json }}
+                    }
+                }
+                {%- assign faq_index = faq_index | plus: 1 -%}
+            {%- endif -%}
+        {%- endfor -%}
+    ]
+}
+</script>
+
 {% schema %}
 {
     "name": "Page Content",

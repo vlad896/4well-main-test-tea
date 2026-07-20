@@ -8,7 +8,7 @@
                 <div class="item">
                     {% if article.image %}
                         <div class="recent-blog__image">
-                            {% assign img_url = article.image | img_url: 'master' %}
+                            {% assign img_url = article.image | image_url: width: 5760 %}
                             <a class="recent-blog__link" href="{{ article.url }}" aria-label="link">
                                 <img class="lazyload"
                                     data-srcset="{{ img_url }}"

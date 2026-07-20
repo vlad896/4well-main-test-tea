@@ -302,8 +302,8 @@
 </script>
 {% endraw %}
 
-{{ 'jquery.tmpl.min.js' | asset_url | script_tag }}
-{{ 'jquery.products.min.js' | asset_url | script_tag }}
+<script src="{{ 'jquery.tmpl.min.js' | asset_url }}" defer="defer"></script>
+<script src="{{ 'jquery.products.min.js' | asset_url }}" defer="defer"></script>
 
 <script>
 

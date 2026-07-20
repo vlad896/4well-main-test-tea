@@ -21,10 +21,10 @@
                                 title="{{ value }}" 
                                 data-name="{{ value }}" 
                                 {% if variant.image != blank %}
-                                    data-image="{{ variant.image.src | product_img_url: '370x555' }}"
+                                    data-image="{{ variant.image.src | image_url: width: 370, height: 555 }}"
                                 {% endif %}
                                 {% if variant.image != blank and settings.show_product_variant_img == 'variant' %}
-                                    style="background-color: {{ value_2 }}; background-image: url({{ variant.image.src | product_img_url: '50x' }})"
+                                    style="background-color: {{ value_2 }}; background-image: url({{ variant.image.src | image_url: width: 50 }})"
                                 {% else %} 
                                     style="background-color: {{ value_2 }}; {% if settings.show_product_color_img %}background-image: url({{ value_2 | handle | append: '.png' | file_url }}){% endif %}"
                                 {% endif %}>

@@ -39,7 +39,7 @@
     </style>
     {% endif %}
 
-    {% assign img_url = section.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' %}
+    {% assign img_url = section.settings.image | image_url: width: 1, height: 1 | replace: '_1x1.', '_{width}x.' %}
 
     <div class="halo-section padding-top-{{ top }} padding-bottom-{{ bottom }} {{ border_top }} {{ border_bottom }}" data-section-id="{{ section.id }}" data-section-type="lookbook-product">
         {% if section.settings.title != blank %}

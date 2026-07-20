@@ -80,7 +80,7 @@
                 }'
             {% endif %}>
             {% for block in section.blocks %}
-                {% assign img_url = block.settings.slide_image | img_url: 'master' %}
+                {% assign img_url = block.settings.slide_image | image_url: width: 5760 %}
                 <div class="slideshow__item">
                     {% if block.type == 'image'%}
                         <div class="slideshow__image{% if block.settings.slide_image_mobile != blank %} slideshow__image--mobile{% endif %}">
@@ -98,14 +98,14 @@
                             {% else %}
                                 {% if forloop.index == 1 %}
                                     {% if block.settings.slide_image_mobile != blank %}
-                                        <img class="slideshow__image--backgroundMobile" srcset="{{ block.settings.slide_image_mobile | img_url: 'master' }}" alt="">
-                                    {% endif %} 
-                                    <img class="{% if section.settings.slide_height != 'normal' %}slideshow__image--background{% endif %}" srcset="{{ img_url }}" data-sizes="auto" alt="">
+                                        <img class="slideshow__image--backgroundMobile" srcset="{{ block.settings.slide_image_mobile | image_url: width: 5760 }}" alt="{% if block.settings.slide_heading != blank %}{{ block.settings.slide_heading | escape }}{% else %}{{ shop.name | escape }}{% endif %}">
+                                    {% endif %}
+                                    <img class="{% if section.settings.slide_height != 'normal' %}slideshow__image--background{% endif %}" srcset="{{ img_url }}" data-sizes="auto" alt="{% if block.settings.slide_heading != blank %}{{ block.settings.slide_heading | escape }}{% else %}{{ shop.name | escape }}{% endif %}">
                                 {% else %}
                                     {% if block.settings.slide_image_mobile != blank %}
-                                        <img class="slideshow__image--backgroundMobile lazyload" data-srcset="{{ block.settings.slide_image_mobile | img_url: 'master' }}" alt="" data-image>
+                                        <img class="slideshow__image--backgroundMobile lazyload" data-srcset="{{ block.settings.slide_image_mobile | image_url: width: 5760 }}" alt="{% if block.settings.slide_heading != blank %}{{ block.settings.slide_heading | escape }}{% else %}{{ shop.name | escape }}{% endif %}" data-image>
                                     {% endif %}
-                                    <img class="{% if section.settings.slide_height != 'normal' %}slideshow__image--background{% endif %} lazyload" data-srcset="{{ img_url }}" data-sizes="auto" alt="" data-image>
+                                    <img class="{% if section.settings.slide_height != 'normal' %}slideshow__image--background{% endif %} lazyload" data-srcset="{{ img_url }}" data-sizes="auto" alt="{% if block.settings.slide_heading != blank %}{{ block.settings.slide_heading | escape }}{% else %}{{ shop.name | escape }}{% endif %}" data-image>
                                 {% endif %}
                             {% endif %}
                             {% if block.settings.link != blank %}<a href="{{ block.settings.link }}" aria-label="link"></a>{% endif %}

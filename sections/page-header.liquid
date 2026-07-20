@@ -22,7 +22,7 @@
     
   .page-header{
     {% if section.settings.background != blank %}
-    background-image:url({{section.settings.background | img_url:'master'}});
+    background-image:url({{section.settings.background | image_url: width: 5760}});
     background-size: cover;
     background-position: center center;
     {% else %}

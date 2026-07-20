@@ -4,14 +4,13 @@
     <div class="container">
         <div class="header-middle">
             <div class="header-middle__left header-middle__navigation">
-                <div class="logo-wrapper" itemscope itemtype="http://schema.org/Organization">
-                    <meta itemprop="url" content="{{ shop.url }}">
+                <div class="logo-wrapper">
                     {% if section.settings.logo != blank %}
                         {% assign img_size = section.settings.logo_max_width | append: 'x' %}
-                        {% assign img_url = section.settings.logo | img_url: 'master' %}
+                        {% assign img_url = section.settings.logo | image_url: width: 5760 %}
                         <a href="{{ routes.root_url }}" class="site-header__logo-image" aria-label="logo" style="width: {{ section.settings.logo_max_width }}px; max-width: {{ section.settings.logo_max_width }}px">
                             {% capture logo_alt %}{{ section.settings.logo.alt | default: shop.name }}{% endcapture %}
-                            <img itemprop="logo" src="{{ img_url }}" alt="{{ logo_alt | escape }}">
+                            <img src="{{ img_url }}" width="{{ section.settings.logo.width }}" height="{{ section.settings.logo.height }}" alt="{{ logo_alt | escape }}">
                         </a>
                     {% else %}
                         <a class="logo_text" href="{{ routes.root_url }}" aria-label="logo" style="width: {{ section.settings.logo_max_width }}px">
@@ -29,7 +28,7 @@
                 <div class="header-middle__item header-middle__item--special">
                     {% if section.settings.enable-header-special and section.settings.image_special != blank %}
                     <a class="navUser-action" href="{{ section.settings.url_special }}">
-                        <img class="lazyload" data-srcset="{{ section.settings.image_special | img_url: 'x500' }}" alt="" data-image>
+                        <img class="lazyload" data-srcset="{{ section.settings.image_special | image_url: height: 500 }}" width="{{ section.settings.image_special.width }}" height="{{ section.settings.image_special.height }}" alt="" data-image>
                     </a>
                     {% endif %}
                 </div>

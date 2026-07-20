@@ -18,17 +18,17 @@
         <div class="item__mobile item__mobile--logo">
             <div class="logo-wrapper">
                 {%- if section.settings.logo_mb != blank -%}
-                    {% assign img_url = section.settings.logo_mb | img_url: 'master' %}
+                    {% assign img_url = section.settings.logo_mb | image_url: width: 5760 %}
                     <a href="{{ routes.root_url }}" class="site-header__logo-image" aria-label="logo" style="width: {{ section.settings.logo_max_width_mb }}px; max-width: {{ section.settings.logo_max_width_mb }}px">
                         {% capture logo_alt %}{{ section.settings.logo_mb.alt | default: shop.name }}{% endcapture %}
-                        <img src="{{ img_url }}" alt="{{ logo_alt | escape }}">
+                        <img src="{{ img_url }}" width="{{ section.settings.logo_mb.width }}" height="{{ section.settings.logo_mb.height }}" alt="{{ logo_alt | escape }}">
                     </a>
                 {%- else -%}
                     {% if section.settings.logo != blank %}
-                        {% assign img_url = section.settings.logo | img_url: 'master' %}
+                        {% assign img_url = section.settings.logo | image_url: width: 5760 %}
                         <a href="{{ routes.root_url }}" class="site-header__logo-image" aria-label="logo" style="width: {{ section.settings.logo_max_width_mb }}px; max-width: {{ section.settings.logo_max_width_mb }}px">
                             {% capture logo_alt %}{{ section.settings.logo.alt | default: shop.name }}{% endcapture %}
-                            <img src="{{ img_url }}" alt="{{ logo_alt | escape }}">
+                            <img src="{{ img_url }}" width="{{ section.settings.logo.width }}" height="{{ section.settings.logo.height }}" alt="{{ logo_alt | escape }}">
                         </a>
                     {% else %}
                         <a class="logo_text" href="{{ routes.root_url }}" aria-label="logo" style="width: {{ section.settings.logo_max_width_mb }}px">

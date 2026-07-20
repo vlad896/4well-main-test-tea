@@ -25,7 +25,7 @@
                             {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' }}
                         </div>
                     {%- else -%}
-                        <img class="lazyload" data-srcset="{{ block.settings.image | img_url: 'master' }}" alt="{{ block.settings.image.alt }}" data-image />
+                        <img class="lazyload" width="{{ block.settings.image.width }}" height="{{ block.settings.image.height }}" data-srcset="{{ block.settings.image | image_url: width: 5760 }}" alt="{{ block.settings.image.alt }}" data-image />
                     {%- endif -%}
                     {%- if block.settings.enable_video -%}
                     {%- if block.settings.video_link != blank or block.settings.video_mp4_link != blank -%}

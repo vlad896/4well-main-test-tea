@@ -37,7 +37,7 @@
                     {% capture img_class %}product-featured-img{% endcapture %}
                     {% capture zoom_img_id %}FeaturedImageZoom-{{ product.id }}-{{ media.id }}{% endcapture %}
                     {% capture img_wrapper_id %}{{ zoom_img_id }}-wrapper{% endcapture %}
-                    {% assign img_url = media | img_url: 'master' %}
+                    {% assign img_url = media | image_url: width: 5760 %}
 
                     {% case media.media_type %}
                         {% when 'image' %}
@@ -50,9 +50,10 @@
                                 style="--my-height-var:{{ product_height }}%">
                                     <img id="{{ img_id }}"
                                         class="product-single__photo-image {{ img_class }} lazyload{% unless featured_image == media %} lazypreload{% endunless %}"
-                                        srcset="{{ media | img_url: '300x300' }}"
+                                        srcset="{{ media | image_url: width: 300, height: 300 }}"
                                         data-srcset="{{ img_url }}"
                                         tabindex="-1"
+                                        width="{{ media.preview_image.width }}" height="{{ media.preview_image.height }}"
                                         alt="{{ media.alt | escape }}">
                                 </div>
                             </div>
@@ -100,7 +101,7 @@
                                         class="product-thumbnails__photo product-single__thumbnail--{{ product.id }}"
                                         data-thumbnail-id="{{ media.id }}" aria-label="link"
                                         {% if enable_zoom %}data-zoom="{{ media.src | img_url: product_image_zoom_size, scale: product_image_scale }}"{% endif %} style="--my-height-var:{{ product_height }}%">
-                                        <img class="product-thumbnails__photo-image" srcset="{{ media.src | img_url: '100x' }}" alt="{{ 'sections.featured_product.gallery_thumbnail_alt' | t: imageAlt: media.alt | escape }}">
+                                        <img class="product-thumbnails__photo-image" srcset="{{ media.src | image_url: width: 100 }}" alt="{{ 'sections.featured_product.gallery_thumbnail_alt' | t: imageAlt: media.alt | escape }}" width="{{ media.preview_image.width }}" height="{{ media.preview_image.height }}">
                                     </a>
                                 </div>
                             {% when 'external_video' %}
@@ -115,7 +116,7 @@
                             {% when 'video' %}
                                 <div class="product-single__thumbnails-item" data-slick-index="{{ forloop.index}}">
                                     <div  class="product-thumbnails__photo product-single__thumbnail--{{ section.id }} product-single__media" data-thumbnail-id="{{ media.id }}" style="--my-height-var:{{ product_height }}%">
-                                        <img src="{{ media | media_tag | split: 'img src="' | last | split: '">' | first }}" />
+                                        <img src="{{ media | media_tag | split: 'img src="' | last | split: '">' | first }}" width="{{ media.preview_image.width }}" height="{{ media.preview_image.height }}" />
                                     </div>
                                 </div>
                             {% when 'model' %}
@@ -430,8 +431,8 @@
 
                 {% if settings.trust_img and settings.trust_img_enable %}
                     <div class="secure_shopping_guarantee_image">
-                        {% assign img_url = settings.trust_img | img_url: 'master' %}
-                        <img class="lazyload" data-srcset="{{ img_url }}" data-sizes="auto" alt="" data-image>
+                        {% assign img_url = settings.trust_img | image_url: width: 5760 %}
+                        <img class="lazyload" data-srcset="{{ img_url }}" data-sizes="auto" alt="" width="{{ settings.trust_img.width }}" height="{{ settings.trust_img.height }}" data-image>
                     </div>
                 {% endif %}
 

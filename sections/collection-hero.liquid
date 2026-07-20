@@ -2,7 +2,7 @@
 <div id="collection-hero">
     {%- if section.settings.display_collection_image_all -%}
         <div class="collection-hero {% if section.settings.enable_parallax %}is--pallarax{% endif %}" style="
-        {% if section.settings.collection_image != blank %}background-image:url({{ section.settings.collection_image | img_url: 'master' }});{% endif %}
+        {% if section.settings.collection_image != blank %}background-image:url({{ section.settings.collection_image | image_url: width: 5760 }});{% endif %}
         min-height: {{ section.settings.min_height }}px;">
             {%- if section.settings.title != blank or section.settings.des != blank -%}
             <div class="container">
@@ -23,7 +23,7 @@
             {%- if collection_id.handle == collection.handle -%}
                 {%- if block.settings.title != blank or block.settings.des != blank or block.settings.image != blank -%}
                     <div class="collection-hero {% if section.settings.enable_parallax %}is--pallarax{% endif %}" style="
-                    {% if block.settings.image != blank %}background-image:url({{ block.settings.image | img_url: 'master' }});{% endif %}
+                    {% if block.settings.image != blank %}background-image:url({{ block.settings.image | image_url: width: 5760 }});{% endif %}
                     min-height: {{ section.settings.min_height }}px;">
                         {%- if block.settings.title != blank or block.settings.des != blank -%}
                         <div class="container">

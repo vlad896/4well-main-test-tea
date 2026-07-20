@@ -1,4 +1,4 @@
-{% assign img_url = product.featured_image | img_url: '100x' %}
+{% assign img_url = product.featured_image | image_url: width: 100 %}
 
 {% assign show_product_vendor = show_product_vendor | default: settings.show_product_vendor %}
 {% assign show_product_title = show_product_title | default: settings.show_product_title %}
@@ -12,6 +12,7 @@
     <div class="product-card__image">
         <a class="product-card__link" href="{{ product.url | within: collection }}" aria-label="link">
             <img class="product-card__img lazyload"
+                width="{{ product.featured_image.width }}" height="{{ product.featured_image.height }}"
                 data-srcset="{{ img_url }}"
                 data-sizes="auto" alt="{{ product.featured_image.alt }}" data-image>
         </a>

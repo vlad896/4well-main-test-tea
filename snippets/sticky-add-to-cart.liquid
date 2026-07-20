@@ -21,7 +21,7 @@
                 <div class="item product-wrapper">
                     <div class="product-on-cart">
                         <div class="product-image">
-                            <img class="lazyload" src="{{ 'loading.svg' | asset_url }}" data-src="{{ product.featured_image.src  | product_img_url: 'compact' }}" alt="" data-image>
+                            <img class="lazyload" src="{{ 'loading.svg' | asset_url }}" data-src="{{ product.featured_image.src  | image_url: width: 160, height: 160 }}" alt="" width="{{ product.featured_image.width }}" height="{{ product.featured_image.height }}" data-image>
                         </div>
                         <div class="product-details">
                             <div class="product-name">{{ product.title }}</div>
@@ -39,7 +39,7 @@
                             <ul>
                                 {% for variant in product.variants %}
                                     <li>
-                                        <a data-option1="{{ variant.option1 }}" data-option2="{{ variant.option2 }}"  data-option3="{{ variant.option3 }}" data-title="{{ variant.title }}" {% if variant.image != null %} data-img="{{ variant.image.src | product_img_url: 'compact' }}"{% else %} data-img="{{ product.featured_image.src | product_img_url: 'compact' }}"{% endif %} data-value="{{ variant.id }}" class="pr-swatch {% if variant.available == false %}sold-out{% endif %}" {% if variant.available == false %}disabled="disabled"{% endif %} href="javascript:void(0)" data-title="{{ variant.title }}" >
+                                        <a data-option1="{{ variant.option1 }}" data-option2="{{ variant.option2 }}"  data-option3="{{ variant.option3 }}" data-title="{{ variant.title }}" {% if variant.image != null %} data-img="{{ variant.image.src | image_url: width: 160, height: 160 }}"{% else %} data-img="{{ product.featured_image.src | image_url: width: 160, height: 160 }}"{% endif %} data-value="{{ variant.id }}" class="pr-swatch {% if variant.available == false %}sold-out{% endif %}" {% if variant.available == false %}disabled="disabled"{% endif %} href="javascript:void(0)" data-title="{{ variant.title }}" >
                                             {{ variant.title }} - {{ variant.price | money }}
                                         </a>
                                     </li>

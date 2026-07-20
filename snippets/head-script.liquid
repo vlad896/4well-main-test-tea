@@ -59,21 +59,24 @@
             hours : "{{ 'general.count_down.hours' | t }}",
             mins : "{{ 'general.count_down.mins' | t }}",
             secs : "{{ 'general.count_down.secs' | t }}",
-            {% if settings.shipping_price != blank %}priceFreeShipping: {{ settings.shipping_price }}
-            {% else %}priceFreeShipping: "0"{% endif %}
+            priceFreeShipping: {{ settings.shipping_price | default: '0' | json }}
 
         },
         moneyFormat: {{ shop.money_format | json }},
         moneyFormatWithCurrency: {{ shop.money_with_currency_format | json }}
     }
     window.shop_currency = "{{ shop.currency }}";
-    window.show_multiple_currencies = {{ settings.enable_multiple_currencies }};
-    window.show_auto_currency = {{ settings.enable_auto_currency }};
+    window.show_multiple_currencies = {{ settings.enable_multiple_currencies | json }};
+    window.show_auto_currency = {{ settings.enable_auto_currency | json }};
     window.swatch_recently = "{{ settings.option_color_swatch | downcase }}";
     window.router = "{{ routes.cart_url | split: '/cart' | first}}";
     window.option_ptoduct1 = "size";
     window.option_ptoduct2 = "color";
     window.option_ptoduct3 = "option 3";
+    {%- comment %} TODO: rename option_ptoduct* once theme.js consumers updated {% endcomment -%}
+    window.option_product1 = window.option_ptoduct1;
+    window.option_product2 = window.option_ptoduct2;
+    window.option_product3 = window.option_ptoduct3;
     window.saving = "{{ settings.type_label_sale }}";
     window.label_save = "{{ 'products.product.on_sale' | t }}"
     document.documentElement.className = document.documentElement.className.replace('no-js', 'js');

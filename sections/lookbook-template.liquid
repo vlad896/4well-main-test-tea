@@ -36,8 +36,8 @@
                         <span class="recommended_size">1170x680</span>
                         {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
                     {% else %}
-                        {% assign img_url = block.settings.lookbook_image | img_url: '1170x680' %}
-                        <img srcset="{{ img_url }}" alt="">
+                        {% assign img_url = block.settings.lookbook_image | image_url: width: 1170, height: 680 %}
+                        <img width="{{ block.settings.lookbook_image.width }}" height="{{ block.settings.lookbook_image.height }}" srcset="{{ img_url }}" alt="">
                     {% endif %}
                     {% for i in (1..3) %}
                         {% capture cap_product %}product_{{ i }}{% endcapture %}

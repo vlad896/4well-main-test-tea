@@ -48,13 +48,14 @@
                 {{ section.settings.accessToken }}
             {%- else -%}
                 {%- for block in section.blocks -%}
-                    {%- assign img_url = block.settings.instagram_image | img_url: '480x' -%}
-                    {%- assign img_url_2 = block.settings.instagram_image | img_url: '180x' -%}
-                    {%- assign img_url_full = block.settings.instagram_image | img_url: 'master' -%}
+                    {%- assign img_url = block.settings.instagram_image | image_url: width: 480 -%}
+                    {%- assign img_url_2 = block.settings.instagram_image | image_url: width: 180 -%}
+                    {%- assign img_url_full = block.settings.instagram_image | image_url: width: 5760 -%}
 
                     <a class="instagram__item image--hover{% if block.settings.instagram_image != blank %} instagram__item--bg{% endif %} {% if block.settings.instagram_image == blank %}no-image{% endif %}" href="{{ img_url_full }}" aria-label="link" data-fancybox="images-instagram">
                         {%- if block.settings.instagram_image != blank -%}
                             <img class="lazyload"
+                                width="{{ block.settings.instagram_image.width }}" height="{{ block.settings.instagram_image.height }}"
                                 data-src="{{ img_url }}"
                                 data-srcset="{{ img_url_2 }} 180w, {{ img_url }} 1025w"
                                 data-sizes="auto" alt="" data-image>

@@ -60,7 +60,7 @@
                         {% capture img_class %}product-featured-img{% endcapture %}
                         {% capture zoom_img_id %}FeaturedImageZoom-{{ section.id }}-{{ media.id }}{% endcapture %}
                         {% capture img_wrapper_id %}{{ zoom_img_id }}-wrapper{% endcapture %}
-                        {% assign img_url = media | img_url: 'master' %}
+                        {% assign img_url = media | image_url: width: 5760 %}
 
                         {% case media.media_type %}
                             {% when 'image' %}
@@ -69,13 +69,13 @@
                                     id="{{ zoom_img_id }}"
                                     class="product-single__photo {% if enable_zoom %}js-zoom-enabled{% endif %}{% if product.images.size > 1 %} product-single__photo--has-thumbnails{% endif %} number__{{ forloop.index0 }}"
                                     data-image-id="{{ media.id }}"
-                                    {% if enable_fancybox %} data-fancybox="images-single" href="{{ media | img_url: 'master' }}"{% endif %}
+                                    {% if enable_fancybox %} data-fancybox="images-single" href="{{ media | image_url: width: 5760 }}"{% endif %}
                                     {% if enable_zoom %} data-zoom="{{ media | img_url: product_image_zoom_size }}"{% endif %}
                                     style="--my-height-var:{{ product_height }}%">
                                         <img id="{{ img_id }}"
                                             class="product-single__photo-image {{ img_class }} lazyload{% unless featured_image == media %} lazypreload{% endunless %}"
                                             data-srcset="{{ img_url }}"
-                                            alt="{{ media.alt | escape }}" data-image>
+                                            alt="{{ media.alt | escape }}" width="{{ media.preview_image.width }}" height="{{ media.preview_image.height }}" data-image>
                                     </a>
                                 </div>
                             {% when 'external_video' %}
@@ -129,7 +129,7 @@
                                         class="product-thumbnails__photo product-single__thumbnail--{{ section.id }}"
                                         data-thumbnail-id="{{ media.id }}" aria-label="link"
                                         {% if enable_zoom %}data-zoom="{{ media.src | img_url: product_image_zoom_size, scale: product_image_scale }}"{% endif %} style="--my-height-var:{{ product_height }}%">
-                                        <img class="product-thumbnails__photo-image" src="{{ media.src | img_url: 'compact' | split: '?' | first }}" alt="{{ 'sections.featured_product.gallery_thumbnail_alt' | t: imageAlt: media.alt | escape }}">
+                                        <img class="product-thumbnails__photo-image" src="{{ media.src | image_url: width: 160, height: 160 | split: '?' | first }}" alt="{{ 'sections.featured_product.gallery_thumbnail_alt' | t: imageAlt: media.alt | escape }}" width="{{ media.preview_image.width }}" height="{{ media.preview_image.height }}">
                                     </a>
                                 </div>
                             {% when 'external_video' %}
@@ -144,7 +144,7 @@
                             {% when 'video' %}
                                 <div class="product-single__thumbnails-item filter-{{ media.alt | handle }}" data-slick-index="{{ forloop.index}}">
                                     <div  class="product-thumbnails__photo product-single__thumbnail--{{ section.id }} product-single__media" data-thumbnail-id="{{ media.id }}" style="--my-height-var:{{ product_height }}%">
-                                        <img src="{{ media | media_tag | split: 'img src="' | last | split: '">' | first }}" />
+                                        <img src="{{ media | media_tag | split: 'img src="' | last | split: '">' | first }}" width="{{ media.preview_image.width }}" height="{{ media.preview_image.height }}" />
                                     </div>
                                 </div>
                             {% when 'model' %}
@@ -441,8 +441,8 @@
 
                 {% if section.settings.trust_img and section.settings.trust_img_enable %}
                     <div class="secure_shopping_guarantee_image">
-                        {% assign img_url = section.settings.trust_img | img_url: 'master' %}
-                        <img class="lazyload" data-srcset="{{ img_url }}" data-sizes="auto" alt="" data-image>
+                        {% assign img_url = section.settings.trust_img | image_url: width: 5760 %}
+                        <img class="lazyload" data-srcset="{{ img_url }}" data-sizes="auto" alt="{{ section.settings.trust_img.alt | default: product.title | escape }}" width="{{ section.settings.trust_img.width }}" height="{{ section.settings.trust_img.height }}" data-image>
                     </div>
                 {% endif %}
 

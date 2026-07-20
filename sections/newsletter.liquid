@@ -23,8 +23,8 @@
 {%- endif -%}
 
 <div class="halo-section padding-top-{{ top }} padding-bottom-{{ bottom }} {{ border_top }} {{ border_bottom }}" data-section-id="{{ section.id }}" data-section-type="newsletter">
-    <!-- <div class="newsletter_pallarax {% if section.settings.background_image == blank %}no-image{% endif %}" {%- if section.settings.background_image != blank -%}style="background-image: url({{ section.settings.background_image | img_url: 'master' }});"{%- endif -%}> -->
-    <div id="newsletter_pallarax" class="newsletter_pallarax {% if section.settings.background_image == blank %}no-image{% endif %}" {%- if section.settings.background_image != blank -%}data-image="{{ section.settings.background_image | img_url: 'master' }}"{%- endif -%}>
+    <!-- <div class="newsletter_pallarax {% if section.settings.background_image == blank %}no-image{% endif %}" {%- if section.settings.background_image != blank -%}style="background-image: url({{ section.settings.background_image | image_url: width: 5760 }});"{%- endif -%}> -->
+    <div id="newsletter_pallarax" class="newsletter_pallarax {% if section.settings.background_image == blank %}no-image{% endif %}" {%- if section.settings.background_image != blank -%}data-image="{{ section.settings.background_image | image_url: width: 5760 }}"{%- endif -%}>
         {%- if section.settings.background_image == blank -%}
             <div class="placeholder-background">
                 <span class="recommended_size">1920x1200</span>

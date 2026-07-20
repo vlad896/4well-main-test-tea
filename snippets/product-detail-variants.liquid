@@ -22,11 +22,11 @@
                                 <input class="single-option-selector single-option-selector-{{ section.id }}" type="radio" name="SingleOptionSelector-{{ option_index0 }}" data-index="option{{ option_index }}" value="{{ value | escape }}" {% if option.selected_value == value %} checked="checked"{% endif %} id="SingleOptionSelector{{ option_index0 }}-{{ value }}"{% if changeImageGroup %} data-filter=".filter-{{ value | handle }}"{% endif %}>
                                 <label data-toggle="tooltip" data-placement="top" title="{{ value }}" for="SingleOptionSelector{{ option_index0 }}-{{ value }}" 
                                     {% if variant.image != blank %} 
-                                        data-image="{{ variant.image.src | product_img_url: 'compact' | split: '?' | first }}" 
+                                        data-image="{{ variant.image.src | image_url: width: 160, height: 160 | split: '?' | first }}" 
                                     {% endif %}
 
                                     {% if variant.image != blank and settings.show_product_variant_img == 'variant' %} 
-                                        style="background-image: url({{ variant.image.src | product_img_url: 'compact' }})"
+                                        style="background-image: url({{ variant.image.src | image_url: width: 160, height: 160 }})"
                                     {% else %} 
                                         style="background-color: {{ value_2 }}; {% if settings.show_product_color_img %}background-image: url({{ value_2 | handle | append: '.png' | file_url }}){% endif %}"
                                     {% endif %}>{{ value }}</label>
@@ -75,9 +75,9 @@
                             {% assign values = values | append: ';' | append: value %}
                             {% assign values = values | split: ';' %}
                             {% if variant.available %}
-                                <option value="{{ value }}" {% if variant.image != blank %} data-image="{{ variant.image.src | product_img_url: 'compact' | split: '?' | first }}"{% endif %}{% if option.selected_value == value %} selected="selected"{% endif %}>{{ value }}</option>
+                                <option value="{{ value }}" {% if variant.image != blank %} data-image="{{ variant.image.src | image_url: width: 160, height: 160 | split: '?' | first }}"{% endif %}{% if option.selected_value == value %} selected="selected"{% endif %}>{{ value }}</option>
                             {% else %}
-                                <option value="{{ value }}" {% if variant.image != blank %} data-image="{{ variant.image.src | product_img_url: 'compact' | split: '?' | first }}"{% endif %}>{{ value }}</option>
+                                <option value="{{ value }}" {% if variant.image != blank %} data-image="{{ variant.image.src | image_url: width: 160, height: 160 | split: '?' | first }}"{% endif %}>{{ value }}</option>
                             {% endif %}
                         {% endunless %}
                     {% endfor %}

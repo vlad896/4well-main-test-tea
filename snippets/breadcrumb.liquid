@@ -2,14 +2,14 @@
     <div class="container">
         <ul class="breadcrumb">
             <li class="breadcrumb__item">
-                <a href="/" aria-label="home">{{ 'homepage.general.title' | t }}</a>
+                <a href="/">{{ 'homepage.general.title' | t }}</a>
                 <svg class="icon"><use xlink:href="#icon-chevron-right" /></svg>
             </li>
-            {% if template contains 'product' %} 
+            {% if template contains 'product' %}
                 {% if collection %}
                     {% capture url %}/collections/{{ collection.handle }}{% endcapture %}
                     <li class="breadcrumb__item">
-                        <a href="{{ url }}" aria-label="link">{{ collection.title }}</a>
+                        <a href="{{ url }}">{{ collection.title }}</a>
                         <svg class="icon"><use xlink:href="#icon-chevron-right" /></svg>
                     </li>
                 {% endif %}
@@ -18,7 +18,7 @@
                 </li>
             {% elsif template == 'article' %}
                 <li class="breadcrumb__item">
-                    <a href="{{ blog.url }}" aria-label="link">{{ blog.title }}</a>
+                    <a href="{{ blog.url }}">{{ blog.title }}</a>
                     <svg class="icon"><use xlink:href="#icon-chevron-right" /></svg>
                 </li>
                 <li class="breadcrumb__item">
@@ -32,3 +32,24 @@
         </ul>
     </div>
 </div>
+
+{%- capture breadcrumb_items -%}
+{"@type":"ListItem","position":1,"name":{{ 'homepage.general.title' | t | json }},"item":{{ shop.url | append: '/' | json }}}
+{%- if template contains 'product' -%}
+    {%- if collection -%},{"@type":"ListItem","position":2,"name":{{ collection.title | json }},"item":{{ shop.url | append: collection.url | json }}},{"@type":"ListItem","position":3,"name":{{ product.title | json }},"item":{{ shop.url | append: product.url | json }}}
+    {%- else -%},{"@type":"ListItem","position":2,"name":{{ product.title | json }},"item":{{ shop.url | append: product.url | json }}}
+    {%- endif -%}
+{%- elsif template == 'article' -%}
+    ,{"@type":"ListItem","position":2,"name":{{ blog.title | json }},"item":{{ shop.url | append: blog.url | json }}},{"@type":"ListItem","position":3,"name":{{ article.title | json }},"item":{{ shop.url | append: article.url | json }}}
+{%- else -%}
+    ,{"@type":"ListItem","position":2,"name":{{ page_title | json }},"item":{{ canonical_url | json }}}
+{%- endif -%}
+{%- endcapture -%}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "@id": "{{ canonical_url }}#breadcrumb",
+    "itemListElement": [{{ breadcrumb_items }}]
+}
+</script>

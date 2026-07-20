@@ -33,7 +33,7 @@
                         {% endif %}
 
                     {% elsif section.settings.size_chart == 'none' %} 
-                        <img src="{{ section.settings.custom_size_chart | img_url: 'original' }}" alt=""/>
+                        <img src="{{ section.settings.custom_size_chart | image_url: width: 1024, height: 1024 }}" alt="" width="{{ section.settings.custom_size_chart.width }}" height="{{ section.settings.custom_size_chart.height }}"/>
                     {% endif %}
                 </div>
             </div>

@@ -1,12 +1,13 @@
 <div class="featured-blog text-left">
     {% if article.image %}
         <div class="featured-blog__image">
-            {% assign img_url = article.image | img_url: 'master' %}
+            {% assign img_url = article.image | image_url: width: 5760 %}
             <a class="featured-blog__link image--hover" href="{{ article.url }}" aria-label="link">
                 <img class="lazyload"
+                    width="{{ article.image.width }}" height="{{ article.image.height }}"
                     data-srcset="{{ img_url }}"
                     data-sizes="auto"
-                    alt="" data-image>
+                    alt="{{ article.title | escape }}" data-image>
             </a>
         </div>
     {% endif %}

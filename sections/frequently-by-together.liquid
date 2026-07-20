@@ -77,8 +77,8 @@
                             <div class="product-image">
                                 <a href="{{ product.url | within: collection }}" class="product-link" aria-label="link">
                                     <img class="lazyload" src="{{ 'loading.svg' | asset_url }}"
-                                        data-src="{{ product.featured_image.src | product_img_url: '190x' }}"
-                                        alt="{{ product.featured_image.alt | escape }}" data-image>
+                                        data-src="{{ product.featured_image.src | image_url: width: 190 }}"
+                                        alt="{{ product.featured_image.alt | escape }}" width="{{ product.featured_image.width }}" height="{{ product.featured_image.height }}" data-image>
                                 </a>
                             </div>
                             <div class="product-content">
@@ -145,8 +145,8 @@
                                 <div class="product-image">
                                     <a href="{{ pro.url | within: collection }}" class="product-link" aria-label="link">
                                         <img class="lazyload" src="{{ 'loading.svg' | asset_url }}"
-                                            data-src="{{ pro.featured_image.src | product_img_url: '190x' }}"
-                                            alt="{{ pro.featured_image.alt | escape }}" data-image>
+                                            data-src="{{ pro.featured_image.src | image_url: width: 190 }}"
+                                            alt="{{ pro.featured_image.alt | escape }}" width="{{ pro.featured_image.width }}" height="{{ pro.featured_image.height }}" data-image>
                                     </a>
                                 </div>
                                 <div class="product-content">

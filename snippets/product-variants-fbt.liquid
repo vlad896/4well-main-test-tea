@@ -22,9 +22,9 @@
                         <div class="swatch-element color {{ value_2 }}{% if variant.available %} available{% else %} soldout{% endif %}" data-value="{{ value }}">
                             <input {% unless variant.available %}disabled{% endunless %} class="single-option-selector single-option-selector-frequently single-option-selector-{{ section.id }}" type="radio" name="GroupSelector-{{ option_index0 }}-{{ product.id }}" data-index="option{{ option_index }}" value="{{ value | escape }}" {% if option.selected_value == value %} checked="checked"{% endif %} id="GroupSelector{{ option_index0 }}-{{ value }}-{{ product.id }}">
                             <label for="GroupSelector{{ option_index0 }}-{{ value }}-{{ product.id }}"
-                                {% if variant.image.size != blank %} data-imge="{{ variant.image.src | product_img_url: 'compact' }}"{% endif %}
+                                {% if variant.image.size != blank %} data-imge="{{ variant.image.src | image_url: width: 160, height: 160 }}"{% endif %}
                                 {% if variant.image != blank and settings.show_product_variant_img == 'variant' %} 
-                                    style="background-image: url({{ variant.image.src | product_img_url: 'compact' }})"
+                                    style="background-image: url({{ variant.image.src | image_url: width: 160, height: 160 }})"
                                 {% else %} 
                                     style="background-color: {{ value_2 }}; {% if settings.show_product_color_img %}background-image: url({{ value_2 | handle | append: '.png' | file_url }}){% endif %}"
                                 {% endif %} ">{{ value }}

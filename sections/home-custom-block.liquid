@@ -107,7 +107,7 @@
                                     {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
                                 </div>
                             {%- else -%}
-                                <img class="block_slide__image" srcset="{{ block.settings.slide_image | img_url: 'master' }}" alt="" />
+                                <img class="block_slide__image" width="{{ block.settings.slide_image.width }}" height="{{ block.settings.slide_image.height }}" srcset="{{ block.settings.slide_image | image_url: width: 5760 }}" alt="" />
                             {%- endif -%}
                             {%- if block.settings.enable_video -%}
                             {%- if block.settings.video_link != blank or block.settings.video_mp4_link != blank -%}

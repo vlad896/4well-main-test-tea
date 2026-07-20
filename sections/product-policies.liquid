@@ -51,7 +51,7 @@
                 <div class="policy-with-text text-center">
                     <div class="policy-with-text__icon">
                         {% if block.settings.icon != blank %}
-                            <img class="lazyload" data-srcset="{{ block.settings.icon | img_url: '100x100' }}" alt="" data-image>
+                            <img class="lazyload" data-srcset="{{ block.settings.icon | image_url: width: 100, height: 100 }}" alt="" width="{{ block.settings.icon.width }}" height="{{ block.settings.icon.height }}" data-image>
                         {% else %}
                             <div class="not_img">
                                 <span class="recommended_size">100x100</span>

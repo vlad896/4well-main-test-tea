@@ -19,9 +19,10 @@
 <div class="collection-grid-item">
     {% unless collection_image == blank %}
         <div class="grid-item__overlay">
-            <img class="lazyload" 
-                    data-srcset="{{ collection_image | img_url: 'master' }} 1025w"
-                    data-sizes="auto" alt="" data-image>
+            <img class="lazyload"
+                    width="{{ collection_image.width }}" height="{{ collection_image.height }}"
+                    data-srcset="{{ collection_image | image_url: width: 5760 }} 1025w"
+                    data-sizes="auto" alt="{{ collection.title | escape }}" data-image>
         </div>
     {% else %}
         {% if collection == empty %}

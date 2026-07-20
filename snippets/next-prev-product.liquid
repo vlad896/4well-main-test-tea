@@ -18,7 +18,7 @@
             <div class="product-card product-card--2 text-left">
                 <div class="product-card__image">
                     <a class="product-card__link" href="{{ collection.previous_product }}" aria-label="image">
-                        <img class="product-card__img" srcset="{{ collection.previous_product.images[0] | img_url: 'compact' }}" alt="{{ collection.previous_product.title }}">
+                        <img class="product-card__img" srcset="{{ collection.previous_product.images[0] | image_url: width: 160, height: 160 }}" alt="{{ collection.previous_product.title }}" width="{{ collection.previous_product.images[0].width }}" height="{{ collection.previous_product.images[0].height }}">
                     </a>
                 </div>
                 <div class="product-card__content">
@@ -58,7 +58,7 @@
             <div class="product-card product-card--2 text-left">
                 <div class="product-card__image">
                     <a class="product-card__link" href="{{ collection.next_product }}" aria-label="image">
-                        <img class="product-card__img" srcset="{{ collection.next_product.images[0] | img_url: 'compact' }}" alt="{{ collection.next_product.title }}">
+                        <img class="product-card__img" srcset="{{ collection.next_product.images[0] | image_url: width: 160, height: 160 }}" alt="{{ collection.next_product.title }}" width="{{ collection.next_product.images[0].width }}" height="{{ collection.next_product.images[0].height }}">
                     </a>
                 </div>
                 <div class="product-card__content">

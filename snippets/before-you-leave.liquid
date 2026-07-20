@@ -5,8 +5,8 @@
 <div class="before-you-leave__wrapper" data-time="{{beforeYouLeave_time}}">
     {% if settings.before_you_leave_logo != blank %}
         <div class="before-you-leave__header text-center">
-            {% assign img_url = settings.before_you_leave_logo | img_url: '120x' %}
-            <img class="lazyload" data-srcset="{{ img_url }}" alt="" data-image>
+            {% assign img_url = settings.before_you_leave_logo | image_url: width: 120 %}
+            <img class="lazyload" data-srcset="{{ img_url }}" alt="" width="{{ settings.before_you_leave_logo.width }}" height="{{ settings.before_you_leave_logo.height }}" data-image>
         </div>
     {% else %}
         <div class="before-you-leave__header before-you-leave__header--text text-center">
@@ -19,11 +19,11 @@
     {% endif %}
     <div class="before-you-leave__bg text-center">
         {% if settings.before_you_leave_bg != blank %}
-            {% assign img_url = settings.before_you_leave_bg | img_url: '470x' %}
-            {% assign img_url_2 = settings.before_you_leave_bg | img_url: '331x' %}
-            <img class="before-you-leave__img lazyload" 
+            {% assign img_url = settings.before_you_leave_bg | image_url: width: 470 %}
+            {% assign img_url_2 = settings.before_you_leave_bg | image_url: width: 331 %}
+            <img class="before-you-leave__img lazyload"
                 data-srcset="{{ img_url_2 }} 180w, {{ img_url }} 400w"
-                data-sizes="auto" alt="" data-image>
+                data-sizes="auto" alt="" width="{{ settings.before_you_leave_bg.width }}" height="{{ settings.before_you_leave_bg.height }}" data-image>
         {% endif %}
         <div class="rte">
             {{ settings.before_you_leave_des }}

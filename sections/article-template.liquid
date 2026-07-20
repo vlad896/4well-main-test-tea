@@ -14,7 +14,7 @@
     {% if article.image %}
         <div class="article__image">
             <a href="{{ article.url }}">
-                <img id="{{ img_id }}" srcset="{{ article.image | img_url: 'master' }}" alt="">
+                <img id="{{ img_id }}" width="{{ article.image.width }}" height="{{ article.image.height }}" srcset="{{ article.image | image_url: width: 5760 }}" alt="{{ article.title | escape }}">
             </a>
         </div>
     {% endif %}
@@ -50,7 +50,7 @@
                 {% endif %}
             </div>
             {% endif %}
-            <h2 class="article__title"><a href="{{ article.url }}">{{ article.title }}</a></h2>
+            <h1 class="article__title">{{ article.title }}</h1>
         </div>
         <div class="article__body ">
             <div class="rte">
@@ -84,8 +84,8 @@
                                                 {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' }}
                                             </div>
                                         {% else %}
-                                            {% assign img_url = block.settings.image_1 | img_url: '500x500' %}
-                                            <img class="hero__image--background lazyload" data-srcset="{{ img_url }}" alt="" data-image>
+                                            {% assign img_url = block.settings.image_1 | image_url: width: 500, height: 500 %}
+                                            <img class="hero__image--background lazyload" width="{{ block.settings.image_1.width }}" height="{{ block.settings.image_1.height }}" data-srcset="{{ img_url }}" alt="" data-image>
                                         {% endif %}
                                     </div>
                                     {% for i in (1..3) %}
@@ -241,43 +241,48 @@
     </div>
 </article>
 
+{% if article.image %}
 <script type="application/ld+json">
 {
-    "@context": "http://schema.org",
-    "@type": "Article",
-    "articleBody": {{ article.content | strip_html | json }},
-    "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": {{ shop.url | append: page.url | json }}
-    },
+    "@context": "https://schema.org",
+    "@type": "ImageObject",
+    "@id": {{ canonical_url | append: '#article-image' | json }},
+    "url": {{ article.image | image_url: width: 5760 | prepend: 'https:' | json }},
+    "contentUrl": {{ article.image | image_url: width: 5760 | prepend: 'https:' | json }},
+    "width": {{ article.image.width | json }},
+    "height": {{ article.image.height | json }},
+    "caption": {{ article.title | json }}
+}
+</script>
+{% endif %}
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "@id": {{ canonical_url | append: '#article' | json }},
+    "url": {{ canonical_url | json }},
     "headline": {{ article.title | json }},
+    "articleBody": {{ article.content | strip_html | json }},
     {% if article.excerpt != blank %}
         "description": {{ article.excerpt | strip_html | json }},
     {% endif %}
     {% if article.image %}
-        {% assign image_size = article.image.width | append: 'x' %}
-        "image": [
-            {{ article | img_url: image_size | prepend: "https:" | json }}
-        ],
+        "image": {
+            "@id": {{ canonical_url | append: '#article-image' | json }}
+        },
     {% endif %}
-    "datePublished": {{ article.published_at | date: '%Y-%m-%dT%H:%M:%SZ' | json }},
-    "dateCreated": {{ article.created_at | date: '%Y-%m-%dT%H:%M:%SZ' | json }},
+    "datePublished": {{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' | json }},
+    "dateModified": {{ article.updated_at | date: '%Y-%m-%dT%H:%M:%S%z' | json }},
     "author": {
         "@type": "Person",
         "name": {{ article.author | json }}
     },
     "publisher": {
-        "@type": "Organization",
-        {% if settings.share_image %}
-            {% assign image_size = settings.share_image.width | append: 'x' %}
-            "logo": {
-                "@type": "ImageObject",
-                "height": {{ settings.share_image.height | json }},
-                "url": {{ settings.share_image | img_url: image_size | prepend: "https:" | json }},
-                "width": {{ settings.share_image.width | json }}
-            },
-        {% endif %}
-        "name": {{ shop.name | json }}
+        "@id": {{ shop.url | append: '#organization' | json }}
+    },
+    "mainEntityOfPage": {
+        "@id": {{ canonical_url | append: '#webpage' | json }}
     }
 }
 </script>

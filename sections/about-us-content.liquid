@@ -17,7 +17,7 @@
       {% if block.settings.display_banner %}
       <div class="col banner {% if block.settings.banner == blank %}no-image{% endif %}" >
         {% if block.settings.banner != blank %}
-        <div class="background" style="background-image: url({{block.settings.banner | img_url:'800x800'}})"></div>
+        <div class="background" style="background-image: url({{block.settings.banner | image_url: width: 800, height: 800}})"></div>
         {% else %}
         <div class="placeholder-background">
             <span class="recommended_size">800x800</span>
@@ -113,7 +113,7 @@
         <div class="image">
           <a href="{{block.settings.url}}" {% if block.settings.image == blank %}class="no-image"{% endif %}>
             {% if block.settings.image != blank %}
-            <img src="{{block.settings.image | img_url:'800x800'}}" alt="{{block.settings.title}}">
+            <img width="{{ block.settings.image.width }}" height="{{ block.settings.image.height }}" src="{{block.settings.image | image_url: width: 800, height: 800}}" alt="{{block.settings.title}}">
             {% else %}
             <div class="placeholder-background">
                 <span class="recommended_size">800x800</span>

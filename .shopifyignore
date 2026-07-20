@@ -1,0 +1,7 @@
+# Files that must NOT be uploaded to the Shopify store
+Tea User Guide/
+*.DS_Store
+.DS_Store
+preview.jpg
+README.md
+SEO-CODE-AUDIT_*.md

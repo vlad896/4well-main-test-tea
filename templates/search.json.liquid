@@ -14,7 +14,7 @@
             "on_sale"         : {% if result.compare_at_price > result.price %}true{% else %}false{% endif %},
             "price"           : {{ result.price | money | json }},
             "compare_at_price": {{ result.compare_at_price | money | json }},
-            "image"           : {{ result.featured_image | img_url: 'x430' | json }},            
+            "image"           : {{ result.featured_image | image_url: height: 430 | json }},            
             "image_alt"       : {{ result.featured_image.alt | escape | json }}
         }{% unless forloop.last %},{% endunless %}
     

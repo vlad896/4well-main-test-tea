@@ -91,7 +91,7 @@
                             {% endif %}
                             <div class="quote-author">
                                 {% if block.settings.image %}    
-                                    <img class="lazyload" data-srcset="{{ block.settings.image | img_url: '50x50' }}" alt="" data-image>
+                                    <img class="lazyload" width="{{ block.settings.image.width }}" height="{{ block.settings.image.height }}" data-srcset="{{ block.settings.image | image_url: width: 50, height: 50 }}" alt="" data-image>
                                 {% endif %}
                                 {% if block.settings.author != blank %}
                                     <cite>{{ block.settings.author }}</cite>

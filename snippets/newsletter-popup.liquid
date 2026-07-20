@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-newsletter text-center" data-delay="{{ newsletter_time }}" data-expire="{{ settings.popup_newsletter_expire }}">
             <a href="javascript:void(0)" aria-label="close" title="close" class="close"><svg class="icon icon-close"><use xlink:href="#icon-close"></use></svg></a>
-            <div class="newsletter--image"{% if settings.newsletter_image != blank %} style="background-image: url({{ settings.newsletter_image | img_url: 'master' }});"{% endif %}>
+            <div class="newsletter--image"{% if settings.newsletter_image != blank %} style="background-image: url({{ settings.newsletter_image | image_url: width: 5760 }});"{% endif %}>
                 {% if settings.newsletter_image == blank %}
                     <div class="placeholder-background">
                         <span class="recommended_size">360x400</span>

@@ -6,7 +6,7 @@
                 <div class="footer-logo text-left">
                     {%- if  block.settings.logo_footer != blank -%}
                         <div class="footer-logo__item">
-                            <a href="{{ routes.root_url }}" aria-label="link" style="width: {{ block.settings.logo_max_width }}px"><img class="lazyload" data-srcset="{{ block.settings.logo_footer | img_url: 'x40' }}" alt="" data-image></a>
+                            <a href="{{ routes.root_url }}" aria-label="link" style="width: {{ block.settings.logo_max_width }}px"><img class="lazyload" data-srcset="{{ block.settings.logo_footer | image_url: height: 40 }}" width="{{ block.settings.logo_footer.width }}" height="{{ block.settings.logo_footer.height }}" alt="{{ shop.name | escape }}" data-image></a>
                         </div>
                     {%- else -%}
                         <div class="footer-logo__item footer-logo--text">

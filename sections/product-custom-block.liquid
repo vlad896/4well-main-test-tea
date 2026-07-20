@@ -50,7 +50,7 @@
                                 {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
                             </div>
                         {% else %}
-                            <img class="block_slide__image lazyload" data-srcset="{{ section.settings.slide_image | img_url: 'master' }}" alt="" data-image />
+                            <img class="block_slide__image lazyload" data-srcset="{{ section.settings.slide_image | image_url: width: 5760 }}" alt="" width="{{ section.settings.slide_image.width }}" height="{{ section.settings.slide_image.height }}" data-image />
                         {% endif %}
                     </div>
                 </div>
@@ -89,7 +89,7 @@
                                     </div>
                                 {% else %}
                                     <div class="zoom-border-effect">
-                                        <img class="block_slide__image lazyload" data-srcset="{{ block.settings.image | img_url: 'master' }}" data-image alt="" />
+                                        <img class="block_slide__image lazyload" data-srcset="{{ block.settings.image | image_url: width: 5760 }}" data-image alt="" width="{{ block.settings.image.width }}" height="{{ block.settings.image.height }}" />
                                     </div>
                                 {% endif %}
                             </div>
@@ -120,7 +120,7 @@
                                     </div>
                                 {% else %}
                                     <div class="zoom-border-effect">
-                                        <img class="block_slide__image lazyload" data-srcset="{{ block.settings.image | img_url: 'master' }}" alt="" data-image />
+                                        <img class="block_slide__image lazyload" data-srcset="{{ block.settings.image | image_url: width: 5760 }}" alt="" width="{{ block.settings.image.width }}" height="{{ block.settings.image.height }}" data-image />
                                     </div>
                                 {% endif %}
                                 {% if block.settings.enable_video %}
@@ -170,7 +170,7 @@
                                         <div class="info-user">
                                             <div class="icon-user zoom-border-effect">
                                                 {% if block.settings[icon] != blank %}
-                                                    <img class="lazyload" data-srcset="{{ block.settings[icon] | img_url: '64x64' }}" data-image />
+                                                    <img class="lazyload" data-srcset="{{ block.settings[icon] | image_url: width: 64, height: 64 }}" alt="{{ block.settings[name] | default: product.title | escape }}" width="{{ block.settings[icon].width }}" height="{{ block.settings[icon].height }}" data-image />
                                                 {% else %}
                                                     <svg class="icon"><use xlink:href="#icon-user"></use></svg>
                                                 {% endif %}

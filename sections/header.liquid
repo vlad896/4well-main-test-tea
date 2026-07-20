@@ -57,43 +57,72 @@
 
 <script type="application/ld+json">
 {
-    "@context": "http://schema.org",
+    "@context": "https://schema.org",
     "@type": "Organization",
+    "@id": "{{ shop.url }}#organization",
     "name": {{ shop.name | json }},
     {% if section.settings.logo %}
         {% assign image_size = section.settings.logo.width | append:'x' %}
-        "logo": {{ section.settings.logo | img_url: image_size | prepend: "https:" | json }},
+        "logo": {
+            "@type": "ImageObject",
+            "@id": "{{ shop.url }}#logo",
+            "url": {{ section.settings.logo | img_url: image_size | prepend: "https:" | json }}
+        },
     {% endif %}
     "sameAs": [
-        {{ settings.social_twitter_link | json }},
-        {{ settings.social_facebook_link | json }},
-        {{ settings.social_pinterest_link | json }},
-        {{ settings.social_instagram_link | json }},
-        {{ settings.social_tumblr_link | json }},
-        {{ settings.social_snapchat_link | json }},
-        {{ settings.social_youtube_link | json }},
-        {{ settings.social_vimeo_link | json }}
+        {%- capture social_string -%}{{ settings.social_twitter_link | strip }},{{ settings.social_facebook_link | strip }},{{ settings.social_pinterest_link | strip }},{{ settings.social_instagram_link | strip }},{{ settings.social_tumblr_link | strip }},{{ settings.social_snapchat_link | strip }},{{ settings.social_youtube_link | strip }},{{ settings.social_vimeo_link | strip }}{%- endcapture -%}
+        {%- assign social_items = social_string | split: ',' -%}
+        {%- assign social_first = true -%}
+        {%- for social_item in social_items -%}
+            {%- assign social_link = social_item | strip -%}
+            {%- if social_link != blank -%}
+                {%- unless social_first %},{% endunless %}{{ social_link | json }}
+                {%- assign social_first = false -%}
+            {%- endif -%}
+        {%- endfor -%}
     ],
-    "url": {{ shop.url | append: page.url | json }}
+    "url": {{ shop.url | json }}
 }
 </script>
 
-{% if request.page_type == 'index' %}
-    {% assign potential_action_target = shop.url | append: routes.search_url | append: "?q={search_term_string}" %}
-    <script type="application/ld+json">
-        {
-            "@context": "http://schema.org",
-            "@type": "WebSite",
-            "name": {{ shop.name | json }},
-            "potentialAction": {
-                "@type": "SearchAction",
-                "target": {{ potential_action_target | json }},
-                "query-input": "required name=search_term_string"
-            },
-            "url": {{ shop.url | append: page.url | json }}
-        }
-  </script>
-{% endif %}
+{% assign potential_action_target = shop.url | append: routes.search_url | append: "?q={search_term_string}" %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": "{{ shop.url }}#website",
+    "name": {{ shop.name | json }},
+    "url": {{ shop.url | json }},
+    "publisher": {
+        "@id": "{{ shop.url }}#organization"
+    },
+    "potentialAction": {
+        "@type": "SearchAction",
+        "target": {{ potential_action_target | json }},
+        "query-input": "required name=search_term_string"
+    }
+}
+</script>
+
+{%- comment -%} Collection/blog/list-collections templates emit their own CollectionPage as #webpage — skip the generic WebPage there to avoid a duplicate @id. {%- endcomment -%}
+{%- unless request.page_type == 'collection' or request.page_type == 'blog' or request.page_type == 'list-collections' -%}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": "{{ canonical_url }}#webpage",
+    "url": {{ canonical_url | json }},
+    "name": {{ page_title | json }},
+    "isPartOf": {
+        "@id": "{{ shop.url }}#website"
+    },
+    "breadcrumb": {
+        "@id": "{{ canonical_url }}#breadcrumb"
+    },
+    "inLanguage": {{ request.locale.iso_code | json }}
+}
+</script>
+{%- endunless -%}
 
 {% schema %}
 {
@@ -467,36 +496,31 @@
                     "type": "image_picker",
                     "id": "banner_image_style_3_1",
                     "label": "Upload Banner 1",
-                    "info": "290px x 125px recommended",
-                    "info": "=============="
+                    "info": "290px x 125px recommended"
                 },     
                 {
                     "type": "image_picker",
                     "id": "banner_image_style_3_2",
                     "label": "Upload Banner 2",
-                    "info": "290px x 125px recommended",
-                    "info": "=============="
+                    "info": "290px x 125px recommended"
                 },     
                 {
                     "type": "image_picker",
                     "id": "banner_image_style_3_3",
                     "label": "Upload Banner 3",
-                    "info": "290px x 125px recommended",
-                    "info": "=============="
+                    "info": "290px x 125px recommended"
                 },     
                 {
                     "type": "image_picker",
                     "id": "banner_image_style_3_4",
                     "label": "Upload Banner 4",
-                    "info": "290px x 125px recommended",
-                    "info": "=============="
+                    "info": "290px x 125px recommended"
                 },     
                 {
                     "type": "image_picker",
                     "id": "banner_image_style_3_5",
                     "label": "Upload Banner 5",
-                    "info": "290px x 125px recommended",
-                    "info": "=============="
+                    "info": "290px x 125px recommended"
                 },
                 {
                     "type" : "header",
@@ -513,8 +537,7 @@
                     "id": "countdown_timer",
                     "label": "Deal Time",
                     "default": "2020/12/25 22:11:00",
-                    "info": "Please use this exact format: yyyy/mm/dd hour:minute:second.",
-                    "info": "Example: 2020/12/25 22:11:00"
+                    "info": "Please use this exact format: yyyy/mm/dd hour:minute:second. Example: 2020/12/25 22:11:00"
                 }
             ]
         },

@@ -57,9 +57,10 @@
 
                     <div class="collection-list-item text-left">
                         <div class="image--hover collection-list-item__image image-with-text-overlay__image {% if link.object == blank %}no-image{% endif %}">
-                            {%- assign imgColl = link.object.image | img_url :"640x", format: 'jpg' -%}
+                            {%- assign imgColl = link.object.image | image_url: width: 640%}
                             {%- if link.object != blank -%}
                                 <img class="lazyload"
+                                    width="{{ link.object.image.width }}" height="{{ link.object.image.height }}"
                                     data-srcset="{{ imgColl }} 180w, {{ imgColl }} 768w"
                                     data-sizes="auto" alt="{{ l.title }}" data-image>
                             {%- else -%}
@@ -89,8 +90,9 @@
                     <div class="collection-list-item text-left">
                         <div class="image--hover collection-list-item__image image-with-text-overlay__image {% unless article.image %}no-image{% endunless %}">
                             {%- if article.image -%}
-                                {%- assign img_url = article.image | img_url: 'master' -%}
+                                {%- assign img_url = article.image | image_url: width: 5760 -%}
                                 <img class="lazyload"
+                                    width="{{ article.image.width }}" height="{{ article.image.height }}"
                                     data-srcset="{{ img_url }} 180w, {{ img_url }} 768w"
                                     data-sizes="auto" alt="{{ l.title }}" data-image>
                             {%- else -%}

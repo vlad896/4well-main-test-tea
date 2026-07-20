@@ -22,8 +22,8 @@
                                 title="{{ value }}" 
                                 data-name="{{ value }}" 
                                 {% if variant.image != blank %} 
-                                    data-image="{{ variant.image.src | product_img_url: '370x555' }}"
-                                    style="background-color: {{ value_2 }}; background-image: url({{ variant.image.src | product_img_url: '50x' }})"
+                                    data-image="{{ variant.image.src | image_url: width: 370, height: 555 }}"
+                                    style="background-color: {{ value_2 }}; background-image: url({{ variant.image.src | image_url: width: 50 }})"
                                 {% else %} 
                                     {% if settings.show_product_variant_img %} 
                                         style="background-color: {{ value_2 }}; background-image: url({{ value_2 | handle | append: '.png' | file_url }})"

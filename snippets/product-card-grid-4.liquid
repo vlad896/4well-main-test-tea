@@ -1,6 +1,6 @@
-{% assign img_url = product.featured_image | img_url: '270x' %}
-{% assign img_url_2 = product.featured_image | img_url: '220x' %}
-{% assign img_url_3 = product.images[1].src | img_url: '270x' %}
+{% assign img_url = product.featured_image | image_url: width: 270 %}
+{% assign img_url_2 = product.featured_image | image_url: width: 220 %}
+{% assign img_url_3 = product.images[1].src | image_url: width: 270 %}
 
 
 {% assign show_product_wishlist = show_product_wishlist | default: settings.show_product_wishlist %}
@@ -17,12 +17,14 @@
         {% render 'product-badges' with product as product, serial: serial %}
         <a class="product-card__link{% if show_product_switch_image and product.images.size > 1 %} product-card__switchImage{% endif %}" href="{{ product.url | within: collection }}" aria-label="link">
             <img class="product-card__img lazyload"
+                width="{{ product.featured_image.width }}" height="{{ product.featured_image.height }}"
                 data-srcset="{{ img_url }} 1025w"
-                data-sizes="auto" alt="" data-image>
+                data-sizes="auto" alt="{{ product.featured_image.alt | default: product.title | escape }}" data-image>
             {% if show_product_switch_image and product.images.size > 1 %}
                 <img class="product-card__img product-card__img--2 lazyload"
+                width="{{ product.images[1].width }}" height="{{ product.images[1].height }}"
                 data-srcset="{{ img_url_3 }} 1025w"
-                data-sizes="auto" alt="" data-image>
+                data-sizes="auto" alt="{{ product.featured_image.alt | default: product.title | escape }}" data-image>
             {% endif %}
         </a>
 

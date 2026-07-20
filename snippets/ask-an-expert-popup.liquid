@@ -2,7 +2,7 @@
     <div class="ask-an-expert{% if settings.show_gdpr == 'left' %} bottom{% endif %}" style="display: none;">
         <a class="text {% if settings.image-ask == blank %}no-image{% endif %}" data-toggle="modal" data-target="#ask_an_expert" href="javascript:void(0)" aria-label="link" aria-describedby="a11y-external-message">
           {% if settings.image-ask != blank %}
-            <img class="lazyload" src="{{ 'loading.svg' | asset_url }}" data-src="{{ settings.image-ask | img_url: 'master' }}" alt="" data-image>
+            <img class="lazyload" src="{{ 'loading.svg' | asset_url }}" data-src="{{ settings.image-ask | image_url: width: 5760 }}" alt="" data-image>
             <span class="icon-mb"><svg class="icon"><use xlink:href="#icon-question" /></svg></span>
           {% else %}
             <div class="placeholder-background">
@@ -25,7 +25,7 @@
                 </div>
                 <div class="modal-logo">
                     {% if settings.image_logo_ask != blank %}
-                            <img class="lazyload" src="{{ 'loading.svg' | asset_url }}" data-src="{{ settings.image_logo_ask | img_url: 'master' }}" alt="" data-image>
+                            <img class="lazyload" src="{{ 'loading.svg' | asset_url }}" data-src="{{ settings.image_logo_ask | image_url: width: 5760 }}" alt="" data-image>
                     {% else %}
                         <span class="recommended_size">130x26</span>
                         {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}

@@ -37,7 +37,7 @@
                             <td class="cart__meta small--text-left cart_item_meta" data-cart-table-cell>
                                 <div class="cart__product-information">
                                     <div class="cart__image-wrapper">
-                                        <img class="cart__image{% if item.image == null %} hide{% endif %}" src="{{ item | img_url: 'x190' }}" alt="{{ item.image.alt | escape }}" data-cart-item-image>
+                                        <img class="cart__image{% if item.image == null %} hide{% endif %}" src="{{ item | image_url: height: 190 }}" alt="{{ item.image.alt | escape }}" width="{{ item.image.width }}" height="{{ item.image.height }}" data-cart-item-image>
                                     </div>
                                     <div class="cart__content-wrapper">
                                         <div class="list-view-item__title">
@@ -266,8 +266,8 @@
                         </div>
                         {% if section.settings.trust_img %}
                         <div class="secure_shopping_guarantee_image">
-                            {% assign img_url = section.settings.trust_img | img_url: 'master' %}
-                            <img class="lazyload" data-srcset="{{ img_url }}" data-sizes="auto" alt="" data-image>
+                            {% assign img_url = section.settings.trust_img | image_url: width: 5760 %}
+                            <img class="lazyload" data-srcset="{{ img_url }}" data-sizes="auto" alt="" width="{{ section.settings.trust_img.width }}" height="{{ section.settings.trust_img.height }}" data-image>
                         </div>
                         {% endif %}
                     {% endif %}
@@ -356,7 +356,7 @@
 
 <div class="empty-page-content{% if cart.item_count > 0 %} hide{% endif %} text-center" data-empty-page-content>
     <div class="section-header text-center padding-top-60">
-        <h1 class="title">{{ 'cart.general.title' | t }}</h1>
+        <p class="title">{{ 'cart.general.title' | t }}</p>
         <p class="cart--empty-message">{{ 'cart.general.empty' | t }}</p>
         <div class="cookie-message">
             <p>{{ 'cart.general.cookies_required' | t }}</p>

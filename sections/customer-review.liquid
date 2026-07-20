@@ -87,7 +87,8 @@
                         <div class="item-user zoom-border-effect">
                           {%- if block.settings.user != blank -%}
                               <img class="lazyload"
-                                        data-srcset="{{ block.settings.user | img_url: '86x' }}"
+                                        width="{{ block.settings.user.width }}" height="{{ block.settings.user.height }}"
+                                        data-srcset="{{ block.settings.user | image_url: width: 86 }}"
                                         data-sizes="auto" alt="{{ block.settings.name }}" data-image>
                           {%- else -%}
                             <svg class="icon"><use xlink:href="#icon-user"></use></svg>

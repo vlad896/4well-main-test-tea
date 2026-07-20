@@ -10,7 +10,8 @@
         {% endif %}
             {% if block.settings.image != blank %}
                 <img class="lazyload1"
-                srcset="{{ block.settings.image | img_url: '290x' }}"
+                srcset="{{ block.settings.image | image_url: width: 290 }}"
+                width="{{ block.settings.image.width }}" height="{{ block.settings.image.height }}"
                 data-sizes="auto" alt="" data-image>
             {% else %}
                 <span class="recommended_size">290x350</span>

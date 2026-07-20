@@ -59,7 +59,7 @@
                         <div class="logo-bar">
                             <div class="logo__image">
                                 {% if block.settings.image != blank %}
-                                    <img class="lazyload" data-srcset="{{ block.settings.image | img_url: 'master' }}" alt="" data-image>
+                                    <img class="lazyload" data-srcset="{{ block.settings.image | image_url: width: 5760 }}" width="{{ block.settings.image.width }}" height="{{ block.settings.image.height }}" alt="" data-image>
                                 {% else %}
                                     <span class="recommended_size">160x60</span>
                                     {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
@@ -79,7 +79,7 @@
                         <div class="logo-bar">
                             <div class="logo__image">
                                 {% if block.settings.image != blank %}
-                                    <img class="lazyload" src="{{ 'loading.svg' | asset_url }}" data-src="{{ block.settings.image | img_url: 'master' }}" alt="" data-image>
+                                    <img class="lazyload" src="{{ 'loading.svg' | asset_url }}" data-src="{{ block.settings.image | image_url: width: 5760 }}" width="{{ block.settings.image.width }}" height="{{ block.settings.image.height }}" alt="" data-image>
                                 {% else %}
                                     <span class="recommended_size">160x60</span>
                                     {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}

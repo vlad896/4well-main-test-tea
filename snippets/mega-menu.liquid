@@ -116,11 +116,12 @@
         <div class="dropdown-megamenu-right dropdown-megamenu_item">
 
             {% if banner_image_1 != blank %}
-                {% assign img_url = banner_image_1 | img_url: '470x' %}
-                {% assign img_url_2 = banner_image_1 | img_url: '330x' %}
+                {% assign img_url = banner_image_1 | image_url: width: 470 %}
+                {% assign img_url_2 = banner_image_1 | image_url: width: 330 %}
                 <a href="{{ link_banner_image_1 }}" class="link image--hover">
-                    <img class="dropdown-megamenu__img lazyload" 
+                    <img class="dropdown-megamenu__img lazyload"
                     data-srcset="{{ img_url_2 }} 180w, {{ img_url }} 1025w"
+                    width="{{ banner_image_1.width }}" height="{{ banner_image_1.height }}"
                     data-sizes="auto" alt="" data-image>
                 </a>
             {% else %}
@@ -243,11 +244,12 @@
 
             <div class="dropdown-megamenu-right--item">
                 {% if banner_image_1 != blank %}
-                    {% assign img_url = banner_image_1 | img_url: '270x' %}
-                    {% assign img_url_2 = banner_image_1 | img_url: '330x' %}
+                    {% assign img_url = banner_image_1 | image_url: width: 270 %}
+                    {% assign img_url_2 = banner_image_1 | image_url: width: 330 %}
                     <a href="{{ link_banner_image_1 }}" class="link">
-                        <img class="dropdown-megamenu__img lazyload" 
+                        <img class="dropdown-megamenu__img lazyload"
                         data-srcset="{{ img_url_2 }} 180w, {{ img_url }} 1025w"
+                        width="{{ banner_image_1.width }}" height="{{ banner_image_1.height }}"
                         data-sizes="auto" alt="" data-image>
                     </a>
                 {% else %}
@@ -261,11 +263,12 @@
                     </a>
                 {% endif %}
                 {% if banner_image_2 != blank %}
-                    {% assign img_url = banner_image_2 | img_url: '470x' %}
-                    {% assign img_url_2 = banner_image_2 | img_url: '330x' %}
+                    {% assign img_url = banner_image_2 | image_url: width: 470 %}
+                    {% assign img_url_2 = banner_image_2 | image_url: width: 330 %}
                     <a href="{{ link_banner_image_2 }}" class="link">
-                        <img class="dropdown-megamenu__img lazyload" 
+                        <img class="dropdown-megamenu__img lazyload"
                         data-srcset="{{ img_url_2 }} 180w, {{ img_url }} 1025w"
+                        width="{{ banner_image_2.width }}" height="{{ banner_image_2.height }}"
                         data-sizes="auto" alt="" data-image>
                     </a>
                 {% else %}
@@ -306,7 +309,7 @@
                                     {% if forloop.index == 1 %}
                                         {% if banner_image_style_3_1 != blank %}
                                         <a href="{{ l.url }}" class="current" aria-label="link">
-                                            <img class="lazyload" src="{{ 'loading.svg' | asset_url }}"  data-src="{{ banner_image_style_3_1 | img_url :'290x' }}" alt="" data-image/>
+                                            <img class="lazyload" src="{{ 'loading.svg' | asset_url }}"  data-src="{{ banner_image_style_3_1 | image_url: width: 290 }}" width="{{ banner_image_style_3_1.width }}" height="{{ banner_image_style_3_1.height }}" alt="" data-image/>
                                         </a>
                                         {% else %}
                                         <a href="{{ l.url }}" class="link">
@@ -321,7 +324,7 @@
                                     {% elsif forloop.index == 2 %}
                                         {% if banner_image_style_3_1 != blank %}
                                         <a href="{{ l.url }}" class="current" aria-label="link">
-                                            <img class="lazyload" src="{{ 'loading.svg' | asset_url }}"  data-src="{{ banner_image_style_3_2 | img_url :'290x' }}" alt="" data-image/>
+                                            <img class="lazyload" src="{{ 'loading.svg' | asset_url }}"  data-src="{{ banner_image_style_3_2 | image_url: width: 290 }}" width="{{ banner_image_style_3_2.width }}" height="{{ banner_image_style_3_2.height }}" alt="" data-image/>
                                         </a>
                                         {% else %}
                                         <a href="{{ l.url }}" class="link">
@@ -336,7 +339,7 @@
                                     {% elsif forloop.index == 3 %}
                                         {% if banner_image_style_3_1 != blank %}
                                         <a href="{{ l.url }}" class="current" aria-label="link">
-                                            <img class="lazyload" src="{{ 'loading.svg' | asset_url }}"  data-src="{{ banner_image_style_3_3 | img_url :'290x' }}" alt="" data-image/>
+                                            <img class="lazyload" src="{{ 'loading.svg' | asset_url }}"  data-src="{{ banner_image_style_3_3 | image_url: width: 290 }}" width="{{ banner_image_style_3_3.width }}" height="{{ banner_image_style_3_3.height }}" alt="" data-image/>
                                         </a>
                                         {% else %}
                                         <a href="{{ l.url }}" class="link">
@@ -351,7 +354,7 @@
                                     {% elsif forloop.index == 4 %}
                                         {% if banner_image_style_3_1 != blank %}
                                         <a href="{{ l.url }}" class="current" aria-label="link">
-                                            <img class="lazyload" src="{{ 'loading.svg' | asset_url }}"  data-src="{{ banner_image_style_3_4 | img_url :'290x' }}" alt="" data-image/>
+                                            <img class="lazyload" src="{{ 'loading.svg' | asset_url }}"  data-src="{{ banner_image_style_3_4 | image_url: width: 290 }}" width="{{ banner_image_style_3_4.width }}" height="{{ banner_image_style_3_4.height }}" alt="" data-image/>
                                         </a>
                                         {% else %}
                                         <a href="{{ l.url }}" class="link">
@@ -366,7 +369,7 @@
                                     {% elsif forloop.index == 5 %}
                                         {% if banner_image_style_3_1 != blank %}
                                         <a href="{{ l.url }}" class="current" aria-label="link">
-                                            <img class="lazyload" src="{{ 'loading.svg' | asset_url }}"  data-src="{{ banner_image_style_3_5 | img_url :'290x' }}" alt="" data-image/>
+                                            <img class="lazyload" src="{{ 'loading.svg' | asset_url }}"  data-src="{{ banner_image_style_3_5 | image_url: width: 290 }}" width="{{ banner_image_style_3_5.width }}" height="{{ banner_image_style_3_5.height }}" alt="" data-image/>
                                         </a>
                                         {% else %}
                                         <a href="{{ l.url }}" class="link">
@@ -411,11 +414,12 @@
     <div class="site-nav-dropdown dropdown-megamenu {{ block_style }}">
         <div class="dropdown-megamenu-left">
             {% if banner_image_1 != blank %}
-                {% assign img_url = banner_image_1 | img_url: '610x' %}
-                {% assign img_url_2 = banner_image_1 | img_url: '330x' %}
+                {% assign img_url = banner_image_1 | image_url: width: 610 %}
+                {% assign img_url_2 = banner_image_1 | image_url: width: 330 %}
                 <a href="{{ link_banner_image_1 }}" class="link image--hover">
-                    <img class="dropdown-megamenu__img lazyload" 
+                    <img class="dropdown-megamenu__img lazyload"
                     data-srcset="{{ img_url_2 }} 180w, {{ img_url }} 1025w"
+                    width="{{ banner_image_1.width }}" height="{{ banner_image_1.height }}"
                     data-sizes="auto" alt="" data-image>
                 </a>
             {% else %}
@@ -514,11 +518,12 @@
 
             <div class="dropdown-megamenu-right--item">
                 {% if banner_image_2 != blank %}
-                    {% assign img_url = banner_image_2 | img_url: '270x' %}
-                    {% assign img_url_2 = banner_image_2 | img_url: '270x' %}
+                    {% assign img_url = banner_image_2 | image_url: width: 270 %}
+                    {% assign img_url_2 = banner_image_2 | image_url: width: 270 %}
                     <a href="{{ link_banner_image_2 }}" class="">
-                        <img class="dropdown-megamenu__img lazyload" 
+                        <img class="dropdown-megamenu__img lazyload"
                         data-srcset="{{ img_url_2 }} 180w, {{ img_url }} 1025w"
+                        width="{{ banner_image_2.width }}" height="{{ banner_image_2.height }}"
                         data-sizes="auto" alt="" data-image>
                     </a>
                 {% else %}
@@ -532,11 +537,12 @@
                     </a>
                 {% endif %}
                 {% if banner_image_3 != blank %}
-                    {% assign img_url = banner_image_3 | img_url: '270x' %}
-                    {% assign img_url_2 = banner_image_3 | img_url: '270x' %}
+                    {% assign img_url = banner_image_3 | image_url: width: 270 %}
+                    {% assign img_url_2 = banner_image_3 | image_url: width: 270 %}
                     <a href="{{ link_banner_image_3 }}" class="">
-                        <img class="dropdown-megamenu__img lazyload" 
+                        <img class="dropdown-megamenu__img lazyload"
                         data-srcset="{{ img_url_2 }} 180w, {{ img_url }} 1025w"
+                        width="{{ banner_image_3.width }}" height="{{ banner_image_3.height }}"
                         data-sizes="auto" alt="" data-image>
                     </a>
                 {% else %}

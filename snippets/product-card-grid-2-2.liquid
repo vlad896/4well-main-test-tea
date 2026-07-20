@@ -3,8 +3,9 @@
     <div class="product-card__image">
         <a class="product-card__link" href="{{ product.url | within: collection }}" aria-label="link">
             <img class="product-card__img lazyload"
-                data-srcset="{{ product.featured_image | img_url: '80x' }}"
-                data-sizes="auto" alt="{{ product.featured_image.alt }}" data-image>
+                width="{{ product.featured_image.width }}" height="{{ product.featured_image.height }}"
+                data-srcset="{{ product.featured_image | image_url: width: 80 }}"
+                data-sizes="auto" alt="{{ product.featured_image.alt | default: product.title | escape }}" data-image>
         </a>
     </div>
     <div class="product-card__content">
