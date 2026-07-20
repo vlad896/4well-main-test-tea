@@ -1,0 +1,18 @@
+{% render 'breadcrumb', breadcrumb_top: true %}
+<div class="page page-productDetail">
+    <div class="container">
+        {% section 'product-template' %}
+        {% section 'product-policies' %}
+        {% section 'frequently-by-together' %}
+        <div class="product-tab-container">
+            <div class="product-tab__item">
+                {% section 'product-tab-horizontal' %}
+            </div>
+        </div>
+    </div>
+    {% section 'product-custom-block' %}
+    <div class="container">
+        {% section 'product-recommendations' %}
+        {% section 'recently-viewed-products' %}
+    </div>
+</div>

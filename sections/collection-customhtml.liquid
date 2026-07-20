@@ -1,0 +1,57 @@
+{% assign des = '' %}
+{% if section.settings.description_type == 'none' %}
+{% if section.settings.text_description != blank %}
+{% assign des = section.settings.text_description %}
+{% endif %}
+{% else %}
+{% if collection.description != blank %}
+{% assign des = collection.description %}
+{% endif %}
+{% endif %}
+{% if des != '' and section.settings.enable_description %}
+<div id="collection-des" class="padding-bottom-50" data-section-id="{{ section.id }}" data-section-type="collection-customhtml">
+    <div class="description-wrapper collapse" id="collapseSummary">
+        {{des}}
+    </div>
+</div>
+{% endif %}
+
+{% schema %}
+{
+    "name": "Collection Custom Html",
+    "class": "page-content",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Description bottom"
+        },
+        {
+            "type": "checkbox",
+            "id": "enable_description",
+            "label": "Enable description",
+            "default": true
+        },
+        {
+            "type": "radio",
+            "id": "description_type",
+            "label": "Using different description for collection by following",
+            "default": "none",
+            "options": [
+                {
+                    "value": "none",
+                    "label": "All Collection"
+                },
+                {
+                    "value": "different",
+                    "label": "Each of description for each of Collection"
+                }
+            ]
+        },
+        {
+            "type": "richtext",
+            "id": "text_description",
+            "label": "Content"
+        }
+    ]
+}
+{% endschema %}

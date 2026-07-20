@@ -1,0 +1,93 @@
+<!doctype html>
+<html class="no-js" lang="{{ shop.locale }}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0,user-scalable=0, shrink-to-fit=no">
+    <meta name="theme-color" content="{{ settings.color_button }}">
+    <meta name="Description" content="Tea and Coffee Shopify theme developed by HaloTheme">
+    <link rel="canonical" href="{{ canonical_url }}">
+
+    <link rel="preconnect" href="//fonts.shopifycdn.com/" crossorigin>
+    <link rel="preconnect" href="//cdn.shopify.com/" crossorigin>
+    <link rel="preconnect" href="//ajax.googleapis.com" crossorigin>
+    <link rel="dns-prefetch" href="//{{shop.domain}}" crossorigin>
+    <link rel="dns-prefetch" href="//{{shop.permanent_domain}}" crossorigin>
+    <link rel="dns-prefetch" href="//cdn.shopify.com" crossorigin>
+    <link rel="dns-prefetch" href="//fonts.shopifycdn.com" crossorigin>
+    <link rel="dns-prefetch" href="//ajax.googleapis.com" crossorigin>
+
+    {%- if settings.favicon != blank -%}
+        <link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png">
+    {%- endif -%}
+
+    {%- capture seo_title -%}
+        {%- if request.page_type == 'search' and search.performed == true -%}
+            {{ 'general.search.heading' | t: count: search.results_count }}: {{ 'general.search.results_with_count' | t: terms: search.terms, count: search.results_count }}
+        {%- else -%}
+            {{ page_title }}
+        {%- endif -%}
+        {%- if current_tags -%}
+            {%- assign meta_tags = current_tags | join: ', ' -%} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags -}}
+        {%- endif -%}
+        {%- if current_page != 1 -%}
+            &ndash; {{ 'general.meta.page' | t: page: current_page }}
+        {%- endif -%}
+        {%- assign escaped_page_title = page_title | escape -%}
+        {%- unless escaped_page_title contains shop.name -%}
+            &ndash; {{ shop.name }}
+        {%- endunless -%}
+    {%- endcapture -%}
+    <title>{{ seo_title | strip }}</title>
+
+    {%- if page_description -%}
+        <meta name="description" content="{{ page_description | escape }}">
+    {%- endif -%}
+
+    {% render 'social-meta-tags' %}
+
+    {% render 'head-script' %}
+
+    {{ content_for_header }}
+    {% if template contains 'product' %}
+    <script nomodule src="https://unpkg.com/@google/model-viewer/dist/model-viewer-legacy.js"></script>
+    {% endif %}
+</head>
+
+<body class="template-{{ request.page_type | handle }} {% unless template contains 'index' or template contains 'collection' or template.suffix == 'about-us' %}has-shadow{% endunless %}">
+    <svg data-src="{{ 'icon-themes.svg' | asset_url }}" class="icons-svg-sprite"></svg>
+
+    {% section 'header' %}
+
+    <div class="page-container" id="PageContainer">
+        <main class="main-content js-focus-hidden" id="MainContent" role="main" tabindex="-1">
+            {{ content_for_layout }}
+            <div class="clearfix"></div>
+        </main>
+    </div>
+    {% section 'footer' %}
+    {% render 'modal-popup' %}
+    {% if settings.enable_btt %}
+    <div id="back-top">
+        <div class="bottom backtoTop">
+            <svg class="icon"><use xlink:href="#icon-chevron-up"></use></svg>
+        </div>
+    </div>
+    {% endif %}
+
+    <script src="{{ 'vendor.min.js' | asset_url }}" defer="defer"></script>
+    <script src="{{ 'lazysizes.js' | asset_url }}" async="async"></script>
+    <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
+
+    {% render 'recently-viewed-product-popup'%}
+    {% if settings.enable_language %}
+        {% render 'language-converter' %}
+    {% endif %}
+    {% if settings.enable_ask_an_expert %}
+        {% render 'ask-an-expert-popup' %}
+    {% endif %}
+
+    {% render 'new-currency' %}
+
+</body>
+</html>

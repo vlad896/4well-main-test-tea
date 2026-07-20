@@ -1,0 +1,19 @@
+<div class="container">
+    <div class="page page-404">
+        <div class="empty-page-content text-center">
+            <h1 class="page-404">404</h1>
+            <h2 class="page-heading">{{ 'general.404.title' | t }}</h1>
+            <p class="description">
+                {{ 'general.404.subtext' | t }}
+            </p>
+
+            <div class="button-group">
+                <a {% if settings.redirect_button == 'go_back' %}
+                    href="javascript:void(0)" onclick="window.history.back();"
+                    {% else %} href="{{ settings.link_to_redirect }}"{% endif %} class="btn btn--large btn--primary">
+                    {{ 'general.404.link' | t }}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

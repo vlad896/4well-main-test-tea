@@ -1,0 +1,105 @@
+{% assign img_url = product.featured_image | img_url: '270x' %}
+{% assign img_url_2 = product.featured_image | img_url: '220x' %}
+{% assign img_url_3 = product.images[1].src | img_url: '270x' %}
+
+
+{% assign show_product_wishlist = show_product_wishlist | default: settings.show_product_wishlist %}
+{% assign show_product_vendor = show_product_vendor | default: settings.show_product_vendor %}
+{% assign show_product_title = show_product_title | default: settings.show_product_title %}
+{% assign show_product_reviews = show_product_reviews | default: settings.show_product_reviews %}
+{% assign show_product_price = show_product_price | default: settings.show_product_price %}
+{% assign show_product_variant = show_product_variant | default: settings.show_product_variant %}
+{% assign show_product_button = show_product_button | default: settings.show_product_button %}
+{% assign show_product_switch_image = show_product_switch_image | default: settings.show_product_switch_image %}
+
+<div class="product-card product-card--4 text-left{% unless product.available %} product-card--sold-out{% endunless %}">
+    <div class="product-card__image">
+        {% render 'product-badges' with product as product, serial: serial %}
+        <a class="product-card__link{% if show_product_switch_image and product.images.size > 1 %} product-card__switchImage{% endif %}" href="{{ product.url | within: collection }}" aria-label="link">
+            <img class="product-card__img lazyload"
+                data-srcset="{{ img_url }} 1025w"
+                data-sizes="auto" alt="" data-image>
+            {% if show_product_switch_image and product.images.size > 1 %}
+                <img class="product-card__img product-card__img--2 lazyload"
+                data-srcset="{{ img_url_3 }} 1025w"
+                data-sizes="auto" alt="" data-image>
+            {% endif %}
+        </a>
+
+        {% if show_product_wishlist %} 
+        <div class="product-card_wishlist_quickview">
+            <a class="product-card_wishlist" aria-label="wishlist" href="javascript:void(0)" data-wishlist data-product-handle="{{ product.handle }}" data-id="{{ product.id }}"><span class="text">{{ 'general.wishlist.add_to_wishlist' | t }}</span><svg class="icon"><use xlink:href="#icon-heart" /></svg>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+    <div class="product-card__content--wrapper">
+        <div class="product-card__content">
+            {% if show_product_vendor %}
+                <div class="product-card__vendor">
+                    {{ product.vendor | link_to_vendor }}
+                </div>
+            {% endif %}
+            {% if show_product_title %}
+                <h4 class="product-card__title">
+                    <a href="{{ product.url | within: collection }}" aria-label="title">{{ product.title }}</a>
+                </h4>
+            {% endif %}
+            {% if show_product_price %}
+                <div class="product-card__price {% if product.compare_at_price > product.price %}price--on-sale{% endif %}" data-price>
+                    {% if product.compare_at_price > product.price %}
+                        <span class="price-item price-item--regular" data-regular-price>
+                            {{ product.compare_at_price | money }}
+                        </span>
+                        <span class="price-item price-item--sale" data-sale-price>
+                            {% if product.price_varies %}
+                                <em>{{ 'products.product.from_text_html' | t }}</em>
+                            {% endif %}
+                            {{ product.price | money }}
+                        </span>
+                    {% else %}
+                        <span class="price-item price-item--regular" data-regular-price>
+                            {% if product.price_varies %}
+                                <em>{{ 'products.product.from_text_html' | t }}</em>
+                            {% endif %}
+                            {{ product.price | money }}
+                        </span>
+                        <span class="price-item price-item--sale" data-sale-price></span>
+                    {% endif %}
+
+                    {% if compare %}
+                        {% render 'product-compare',  id: product.id, link: product.handle %}
+                    {% endif %}
+                </div>
+            {% endif %}
+            {% render 'product-variant-color', product: product, show_product_variant: show_product_variant %}
+            {% if product.available %}
+                {% if product.options_with_values.size <= 1 %}
+                    <div class="product-card__error-message product-form__error-message-wrapper product-form__error-message-wrapper--hidden"
+                    data-error-message-wrapper role="alert">
+                        <span class="visually-hidden">{{ 'general.accessibility.error' | t }} </span>
+                        <svg class="icon"><use xlink:href="#icon-error" /></svg>
+                        <span class="product-form__error-message" data-error-message>{{ 'products.product.quantity_minimum_message' | t }}</span>
+                    </div>
+                {% endif %}
+            {% endif %}
+            <div class="product-card__button--wrapper">
+                {% if show_product_button %}
+                    <div class="product-card__button">
+                        {% if product.available %}
+                            <a class="product-card__btn--plus" href="{{ product.url | within: collection }}" aria-label="button">
+                                <span>{{ 'products.product.detail' | t }}</span>
+                                <span class="line-icon"></span>
+                            </a>
+                        {% else %}
+                            <button class="product-card__btn-soldOut" type="submit" disabled="disabled">
+                                {{ 'products.product.unavailable' | t }}
+                            </button>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+    </div>
+</div>

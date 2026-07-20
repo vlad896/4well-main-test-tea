@@ -1,0 +1,148 @@
+{% if settings.enable-search-form %}
+<div class="search-form-wrapper text-left" data-ajax-search>
+    <!-- <div class="search-form--close" data-search-close-popup>&#215;</div> -->
+    <div class="search-form">
+        <form action="{{ routes.search_url }}" method="get" class="input-group search-bar" role="search">
+            <input type="hidden" name="type" value="product">
+            <input type="text" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.placeholder' | t }}" class="input-group-field search-form__input" aria-label="Search Site" autocomplete="off">
+            <button type="submit" class="btn-search icon-search" title="search">
+                <svg class="icon"><use xlink:href="#icon-search" /></svg>
+            </button>
+        </form>
+        <div class="search-form__results">
+            <div class="search-form__results-wrapper">
+                {% if settings.enable-search-products %}
+                    <div class="search-form__product search-form__product--1 search-column">
+                        <h3 class="search-form__product-title text-left">
+                            {{ settings.search-products-title }}
+                        </h3>
+                        <a class="link" href="{{ collections[settings.search-products-list].url }}">{{ settings.link_search-title }}</a>
+                        <div class="search-form__products">
+                            <div class="halo-row column-3">
+                                {% for product in collections[settings.search-products-list].products limit:settings.popular_products_limit %}
+                                    <div class="halo-row__item">
+                                        {% render 'product-card-grid-3' with product as product %}
+                                    </div>
+                                {% endfor %}
+                            </div>                    
+                        </div>
+                    </div>
+                {% endif %}
+                {% if settings.enable-search-trending %}
+                    <div class="search-form__trending text-left search-column">
+                        <h3 class="search-form__trending-title">
+                            {{ settings.search-trending-title }}
+                        </h3>
+                        <ul class="search-form__list-tags">
+                            {% for i in (1..10) %}
+                                {% capture item %}search-trending-item-{{i}}{% endcapture %}
+                                {% if settings[item] != blank %}
+                                    {% assign handle_1 = settings[item] | handleize %}
+                                    <li class="search-form__tag-item">
+                                        <a href="{{ routes.search_url }}?type=product&amp;q={{handle_1}}" class="highlight">
+                                            <svg class="icon"><use xlink:href="#icon-search" /></svg>
+                                            {{ settings[item] }}
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+                <div class="search-form__ajax"></div>          
+            </div>
+        </div>
+    </div>
+    {% capture search %}
+        {% raw %}{{#if is_loading}}{% endraw %}
+        <div class="search-form__product text-center">
+            <div class="search-form__spinner">
+                <img src="{{ 'loading.svg' | asset_url }}" alt="">
+            </div>
+        </div>
+
+        {% raw %}{{else}}{% endraw %}
+        {% raw %}{{#if is_show}}{% endraw %}
+        <div class="search-form__product search-form__product--2">
+            {% raw %}
+                {{#if has_results}}
+                    <h3 class="search-form__product-title text-left">
+                        <a href="{{results_url}}" class="text-results search-form__see-more" data-results-count="{{results_count}}">
+                            <span class="text">{{results_label}}</span> <span>({{results_count}})</span>
+                        </a>
+                    </h3>
+
+                    <div class="search-form__products">
+                        <div class="halo-row column-5">
+                            {{#each results}}
+                            <div class="halo-row__item">
+                                <div class="product-card product-card--3 text-left">
+                                    <div class="product-card__image">
+                                        <a href="{{url}}" class="product-card__link">
+                                            <img src="{{image}}" alt="{{image_alt}}">                                               
+                                        </a>
+                                    </div>
+                                    <div class="product-card__content">
+                                        {% endraw %}{% if settings.show_product_vendor %}{% raw %}
+                                            <div class="product-vendor">{{vendor}}</div>
+                                        {% endraw %}{% endif %}{% raw %}
+                                        {% endraw %}{% if settings.show_product_title %}{% raw %}
+                                            <h4 class="product-card__title">
+                                                <a href="{{url}}" aria-label="title">{{title}}</a>
+                                            </h4>
+                                        {% endraw %}{% endif %}{% raw %}
+                                        {% endraw %}{% if settings.show_product_price %}{% raw %}
+                                            {{#if on_sale}}
+                                                <div class="product-card__price price--on-sale">
+                                                    <span class="price-item price-item--regular" data-regular-price>
+                                                        {{ compare_at_price }}
+                                                    </span>
+                                                    <span class="price-item price-item--sale">
+                                                        {{ price }}
+                                                    </span>
+                                                </div>
+                                            {{else}}
+                                                <div class="product-card__price">
+                                                    <span class="price-item price-item--regular" data-regular-price>
+                                                        {{ price }}
+                                                    </span>
+                                                    <span class="price-item price-item--sale" data-sale-price></span>
+                                                </div>
+                                            {{/if}}
+                                        {% endraw %}{% endif %}{% raw %}
+                                        {% endraw %}{% if settings.show_product_button %}{% raw %}
+                                            <a class="product-card__btn--plus" href="{{url}}" title="{{title}}" aria-label="button">
+                                                <span>{% endraw %}{{ 'products.product.detail' | t }}{% raw %}</span>
+                                            </a>
+                                        {% endraw %}{% endif %}{% raw %}
+                                    </div>
+                                </div>
+                            </div>
+                            {{/each}}
+                        </div>              
+                    </div>
+                {{else}}
+                    <p class="search-form__no-product text-center">{{ results_label }}</p>
+                {{/if}}
+            {% endraw %}
+        </div>
+        {% raw %}{{/if}}{% endraw %}
+        {% raw %}{{/if}}{% endraw %}
+    {% endcapture %} 
+    <script id="search-results-template" type="text/template7">
+        {{search}}
+    </script>
+</div>
+{% else %}
+<div class="search-form-wrapper text-left">
+    <div class="search-form">
+        <form action="{{ routes.search_url }}" method="get" class="input-group search-bar" role="search">
+            <input type="hidden" name="type" value="product">
+            <input type="text" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.placeholder' | t }}" class="input-group-field search-form__input" aria-label="Search Site" autocomplete="off">
+            <button type="submit" class="btn-search icon-search" title="search">
+                <svg class="icon"><use xlink:href="#icon-search" /></svg>
+            </button>
+        </form>
+    </div>
+</div>
+{% endif %}

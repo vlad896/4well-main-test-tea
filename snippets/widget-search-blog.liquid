@@ -1,0 +1,19 @@
+{% if block.settings.enable_search %}
+    <div class="sidebarBlock search">
+        {% if block.settings.title != blank %}
+        <h3 class="sidebarBlock__heading">
+            <svg class="icon icon-dropdown"><use xlink:href="#icon-chevron-up" /></svg>
+            {{ block.settings.title }}
+        </h3>
+        {% endif %}
+        <div class="sidebarBlock__content">
+            <form action="{{ routes.search_url }}" method="get" class="widget-form" role="search">
+                <input type="hidden" name="type" value="article">
+                <input type="text" name="q" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.blog_placeholder' | t }}" class="widget-form__input" aria-label="Search Site" autocomplete="off">
+                <button type="submit" class="btn widget-form__btn">
+                    <svg class="icon"><use xlink:href="#icon-search" /></svg>
+                </button>
+            </form>
+        </div>
+    </div>
+{% endif %}

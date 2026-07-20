@@ -1,0 +1,533 @@
+{%- liquid
+    assign arrows = arrows | default: section.settings.show_arrows
+    assign dots = dots | default: section.settings.show_dots
+    assign fadein = fadein | default: section.settings.show_fadein
+    assign autoplay = autoplay | default: section.settings.autoplay
+    assign time = time | default: section.settings.autorotate_speed | times: 1000
+-%}
+
+
+{% if section.settings.custom_color %}
+<style>
+    [data-section-id='{{ section.id }}'] .slideshow__subheading {
+        color: {{ section.settings.color_subheading }}
+    }
+
+    [data-section-id='{{ section.id }}'] .slideshow__heading {
+        color: {{ section.settings.color_heading }}
+    }
+
+    [data-section-id='{{ section.id }}'] .slideshow__text {
+        color: {{ section.settings.color_text }}
+    }
+
+    [data-section-id='{{ section.id }}'] .slideshow__button {
+        color: {{ section.settings.color_button_text }} !important;
+        border-color: {{ section.settings.color_button_border }} !important;
+        background-color: {{ section.settings.color_button_bg }} !important;
+    }
+
+    [data-section-id='{{ section.id }}'] .slideshow__button:hover {
+        filter: brightness(85%) !important;
+    }
+
+
+    [data-section-id='{{ section.id }}'] .slideshow .slick-arrow svg {
+        color: {{ section.settings.color_arrow }} !important;
+        fill: {{ section.settings.color_arrow }} !important;
+        stroke: {{ section.settings.color_arrow }} !important;
+    }
+
+    [data-section-id='{{ section.id }}'] .slideshow .slick-dots li button {
+        opacity: 0.5;
+        background-color: {{ section.settings.color_dot }};
+    }
+</style>
+{% endif %}
+
+<div class="slideshow-wrapper" data-section-id="{{ section.id }}" data-section-type="slideshow">
+    {% if section.settings.layout == 'fixed_width' %}
+        <div class="container">
+    {% else %}
+        <div class="container-fluid">
+    {% endif %}
+        <div class="slideshow slideshow--{{ section.settings.slide_height }} overlay--{{ section.settings.overlay }}"
+            {% if section.blocks.size > 1 %}
+                data-slick-auto data-slick='{
+                    "rtl": false,
+                    "rows": 0,
+                    "dots": true,
+                    "arrows": false,
+                    "fade": {{ fadein }},
+                    "autoplay": {{ autoplay }},
+                    "autoplaySpeed": {{ time }},
+                    "infinite": true,
+                    "adaptiveHeight": true,
+                    "slidesToScroll": 1,
+                    "mobileFirst": true,
+                    "lazyLoad": "ondemand",
+                    "prevArrow": "<div class=&apos;slick-prev slick-arrow slick-arrow--large&apos;><svg class=&apos;icon&apos;><use xlink:href=&apos;#icon-chevron-left&apos; /></svg></div>", 
+                    "nextArrow": "<div class=&apos;slick-next slick-arrow slick-arrow--large&apos;><svg class=&apos;icon&apos;><use xlink:href=&apos;#icon-chevron-right&apos; /></svg></div>",
+                    "responsive": [
+                        {
+                            "breakpoint": 1100,
+                            "settings": {
+                                "dots": {{ dots }},
+                                "arrows": {{ arrows }}
+                            }
+                        }
+                    ]
+                }'
+            {% endif %}>
+            {% for block in section.blocks %}
+                {% assign img_url = block.settings.slide_image | img_url: 'master' %}
+                <div class="slideshow__item">
+                    {% if block.type == 'image'%}
+                        <div class="slideshow__image{% if block.settings.slide_image_mobile != blank %} slideshow__image--mobile{% endif %}">
+                            {% if block.settings.slide_image == blank %}
+                                <div class="placeholder-background">
+                                    {% if section.settings.slide_height == 'large' %}
+                                        <span class="recommended_size">1920x900</span>
+                                    {% elsif section.settings.slide_height == 'medium' %}
+                                        <span class="recommended_size">1920x720</span>
+                                    {% elsif section.settings.slide_height == 'small' %}
+                                        <span class="recommended_size">1920x500</span>
+                                    {% endif %}
+                                    {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                                </div>
+                            {% else %}
+                                {% if forloop.index == 1 %}
+                                    {% if block.settings.slide_image_mobile != blank %}
+                                        <img class="slideshow__image--backgroundMobile" srcset="{{ block.settings.slide_image_mobile | img_url: 'master' }}" alt="">
+                                    {% endif %} 
+                                    <img class="{% if section.settings.slide_height != 'normal' %}slideshow__image--background{% endif %}" srcset="{{ img_url }}" data-sizes="auto" alt="">
+                                {% else %}
+                                    {% if block.settings.slide_image_mobile != blank %}
+                                        <img class="slideshow__image--backgroundMobile lazyload" data-srcset="{{ block.settings.slide_image_mobile | img_url: 'master' }}" alt="" data-image>
+                                    {% endif %}
+                                    <img class="{% if section.settings.slide_height != 'normal' %}slideshow__image--background{% endif %} lazyload" data-srcset="{{ img_url }}" data-sizes="auto" alt="" data-image>
+                                {% endif %}
+                            {% endif %}
+                            {% if block.settings.link != blank %}<a href="{{ block.settings.link }}" aria-label="link"></a>{% endif %}
+                        </div>
+                    {% else %}
+                        {% if block.settings.video_link != blank %}
+                            <div class="slideshow__image slideshow__video youtube" id="slideshow-{{ block.id }}">
+                                <div class="slideshow__video--wrapper">
+                                    <div data-youtube="{{ block.settings.video_link }}"></div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        {% if block.settings.video_mp4_link != blank %}
+                            <div class="slideshow__image slideshow__video mp4" id="slideshow-{{ block.id }}">
+                                <div class="slideshow__video--wrapper">
+                                    <video class="video" muted playsinline preload="none" autoplay loop>
+                                        <source type="video/mp4" src="{{ block.settings.video_mp4_link }}">
+                                    </video>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                    {% if block.settings.slide_heading != blank or block.settings.slide_des != blank or block.settings.slide_button != blank %}
+                        <div class="slideshow__content content--{{ block.settings.alignment }} {% if block.settings.custom_position %}content-position-{{block.settings.position}}{% endif %}">
+                            {% if block.settings.sub_title != blank %}
+                                <h5 class="slideshow__subheading animated">
+                                    {{ block.settings.sub_title }}
+                                </h5>
+                            {% endif %}
+
+                            {% if block.settings.slide_heading != blank %}
+                                <h2 class="slideshow__heading animated mega-title--{{ section.settings.text_size }}">
+                                    {{ block.settings.slide_heading }}
+                                </h2>
+                            {% endif %}
+                            
+                            {% if block.settings.slide_des != blank %}
+                                <p class="slideshow__text animated">
+                                    {{ block.settings.slide_des }}
+                                </p>
+                            {% endif %}
+
+                            {% if block.settings.countdown != blank %}
+                                <div class="slideshow__countdownWrapper animated"><div class="slideshow__countdown" data-countdown="{{ block.settings.countdown }}"></div></div>
+                            {% endif %}
+
+                            {% if block.settings.slide_button != blank %}
+                                <a href="{{ block.settings.link }}" class="slideshow__button btn {% if block.settings.button_style == 'style_1' %}btn--slideshow{% else %}btn--secondary{% endif %} animated" aria-label="link">
+                                    {{ block.settings.slide_button }}
+                                </a>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% schema %}
+    {
+        "name": "Slideshow",
+        "max_blocks": 9,
+        "settings": [
+            {
+                "type": "header",
+                "content": "General"
+            },
+            {
+                "type": "select",
+                "id": "layout",
+                "label": "Layout",
+                "default": "fixed_width",
+                "options": [
+                    {
+                        "label": "Full width",
+                        "value": "full_width"
+                    },
+                    {
+                        "label": "Fixed width",
+                        "value": "fixed_width"
+                    }
+                ]
+            },
+            {
+                "type": "select",
+                "id": "slide_height",
+                "label": "Slide Height",
+                "default": "medium",
+                "options": [
+                    {
+                        "label": "Normal",
+                        "value": "normal"
+                    },
+                    {
+                        "label": "Small",
+                        "value": "small"
+                    },
+                    {
+                        "label": "Medium",
+                        "value": "medium"
+                    },
+                    {
+                        "label": "Large",
+                        "value": "large"
+                    }
+                ]
+            },
+            {
+                "type": "select",
+                "id": "text_size",
+                "label": "Text size",
+                "default": "large",
+                "options": [
+                    {
+                        "label": "Small",
+                        "value": "small"
+                    },
+                    {
+                        "label": "Medium",
+                        "value": "medium"
+                    },
+                    {
+                        "label": "Large",
+                        "value": "large"
+                    }
+                ]
+            },
+            {
+                "type": "select",
+                "id": "overlay",
+                "label": "Overlays",
+                "default": "dark",
+                "options": [
+                    {
+                        "label": "Dark",
+                        "value": "dark"
+                    },
+                    {
+                        "label": "Light",
+                        "value": "light"
+                    }
+                ]
+            },
+            {
+                "type": "checkbox",
+                "id": "show_arrows",
+                "label": "Show Arrows",
+                "default": true
+            },
+            {
+                "type": "checkbox",
+                "id": "show_dots",
+                "label": "Show dots",
+                "default": true
+            },
+            {
+                "type": "checkbox",
+                "id": "show_fadein",
+                "label": "Effect Fade In",
+                "default": false
+            },
+            {
+                "type": "checkbox",
+                "id": "autoplay",
+                "label": "Slideshow Auto Play",
+                "default": true
+            },
+            {
+                "type": "range",
+                "id": "autorotate_speed",
+                "label": "Change slides every",
+                "max": 9,
+                "min": 3,
+                "step": 1,
+                "unit": "s",
+                "default": 5
+            },
+            {
+                "type": "header",
+                "content": "Custom Color"
+            },
+            {
+                "type": "checkbox",
+                "id": "custom_color",
+                "label": "Turn on custom color",
+                "default": false
+            },
+            {
+                "type": "color",
+                "id": "color_subheading",
+                "label": "Sub Heading Color"
+            },
+            {
+                "type": "color",
+                "id": "color_heading",
+                "label": "Heading Color"
+            },
+            {
+                "type": "color",
+                "id": "color_text",
+                "label": "Description Color"
+            },
+            {
+                "type": "color",
+                "id": "color_button_text",
+                "label": "Button Text Color"
+            },
+            {
+                "type": "color",
+                "id": "color_button_border",
+                "label": "Button Border Color"
+            },
+            {
+                "type": "color",
+                "id": "color_button_bg",
+                "label": "Button Background Color"
+            },
+            {
+                "type": "color",
+                "id": "color_arrow",
+                "label": "Button Arrows Color"
+            },
+            {
+                "type": "color",
+                "id": "color_dot",
+                "label": "Button Dots Color"
+            }
+        ],
+        "blocks" : [
+            {
+                "type": "image",
+                "name": "Image SlideShow",
+                "settings":[
+                    {
+                        "type": "header",
+                        "content": "Image"
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "slide_image",
+                        "label" : "Image"
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "slide_image_mobile",
+                        "label": "Image For Mobile",
+                        "info": "Use image for mobile to load pages faster"
+                    },
+                    {
+                        "type": "header",
+                        "content": "Content"
+                    },
+                    {
+                        "type": "select",
+                        "id": "alignment",
+                        "label": "Text alignment",
+                        "default": "left",
+                        "options": [
+                        {
+                            "value": "left",
+                            "label": "Left"
+                        },
+                        {
+                            "value": "middle",
+                            "label": "Center"
+                        },
+                        {
+                            "value": "right",
+                            "label": "Right"
+                        }
+                        ]
+                    },
+                    {
+                        "type": "checkbox",
+                        "id": "custom_position",
+                        "label": "Enable Custom Position Content (Left to Right)"
+                    },
+                    {
+                        "type":      "range",
+                        "id":        "position",
+                        "min":       0,
+                        "max":        100,
+                        "step":       10,
+                        "unit":       "%",
+                        "label":     "Position",
+                        "default":   0
+                    },
+                    {
+                        "type": "text",
+                        "id": "sub_title",
+                        "label": "Sub Heading"
+                    },
+                    {
+                        "type" : "text",
+                        "id" : "slide_heading",
+                        "label" : "Heading",
+                        "default" : "Slideshow Heading"
+                    },
+                    {
+                        "type": "text",
+                        "id": "countdown",
+                        "label": "Time Countdown",
+                        "info": "2020/12/12 0:0:00"
+                    },
+                    {
+                        "type" : "textarea",
+                        "id" : "slide_des",
+                        "label" : "Slide Description",
+                        "default": "Use overlay text to give your customers insight into your brand. Select image and text that relates to your style and story."
+                    },
+                    {
+                        "type" : "text",
+                        "id" : "slide_button",
+                        "label" : "Button Text",
+                        "default" : "Shop The Collection"
+                    },
+                    {
+                        "type" : "url",
+                        "id" : "link",
+                        "label" : "Button Link"
+                    },
+                    {
+                        "type": "select",
+                        "id": "button_style",
+                        "label": "Button style",
+                        "default": "style_1",
+                        "options": [
+                        {
+                            "value": "style_1",
+                            "label": "Style 1"
+                        },
+                        {
+                            "value": "style_2",
+                            "label": "Style 2"
+                        }]
+                    }
+                ]
+            },
+            {
+                "type": "video",
+                "name": "Video Slider",
+                "settings": [
+                    {
+                        "type": "header",
+                        "content": "Youtube"
+                    },
+                    {
+                        "type": "text",
+                        "id": "video_link",
+                        "label": "YouTube video ID",
+                        "default": "eTCtDW7O1aM",
+                        "info": "[Find your YouTube video ID](https://docs.joeworkman.net/rapidweaver/stacks/youtube/video-id)."
+                    },
+                    {
+                        "type": "header",
+                        "content": "MP4"
+                    },
+                    {
+                        "type": "text",
+                        "id": "video_mp4_link",
+                        "label": "Video link",
+                        "info": "just choose one option: YouTube or MP4"
+                    },
+                    {
+                        "type": "header",
+                        "content": "Content"
+                    },
+                    {
+                        "type": "select",
+                        "id": "alignment",
+                        "label": "Text alignment",
+                        "default": "left",
+                        "options": [
+                        {
+                            "value": "left",
+                            "label": "Left"
+                        },
+                        {
+                            "value": "middle",
+                            "label": "Center"
+                        },
+                        {
+                            "value": "right",
+                            "label": "Right"
+                        }
+                        ]
+                    },
+                    {
+                        "type" : "text",
+                        "id" : "slide_heading",
+                        "label" : "Heading",
+                        "default" : "Slideshow Heading"
+                    },
+                    {
+                        "type" : "textarea",
+                        "id" : "slide_des",
+                        "label" : "Slide Description",
+                        "default": "Use overlay text to give your customers insight into your brand. Select image and text that relates to your style and story."
+                    },
+                    {
+                        "type" : "text",
+                        "id" : "slide_button",
+                        "label" : "Button Text",
+                        "default" : "Shop The Collection"
+                    },
+                    {
+                        "type" : "url",
+                        "id" : "link",
+                        "label" : "Slide link"
+                    }
+                ]
+            }
+        ],
+        "presets": [{
+            "name": "Slideshow",
+            "category": "Slideshow",
+            "blocks": [
+                {
+                    "type": "image"
+                }
+            ]
+        }]
+    }
+{% endschema %}

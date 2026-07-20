@@ -1,0 +1,42 @@
+<div class="sidebarBlock">
+    {% if block.settings.title != blank %}
+    <h3 class="sidebarBlock__heading">
+        {{ block.settings.title }}
+        {% if block.settings.enable_button and block.settings.button_text != blank %}
+            <a href="{{ collections[block.settings.collection].url }}">{{ block.settings.button_text }}</a>
+        {% endif %}
+    </h3>
+    {% endif %}
+    <div class="sidebarBlock__content sidebarBlock__content-product">
+        {% if block.settings.collection != blank %}
+            <div class="widget-column column-1">
+                {% for product in collections[block.settings.collection].products limit : block.settings.number %}
+                    <div class="widget-column__item">
+                        {% render 'product-card-grid-2-2', product : product %}
+                    </div>
+                {% else %}
+                    {% for i in (1..6) %}
+                        <div class="widget-column__item">
+                            <div class="product-card product-card--2 text-left">
+                                <div class="product-card__image">
+                                    <a class="product-card__link" href="#">
+                                        {{ 'product-1' |  placeholder_svg_tag: 'placeholder-svg' }}
+                                    </a>
+                                </div>
+                                <div class="product-card__content">
+                                    <h4 class="product-card__title">{{ 'homepage.onboarding.product_title' | t }}</h4>
+                                    {% assign price = 1999 %}
+                                    <div class="product-card__price" data-price>
+                                        <span class="price-item price-item--regular" data-regular-price>
+                                            {{ price | money }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</div>

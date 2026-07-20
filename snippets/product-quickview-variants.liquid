@@ -1,0 +1,101 @@
+{% unless product.has_only_default_variant %}
+    {% for option in product.options_with_values %}
+        {% assign option_name = option.name | downcase %}
+        {% assign option_color_swatch = settings.option_color_swatch | downcase %}
+        {% if settings.option_swatch %}
+            {% if option_color_swatch contains option_name %}
+                <div class="selector-wrapper selector-wrapper-{{forloop.index}} swatch js product-form__item" data-option-index={{forloop.index}}>
+                    <label class="form-label {% if option.name == 'default' %}label--hidden{% endif %}">
+                        {{ option.name }} * <span class="label-value-{{ forloop.index }}">{{ option.selected_value }}</span>
+                    </label>
+                    {% assign option_index0 = forloop.index0 %}
+                    {% assign option_index = forloop.index %}
+                    {% assign values = '' %}
+                    {% for variant in product.variants %}
+                        {% assign value = variant.options[option_index0] %}
+                        {% unless values contains value %}
+                            {% assign values = values | join: ';' %}
+                            {% assign values = values | append: ';' | append: value %}
+                            {% assign values = values | split: ';' %}
+                            {% assign value_2 = value | remove: " " | downcase %}
+                            <div class="swatch-element color {{ value_2 }}{% if variant.available %} available{% else %} soldout{% endif %}" data-value="{{ value }}">
+                                <input class="single-option-selector single-option-selector-quick single-option-selector-{{ product.id }}" type="radio" name="SingleOptionSelector-{{ option_index0 }}" data-index="option{{ option_index }}" value="{{ value | escape }}" {% if option.selected_value == value %} checked="checked"{% endif %} id="SingleOptionSelector{{ option_index0 }}-{{ value }}-{{ product.id }}">
+                                <label data-toggle="tooltip" data-placement="top" title="{{ value }}" for="SingleOptionSelector{{ option_index0 }}-{{ value }}-{{ product.id }}" 
+                                {% if variant.image != blank %}
+                                    data-imge="{{ variant.image.src | product_img_url: 'compact' }}" 
+                                {% endif %}
+                                {% if variant.image != blank and settings.show_product_variant_img == 'variant' %} 
+                                    style="background-image: url({{ variant.image.src | product_img_url: 'compact' }})"
+                                {% else %} 
+                                    style="background-color: {{ value_2 }}; {% if settings.show_product_color_img %}background-image: url({{ value_2 | handle | append: '.png' | file_url }}){% endif %}"
+                                {% endif %}>
+                                    {{ value }}
+                                </label>
+                            </div>
+                        {% endunless %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="selector-wrapper selector-wrapper-{{forloop.index}} swatch js product-form__item" data-option-index={{forloop.index}}>
+                    <label class="form-label {% if option.name == 'default' %}label--hidden{% endif %}">
+                        {{ option.name }} * <span class="label-value-{{ forloop.index }}">{{ option.selected_value }}</span>
+                    </label>
+                    {% assign option_index0 = forloop.index0 %}
+                    {% assign option_index = forloop.index %}
+                    {% assign values = '' %}
+
+                    {% for variant in product.variants %}
+                        {% assign value = variant.options[option_index0] %}
+                        {% unless values contains value %}
+                            {% assign values = values | join: ';' %}
+                            {% assign values = values | append: ';' | append: value %}
+                            {% assign values = values | split: ';' %}
+                            {% assign value_2 = value | remove: " " | downcase %}
+                            <div class="swatch-element size {{ value_2 }}{% if variant.available %} available{% else %} soldout{% endif %}" data-value="{{ value }}">
+                                <input class="single-option-selector single-option-selector-quick single-option-selector-{{ product.id }}" type="radio" name="SingleOptionSelector-{{ option_index0 }}" data-index="option{{ option_index }}" value="{{ value | escape }}" {% if option.selected_value == value %} checked="checked"{% endif %} id="SingleOptionSelector{{ option_index0 }}-{{ value }}-{{ product.id }}">
+                                <label data-toggle="tooltip" data-placement="top" title="{{ value }}" for="SingleOptionSelector{{ option_index0 }}-{{ value }}-{{ product.id }}">{{ value }}</label>
+                            </div>
+                        {% endunless %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="selector-wrapper selector-wrapper-{{forloop.index}} selector js product-form__item" data-option-index={{forloop.index}}>
+                <label for="SingleOptionSelector-{{ forloop.index0 }}" class="form-label {% if option.name == 'default' %}label--hidden{% endif %}">
+                    {{ option.name }} * <span class="label-value-{{ forloop.index }}">{{ option.selected_value }}</span>
+                </label>
+                <select class="single-option-selector single-option-selector-{{ product.id }} product-form__input form-control" id="SingleOptionSelector-{{ forloop.index0 }}" data-index="option{{ forloop.index }}">
+                    {% assign option_index0 = forloop.index0 %}
+                    {% assign option_index = forloop.index %}
+                    {% assign values = '' %}
+                    
+                    {% for variant in product.variants %}
+                        {% assign value = variant.options[option_index0] %}
+                        {% unless values contains value %}
+                            {% assign values = values | join: ';' %}
+                            {% assign values = values | append: ';' | append: value %}
+                            {% assign values = values | split: ';' %}
+                            {% if variant.available %}
+                                <option value="{{ value }}"{% if option.selected_value == value %} selected="selected"{% endif %}>{{ value }}</option>
+                            {% else %}
+                                <option value="{{ value }}" >{{ value }}</option>
+                            {% endif %}
+                        {% endunless %}
+                    {% endfor %}
+                </select>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endunless %}
+
+<select name="id" id="ProductSelect-{{ product.id }}" class="product-form__variants no-js">
+    {% for variant in product.variants %}
+        {% if variant.available %}
+            <option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} value="{{ variant.id }}">
+                {{ variant.title }}
+            </option>
+        {% else %}
+            <option>{{ variant.title }} - {{ 'products.product.sold_out' | t }}</option>
+        {% endif %}
+    {% endfor %}
+</select>

@@ -1,0 +1,8 @@
+<div class="sidebarBlock">
+    {% if block.settings.title != blank %}
+    <h3 class="sidebarBlock__heading">{{ block.settings.title }}</h3>
+    {% endif %}
+    <div class="sidebarBlock__content">
+        {{ block.settings.text }}
+    </div>
+</div>

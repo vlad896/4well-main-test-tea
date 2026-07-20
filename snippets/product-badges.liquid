@@ -1,0 +1,80 @@
+{%- liquid 
+    assign new_badge = false
+    assign sale_badge = false
+    assign sale_badge2 = false
+    assign soldOut_badge = true
+    assign custom_badge = false
+    assign bundle_badge = false
+    if badge_detail
+        assign current_variant = product.selected_or_first_available_variant
+        if current_variant.compare_at_price > current_variant.price
+            if settings.type_label_sale == 'text'
+                assign sale_badge = true
+            else
+                assign sale_badge2 = true
+            endif
+        endif
+    else
+        if product.compare_at_price_min > product.price_min
+            if settings.type_label_sale == 'text'
+                assign sale_badge = true
+            else
+                assign sale_badge2 = true
+            endif
+        endif
+    endif
+    if product.available
+        assign soldOut_badge = false
+    endif
+    for tag in product.tags
+        assign tag_handle = tag | handle
+        if tag_handle == 'new'
+            assign new_badge = true
+        endif
+        if tag_handle == 'custom-badge'
+            assign custom_badge = true
+        endif
+    endfor
+    if product.metafields.halo['Grouped Sub Product'] and settings.enable_label_bundle
+        assign bundle_badge = true
+    endif
+    assign date_published = product.published_at | date:'%s'
+    assign date_now = 'now' | date:'%s'
+    assign date_minus = date_now | minus: date_published
+    assign date_difference = date_minus | divided_by: 86400
+-%}
+
+<div class="product_badges">
+    {%- if new_badge -%}
+        <div class="badge new-badge">{{ 'products.product.new' | t }}</div>
+    {%- elsif date_difference < settings.time_show_badgeNew -%}
+        {%- if serial <= settings.product_show_badgeNew -%}
+        <div class="badge new-badge">{{ 'products.product.new' | t }}</div>
+        {%- endif -%}
+    {%- endif -%}
+    
+        <!-- <div class="badge sale-badge" data-label-sale>{%- if sale_badge -%}{{ 'products.product.on_sale' | t }}{%- endif -%}</div> -->
+    
+    {% if badge_detail %}
+        <div class="badge sale-badge" data-label-sale>{%- if sale_badge2 -%}-{{ current_variant.compare_at_price | minus: current_variant.price | times: 100.0 | divided_by: current_variant.compare_at_price | money_without_currency | times: 100 | replace: '.0', ''}}%{% elsif sale_badge %}{{ 'products.product.on_sale' | t }}{%- endif -%}</div>
+    {% else %}
+        {% if sale_badge2 %}
+            <div class="badge sale-badge" data-label-sale>
+                -{{ product.compare_at_price_min | minus: product.price_min | times: 100.0 | divided_by: product.compare_at_price_min | money_without_currency | times: 100 | replace: '.0', ''}}%
+            </div>
+        {% elsif sale_badge %}
+            <div class="badge sale-badge" data-label-sale>
+                {{ 'products.product.on_sale' | t }}
+            </div>
+        {% endif %}
+    {% endif %}
+    {%- if soldOut_badge -%}
+        <div class="badge soldOut-badge">{{ 'products.product.sold_out' | t }}</div>
+    {%- endif -%}
+    {%- if custom_badge -%}
+        <div class="badge custom-badge">{{ 'products.product.custom_badge' | t }}</div>
+    {%- endif -%}
+    {%- if bundle_badge -%}
+        <div class="badge bundle-badge">{{ 'products.product.bundle_badge' | t }}</div>
+    {%- endif -%}
+</div>

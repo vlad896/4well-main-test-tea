@@ -1,0 +1,194 @@
+{%- assign label_1_collection = section.settings.label_1_collection | split:"," | strip | downcase | handle -%}
+{%- assign label_2_collection = section.settings.label_2_collection | split:"," | strip | downcase | handle -%}
+{%- assign label_3_collection = section.settings.label_3_collection | split:"," | strip | downcase | handle -%}
+
+<ul class="site-nav" id="site-nav" data-item-count="4">
+    {%- for link in linklists[main_menu].links -%}
+        {%- assign i = forloop.index | downcase -%}
+        {%- assign cat = link.title | handleize -%}
+
+        {%- if section.settings.label_1 != blank -%}
+            {%- assign label_1_link = link.title | downcase | handle  -%}
+        {%- endif -%}
+
+        {%- if section.settings.label_2 != blank -%}
+            {%- assign label_2_link = link.title | downcase | handle  -%}
+        {%- endif -%}
+
+        {%- if section.settings.label_3 != blank -%}
+            {%- assign label_3_link = link.title | downcase | handle  -%}
+        {%- endif -%}
+
+        {%- if section.settings.enable_megamenu and template.suffix == 'mega' -%}
+            {%- assign is_megamenu = false -%}
+            {%- for block in section.blocks -%}
+                {%- for i in (1..4) -%}
+                    {%- capture cap_megamenu_item -%}megamenu_items_{{ i }}{%- endcapture -%}
+                    {%- capture cap_link_menu -%}link_menu_{{ i }}{%- endcapture -%}
+                    {%- capture cap_collection -%}collection_{{ i }}{%- endcapture -%}
+                    {%- capture cap_title_product -%}title_featured_product_{{ i }}{%- endcapture -%}
+                    {%- capture cap_banner_image_1 -%}banner_image_{{ i }}_1{%- endcapture -%}
+                    {%- capture cap_banner_image_2 -%}banner_image_{{ i }}_2{%- endcapture -%}
+                    {%- capture cap_banner_image_3 -%}banner_image_{{ i }}_3{%- endcapture -%}
+                    {%- capture cap_banner_image_4 -%}banner_image_{{ i }}_4{%- endcapture -%}
+
+                    {%- capture cap_title_shop -%}title_menu_{{ i }}{%- endcapture -%}
+                    {%- capture cap_url_shop -%}url_shop_{{ i }}{%- endcapture -%}
+                    {%- capture cap_title_banner_1 -%}title_banner_{{ i }}_1{%- endcapture -%}
+                    {%- capture cap_button_banner_1 -%}button_banner_{{ i }}_1{%- endcapture -%}
+
+                    {%- capture cap_link_banner_image_1 -%}link_banner_image_{{ i }}_1{%- endcapture -%}
+                    {%- capture cap_link_banner_image_2 -%}link_banner_image_{{ i }}_2{%- endcapture -%}
+                    {%- capture cap_link_banner_image_3 -%}link_banner_image_{{ i }}_3{%- endcapture -%}
+                    {%- capture cap_link_banner_image_4 -%}link_banner_image_{{ i }}_4{%- endcapture -%}
+
+                    {%- capture cap_text_breadcrumb -%}text_breadcrumb_{{ i }}{%- endcapture -%}
+                    {%- capture cap_link_breadcrumb -%}link_breadcrumb_{{ i }}{%- endcapture -%}
+
+                    {%- capture cap_button_type -%}button_type_{{ i }}{%- endcapture -%}
+                    {%- capture cap_button_type_url -%}button_type_url_{{ i }}{%- endcapture -%}
+
+                    {%- if block.settings[cap_megamenu_item] != blank -%}
+                        {%- assign megamenu_item = block.settings[cap_megamenu_item] | handleize -%}
+                        {%- if megamenu_item == cat -%}
+                            {%- assign is_megamenu = true -%}
+                            {%- assign block_style = block.type -%}
+                            {%- assign link_menu = block.settings[cap_link_menu] -%}
+                            {%- assign link_menu_type = block.settings.menu_type -%}
+                            {%- assign block_collection = block.settings[cap_collection] -%}
+                            {%- assign collection = collections[block_collection] -%}
+                            {%- assign title_featured_product = block.settings[cap_title_product] -%}
+                            {%- assign banner_image_1 = block.settings[cap_banner_image_1] -%}
+                            {%- assign banner_image_2 = block.settings[cap_banner_image_2] -%}
+                            {%- assign banner_image_3 = block.settings[cap_banner_image_3] -%}
+                            {%- assign banner_image_4 = block.settings[cap_banner_image_4] -%}
+
+                            {%- assign title_shop = block.settings[cap_title_shop] -%}
+                            {%- assign url_shop = block.settings[cap_url_shop] -%}
+                            {%- assign title_banner_1 = block.settings[cap_title_banner_1] -%}
+                            {%- assign button_banner_1 = block.settings[cap_button_banner_1] -%}
+
+                            {%- assign link_banner_image_1 = block.settings[cap_link_banner_image_1] -%}
+                            {%- assign link_banner_image_2 = block.settings[cap_link_banner_image_2] -%}
+                            {%- assign link_banner_image_3 = block.settings[cap_link_banner_image_3] -%}
+                            {%- assign link_banner_image_4 = block.settings[cap_link_banner_image_4] -%}
+
+                            {%- assign text_breadcrumb = block.settings[cap_text_breadcrumb] -%}
+                            {%- assign link_breadcrumb = block.settings[cap_link_breadcrumb] -%}
+
+                            {%- assign button_type = block.settings[cap_button_type] -%}
+                            {%- assign button_type_url = block.settings[cap_button_type_url] -%}
+
+                            {%- assign banner_image_style_3_1 = block.settings.banner_image_style_3_1 -%}
+                            {%- assign banner_image_style_3_2 = block.settings.banner_image_style_3_2 -%}
+                            {%- assign banner_image_style_3_3 = block.settings.banner_image_style_3_3 -%}
+                            {%- assign banner_image_style_3_4 = block.settings.banner_image_style_3_4 -%}
+                            {%- assign banner_image_style_3_5 = block.settings.banner_image_style_3_5 -%}
+
+                            {%- assign countdown_text = block.settings.countdown_text -%}
+                            {%- assign countdown_timer = block.settings.countdown_timer -%}
+
+                            {%- assign block_id = block.id -%}
+
+                        {%- endif -%}
+                    {%- endif -%}
+                {%- endfor -%}
+            {%- endfor -%}
+        {%- endif -%}
+
+        <li class="menu-lv-1 item{% if linklists[link.handle] != empty %} dropdown{% if is_megamenu %} mega-menu {{ block_style }}{% else %} no-mega-menu{% endif %}{% endif %}{% if is_megamenu %}{% if linklists[link.handle] == empty and  block_style == 'style_4' %} dropdown mega-menu {{ block_style }}{% endif %}{% endif %}">
+            <p class="nav-action{% if linklists[link.handle] == empty %} nav-action--end{% endif %}">
+                <a href="{{ link.url }}" aria-label="link" data-block-id="{{ block_id }}">
+                    {{ link.title }}
+                    {%- if label_1_collection contains label_1_link -%}
+                        <span class="icon-label label_1">
+                            {{ section.settings.label_1 }}
+                        </span>
+                    {%- endif -%}
+
+                    {%- if label_2_collection contains label_2_link -%}
+                        <span class="icon-label label_2">
+                            {{ section.settings.label_2 }}
+                        </span>
+                    {%- endif -%}
+
+                    {%- if label_3_collection contains label_3_link -%}
+                        <span class="icon-label label_3">
+                            {{ section.settings.label_3 }}
+                        </span>
+                    {%- endif -%}
+                </a>
+                {%- if linklists[link.handle] != empty -%}
+                    <span class="icon-dropdown" data-toggle-menu-mb>&#10095;</span>
+                {%- else -%}
+                    {%- if is_megamenu -%}{%- if linklists[link.handle] == empty and  block_style == 'style_4' -%}
+                    <span class="icon-dropdown" data-toggle-menu-mb>&#10095;</span>
+                    {%- endif -%}{%- endif -%}
+                {%- endif -%}
+            </p>
+            {%- if linklists[link.handle] != empty -%}
+            {% if template.suffix == 'mega' %}
+            <div class="dropdown-menu-mobile {{block_style}} text-left" {% if section.settings.enable_megamenu and is_megamenu %}data-id="{{ block_id }}"{% endif %}>
+                <div class="nav-title-mobile text-center">
+                    <span class="icon-dropdown">&#10094;</span>
+                    {{ link.title }}
+                </div>
+                
+                {%- if section.settings.enable_megamenu and is_megamenu -%}
+                    {% unless block_style == "style_4" %}
+                        <ul class="hide_pc">
+                            <li class="menu-lv-3">
+                                <a href="{{link.url}}" class="nav-action nav-action--end" aria-label="link">
+                                    <span class="text">{{ 'layout.navigation.menu_all' | t }} {{ link.title }}</span>
+                                </a>
+                            </li>
+                        </ul>
+                    {% endunless %}
+                    {%- render 'mega-menu', 
+                        link_for_style_4: link,
+                        link_child: link.handle, 
+                        block_style: block_style,
+                        title_featured_product: title_featured_product,
+                        title_shop: title_shop,
+                        url_shop: url_shop,
+                        link_menu: link_menu,
+                        link_menu_type: link_menu_type,
+                        collection: collection,
+                        title_banner_1: title_banner_1,
+                        button_banner_1: button_banner_1,
+                        banner_image_1: banner_image_1,
+                        banner_image_2: banner_image_2,
+                        banner_image_3: banner_image_3,
+                        banner_image_4: banner_image_4,
+                        link_banner_image_1: link_banner_image_1,
+                        link_banner_image_2: link_banner_image_2,
+                        link_banner_image_3: link_banner_image_3,
+                        link_banner_image_4: link_banner_image_4,
+                        button_type: button_type,
+                        button_type_url: button_type_url,
+                        banner_image_style_3_1: banner_image_style_3_1,
+                        banner_image_style_3_2: banner_image_style_3_2,
+                        banner_image_style_3_3: banner_image_style_3_3,
+                        banner_image_style_3_4: banner_image_style_3_4,
+                        banner_image_style_3_5: banner_image_style_3_5,
+                        countdown_text: countdown_text,
+                        countdown_timer: countdown_timer -%}
+                    
+                {%- else -%}
+                    {%- render 'dropdown-menu', link_child: link.handle, link_for_dropdown: link -%}
+                {%- endif -%}
+            </div>
+            {% endif %}
+            {% endif %}
+        </li>
+    {%- endfor -%}
+    {%- if section.settings.special_menu_title != blank -%}
+    <li class="menu-lv-1 special-menu">
+        <p class="nav-action nav-action--end">
+            <a href="{{ section.settings.special_menu_url }}" aria-label="link">
+                {{ section.settings.special_menu_title }}
+            </a>
+        </p>
+    </li>
+    {%- endif -%}
+</ul>

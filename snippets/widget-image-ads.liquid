@@ -1,0 +1,25 @@
+<div class="sidebarBlock image">
+    {% if block.settings.title != blank %}
+    <h3 class="sidebarBlock__heading">{{ block.settings.title }}</h3>
+    {% endif %}
+    <div class="sidebarBlock__content">
+        {% if block.settings.link != blank %}
+            <a class="widget-img text-center" href="{{ block.settings.link }}" aria-label="link">
+        {% else %}
+            <div class="widget-img text-center">
+        {% endif %}
+            {% if block.settings.image != blank %}
+                <img class="lazyload1"
+                srcset="{{ block.settings.image | img_url: '290x' }}"
+                data-sizes="auto" alt="" data-image>
+            {% else %}
+                <span class="recommended_size">290x350</span>
+                {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+            {% endif %}
+        {% if block.settings.link != blank %}
+            </a>
+        {% else %}
+            </div>
+        {% endif %}
+    </div>
+</div>

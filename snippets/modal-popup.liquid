@@ -1,0 +1,181 @@
+<div class="popup-sidebar popup-sidebar--left" id="navigation-mobile">
+    <div class="close_menu">
+        <a href="javascript:void(0)" class="close" aria-label="close">&#215;</a>
+    </div>
+    <div class="popup-sidebar__wrapper">
+        <ul class="site-nav-mobile two">
+            {% if shop.customer_accounts_enabled %}
+                <li class="menu-lv-1 item">
+                    <p class="nav-action nav-action--end">
+                        {% if customer %}
+                            <a href="{{ routes.account_url }}" aria-label="link">
+                                <svg class="icon"><use xlink:href="#icon-user" /></svg>
+                                <span>{{ customer.name }}</span>
+                            </a>
+                        {% else %}
+                            <a href="{{ routes.account_login_url }}" aria-label="link">
+                                <svg class="icon"><use xlink:href="#icon-user" /></svg>
+                                <span>{{ 'customer.login.title' | t }}</span>
+                            </a>
+                        {% endif %}
+                    </p>
+                </li>
+            {% endif %}
+            <li class="menu-lv-1 item">
+                <p class="nav-action nav-action--end">
+                    <a href="/pages/wish-list" aria-label="link">
+                        <svg class="icon"><use xlink:href="#icon-heart" /></svg>
+                        <span>{{ 'general.wishlist.wishlist' | t }}</span>
+                    </a>
+                </p>
+            </li>
+        </ul>
+        <div class="site-nav-mobile three">
+        </div>
+    </div>
+</div>
+
+<div class="popup-sidebar popup-sidebar--right" id="login-form-mobile">
+    <div class="popup-sidebar__wrapper">
+    </div>
+</div>
+
+{% assign pagename = request.page_type | handle %}
+{% if pagename != 'cart' %}
+    <div class="popup-sidebar popup-sidebar--right" id="cart-mobile">
+        <div class="popup-sidebar__wrapper">
+            <div class="cart-quickview_header cart-quickview_header--no-item">
+                <h2 class="title">{{ 'cart.quickview.title' | t }}</h2>
+                <a href="javascript:void(0)" class="cart-quickview__close" data-close-cart="" aria-label="close" aria-describedby="a11y-external-message">×</a>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% if settings.enable_before_you_leave %}
+    <div class="popup-sidebar popup-sidebar--right{% unless settings.enable_before_you_leave_mb %} before-you-leave__wrapper--disableMobile{% endunless %}" id="before-you-leave">
+        <div class="popup-sidebar__wrapper">
+            {% render 'before-you-leave' %}
+        </div>
+    </div>
+{% endif %}
+<div class="modal" id="cart-edit-modal" >
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        {% render 'cart-edit' %}
+    </div>
+</div>
+
+<div id="video-modal" class="modal">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">{{ 'products.product.video' | t }}</h2>
+                <a href="javascript:void(0)" aria-label="close" title="close" class="close">&#215;</a>
+            </div>
+            <div class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if settings.enable_gdpr %}
+    <div id="gdpr" class="gdpr text-left hide{% if settings.show_gdpr == 'right' %} gdpr--right{% endif %}{% unless settings.enable_gdpr_mb %} gdpr--disableMobile{% endunless %}">
+        {% if settings.gdpr_description != blank %}
+            <div class="rte">
+                {{ settings.gdpr_description }}
+                <a href="javascript:void(0)" class="close" aria-label="close" data-accept-cookie>{{ 'general.gdpr.btn' | t }}</a>
+            </div>
+        {% endif %}
+    </div>
+{% endif %}
+
+{% if settings.enable_someone_purchased %}
+    {% assign time = time | default: settings.autorotate_speed | times: 1000 %}
+    <div id="someone-purchased-modal" class="someone-purchased-modal{% if settings.show_someone_purchased == 'right' %} someone-purchased-modal--right{% endif %}{% unless settings.enable_someone_purchased_mb %} someone-purchased-modal--disableMobile{% endunless %}">
+        <div class="product-notification" data-time="{{ time }}">
+            <a href="javascript:void(0)" aria-label="close" title="close" class="close">&#215;</a>
+            <div class="product-suggest">
+                <a class="product-image" href="" aria-label="link">
+                    <img src="{{ 'loading.svg' | asset_url }}" alt="">
+                </a>
+                <div class="column-right">
+                    <p class="text">{{ settings.text }}</p>
+                    <a class="product-name" href=""></a>
+                    <div class="info-ago">
+                        <span class="time-text"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="hide">
+                {% for i in (1..8) %}
+                    {% capture cap_product %}someone_recently_product_{{ i }}{% endcapture %}
+                    {% assign product_id = settings[cap_product] %}
+                    {% assign product = all_products[product_id] %}
+                    {% capture cap_from_ago %}from_ago_{{ i }}{% endcapture %}
+                    {% assign from_ago = settings[cap_from_ago] %}
+                    {% if product != blank %}
+                        <div class="data-product" data-id="someone_recently_{{ i }}" data-image="{{ product.featured_image.src | img_url: '100x' }}" data-url="{{ product.url | within: collection }}" data-title="{{ product.title | truncatewords: 9}}" data-alt="{{ product.title }}" data-local="{{ from_ago }}"></div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+{% if settings.enable_popup_newsletter %}
+    {% render 'newsletter-popup' %}
+{% endif %}
+
+{% if settings.enable_ajax %}
+    {% render 'cart-popup' %}
+{% endif %}
+
+{% if settings.show_product_quickview %}
+    {% render 'product-quickview-popup' %}
+{% endif %}
+<div id="searchbar_mobile"></div>
+<div class="modal" id="loading-modal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="loading-modal-content">
+            <img class="loading" srcset="{{ 'loading.svg' | asset_url }}" alt="">
+        </div>
+    </div>
+</div>
+
+{% if settings.terms_conditions and settings.terms_conditions_content != blank %}
+<div class="modal fade halo_modal" id="terms_condition_modal">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">{{ settings.terms_conditions_text_link }}</h2>
+                <a data-dismiss="modal" class="close close-modal" href="javascript:void(0)" aria-describedby="a11y-external-message">
+                    <svg class="icon icon-close"><use xlink:href="#icon-close"></use></svg>
+                </a>
+            </div>
+            <div class="modal-body">
+                {{ settings.terms_conditions_content }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if settings.enable_compare_product and pagename == 'collection' %}
+    {% render 'compare-products-popup' %}
+{% endif %}
+
+{% if pagename == 'product' %}
+<div class="modal fade halo_modal" id="notify-soldout">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <a data-dismiss="modal" class="close close-modal" href="javascript:void(0)" aria-describedby="a11y-external-message">
+                <svg class="icon icon-close"><use xlink:href="#icon-close"></use></svg>
+            </a>
+            <div class="modal-body">
+                
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="overlay_background"></div>

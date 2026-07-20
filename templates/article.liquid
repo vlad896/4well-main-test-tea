@@ -1,0 +1,17 @@
+{%- comment -%}
+    Comments may not appear right after they are submitted, either to be checked by Shopify's spam filter
+    or to await moderation. When a comment is submitted, the browser is redirected to a page
+    that includes the new comment id in its URL.
+        Example: http://shopname.myshopify.com/blogs/news/2022072-my-post?comment=3721372
+{%- endcomment -%}
+{% render 'breadcrumb', breadcrumb_top: true %}
+<div class="container">
+    <div class="page-blog">
+        <div class="section-header text-left">
+            <h1 class="title">{{ 'blogs.article.title' | t }}</h1>
+        </div>
+        <div class="clearfix"></div>
+        {% section 'sidebar-blogs' %}
+        {% section 'article-template' %}
+    </div>
+</div>

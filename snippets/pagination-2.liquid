@@ -1,0 +1,65 @@
+{% comment %}
+        Renders a pagination bar
+
+        Accepts:
+        - paginate: {Object} Paginate Liquid object (required)
+
+        Usage:
+        {% include 'pagination', paginate: paginate %}
+{% endcomment %}
+<div class="mt-5 pagination-wrapper text-center">
+    {% assign current = paginate.current_offset | plus: 1 %}
+    {% if paginate.next %}
+        {% assign pageSize = paginate.current_offset | plus: paginate.page_size %}
+    {% else %}
+        {% assign pageSize = paginate.items %}
+    {% endif %}
+    
+    <div class="item page-total text-left">
+        {{ 'general.pagination.current_page' | t: current: current, pageSize: pageSize, total: paginate.items }}
+    </div>
+
+    <ul class="item list--inline pagination">
+        {% unless paginate.previous.is_link %}
+            <li class="pagination__item pagination__item--first">
+                <button class="btn btn--tertiary" disabled>
+                    <svg class="icon"><use xlink:href="#icon-chevron-left" /></svg>
+                    <span class="text">{{ 'general.pagination.previous' | t }}</span>
+                </button>
+            </li>
+            {% else %}
+            <li class="pagination__item pagination__item--first">
+                <a href="{{ paginate.previous.url }}" class="btn btn--tertiary" aria-label="link">
+                    <svg class="icon"><use xlink:href="#icon-chevron-left" /></svg>
+                    <span class="text">{{ 'general.pagination.previous' | t }}</span>
+                </a>
+            </li>
+        {% endunless %}
+        {% for part in paginate.parts %}
+            {% if part.is_link %}
+                <li class="pagination__item">
+                    <a href="{{ part.url }}" class="pagination__link" aria-label="link">{{ part.title }}</a>
+                </li>
+            {% else %}
+                <li class="pagination__item"><span class="pagination__link pagination__link--current">{{ part.title }}</span></li>
+            {% endif %}
+        {% endfor %}
+        {% unless paginate.next.is_link %}
+            <li class="pagination__item pagination__item--last">
+                <button class="btn btn--tertiary" disabled>
+                    <span class="text">{{ 'general.pagination.next' | t }}</span>
+                    <svg class="icon"><use xlink:href="#icon-chevron-right" /></svg>
+                </button>
+            </li>
+        {% else %}
+            <li class="pagination__item pagination__item--last">
+                <a href="{{ paginate.next.url }}" class="btn btn--tertiary" aria-label="link">
+                    <span class="text">{{ 'general.pagination.next' | t }}</span>
+                    <svg class="icon"><use xlink:href="#icon-chevron-right" /></svg>
+                </a>
+            </li>
+        {% endunless %}
+    </ul>
+
+    <div class="item text-right"></div>
+</div>

@@ -1,0 +1,277 @@
+{%- liquid
+    if section.settings.background-color
+    assign background_color = 'halo-section-background-gray'
+    endif
+    if section.settings.border-top
+    assign border_top = 'halo-section-border-top'
+    endif
+    if section.settings.border-bottom
+    assign border_bottom = 'halo-section-border-bottom'
+    endif
+    assign top = top | default: section.settings.top
+    assign bottom = bottom | default: section.settings.bottom
+-%}
+
+{%- if section.settings.custom_color -%}
+<style>
+    {%- if section.settings.color_heading != 'rgba(0,0,0,0)' -%}
+    [data-section-id='{{ section.id }}'] .section-header .title {
+        color: {{ section.settings.color_heading }};
+    }
+    {%- endif -%}
+
+    {%- if section.settings.color_text != 'rgba(0,0,0,0)' -%}
+    [data-section-id='{{ section.id }}'] .section-header > p {
+        color: {{ section.settings.color_text }}
+    }
+    {%- endif -%}
+</style>
+{%- endif -%}
+
+<div class="halo-section padding-top-{{ top }} padding-bottom-{{ bottom }} {{ background_color }} {{ border_top }} {{ border_bottom }}" data-section-id="{{ section.id }}" data-section-type="instagram">
+    <div class="container">
+    {%- if section.settings.title != blank -%}
+        <div class="section-header text-center">
+            <h2 class="title">{{ section.settings.title }}</h2>
+            {%- if section.settings.description != blank -%}
+                <p>{{ section.settings.description }}</p>
+            {%- endif -%}
+        </div>
+    {%- endif -%}
+    </div>
+
+    {%- if section.settings.layout == 'default' -%}
+    <div class="container">
+    {%- endif -%}
+        <div class="instagram halo-column halo-row--mobile">
+            {%- if section.settings.instagram_option == 'app' -%}
+                {{ section.settings.accessToken }}
+            {%- else -%}
+                {%- for block in section.blocks -%}
+                    {%- assign img_url = block.settings.instagram_image | img_url: '480x' -%}
+                    {%- assign img_url_2 = block.settings.instagram_image | img_url: '180x' -%}
+                    {%- assign img_url_full = block.settings.instagram_image | img_url: 'master' -%}
+
+                    <a class="instagram__item image--hover{% if block.settings.instagram_image != blank %} instagram__item--bg{% endif %} {% if block.settings.instagram_image == blank %}no-image{% endif %}" href="{{ img_url_full }}" aria-label="link" data-fancybox="images-instagram">
+                        {%- if block.settings.instagram_image != blank -%}
+                            <img class="lazyload"
+                                data-src="{{ img_url }}"
+                                data-srcset="{{ img_url_2 }} 180w, {{ img_url }} 1025w"
+                                data-sizes="auto" alt="" data-image>
+                        {%- else -%}
+                            <div class="placeholder-background">
+                                <span class="recommended_size">480x480</span>
+                                {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                            </div>
+                        {%- endif -%}
+                        <span>
+                            <svg class="icon"><use xlink:href="#icon-search_plus"></use></svg>
+                            {{ 'homepage.instagram.zoom' | t }}
+                        </span>
+                    </a>
+                {%- endfor -%}
+            {%- endif -%}
+        </div>
+        {%- if section.settings.load_more -%}
+            <div class="instagram-load-more text-center">
+                <a href="{{ section.settings.button_link }}" class="btn btn--primary">
+                    {{ section.settings.button_text }}
+                </a>
+            </div>
+        {%- endif -%}
+        
+    {%- if section.settings.layout == 'default' -%}
+    </div>
+    {%- endif -%}
+</div>
+
+
+{% schema %}
+{
+    "name": "Instagram",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Section Layout"
+        },
+        {
+            "type": "checkbox",
+            "id": "background-color",
+            "label": "Background Color Custom",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "border-top",
+            "label": "show border top",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "border-bottom",
+            "label": "show border bottom",
+            "default": false
+        },
+        {
+            "type": "range",
+            "id": "top",
+            "label": "Spacing Top",
+            "default": 30,
+            "min": 0,
+            "max": 100,
+            "step": 10,
+            "unit": "px"
+        },
+        {
+            "type": "range",
+            "id": "bottom",
+            "label": "Spacing bottom",
+            "default": 30,
+            "min": 0,
+            "max": 100,
+            "step": 10,
+            "unit": "px"
+        },
+        {
+            "type": "header",
+            "content": "Heading Section"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Instagram"
+        },
+        {
+            "type": "textarea",
+            "id": "description",
+            "label": "Description"
+        },
+        {
+          "type" : "header",
+          "content" : "Instagram Option"
+        },
+        {
+            "type": "select",
+            "id": "instagram_option",
+            "label": "Instagram Option",
+            "options": [
+                {
+                    "value": "app",
+                    "label": "Use app Snapppt"
+                },
+                {
+                    "value": "block",
+                    "label": "Use Block Gallery Image"
+                }
+            ],
+            "default": "block"
+        },
+        {
+            "type": "text",
+            "id": "accessToken",
+            "label": "Script Instagram",
+            "info": "Insert Script Instagram from App Snapppt"
+        },
+        {
+          "type" : "header",
+          "content" : "Layout"
+        },
+        {
+            "type": "select",
+            "id": "layout",
+            "label": "Layout",
+            "options": [
+                {
+                    "value": "default",
+                    "label": "Default"
+                },
+                {
+                    "value": "full",
+                    "label": "Full Width"
+                }
+            ],
+            "default": "default"
+        },
+        {
+            "type": "checkbox",
+            "id": "load_more",
+            "label": "Enabled Button",
+            "default": true
+        },
+        {
+            "type": "text",
+            "id": "button_text",
+            "label": "Text Button",
+            "default": "View All Images"
+        },
+        {
+            "type": "url",
+            "id": "button_link",
+            "label": "Link Button"
+        },
+        {
+            "type": "header",
+            "content": "Custom Color"
+        },
+        {
+            "type": "checkbox",
+            "id": "custom_color",
+            "label": "Turn on custom color",
+            "default": false
+        },
+        {
+            "type": "color",
+            "id": "color_heading",
+            "label": "Heading Color"
+        },
+        {
+            "type": "color",
+            "id": "color_text",
+            "label": "Description Color"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "instagram_block",
+            "name": "Instagram Image",
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "instagram_image",
+                    "label": "Image"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Instagram",
+            "category": "Instagram",
+            "blocks": [
+                {
+                    "type": "instagram_block"
+                },
+                {
+                    "type": "instagram_block"
+                },
+                {
+                    "type": "instagram_block"
+                },
+                {
+                    "type": "instagram_block"
+                },
+                {
+                    "type": "instagram_block"
+                },
+                {
+                    "type": "instagram_block"
+                },
+                {
+                    "type": "instagram_block"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

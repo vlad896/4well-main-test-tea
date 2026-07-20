@@ -1,0 +1,229 @@
+{% if section.settings.enable_layout %}
+    {%- liquid 
+        if section.settings.background-color
+            assign background_color = 'halo-section-background-gray'
+        endif
+
+        if section.settings.border-top
+            assign border_top = 'halo-section-border-top'
+        endif
+
+        if section.settings.border-bottom
+            assign border_bottom = 'halo-section-border-bottom'
+        endif
+
+        assign top = top | default: section.settings.top
+        assign bottom = bottom | default: section.settings.bottom
+    -%}
+
+    <div class="halo-section padding-top-{{ top }} padding-bottom-{{ bottom }} {{ border_top }} {{ border_bottom }} {{ background_color }}" data-section-id="{{ section.id }}" data-section-type="collection-banner">
+        {%- for block in section.blocks -%}
+            <div class="image-with-text-2{% if block.settings.layout == 'right' %} image-with-text-2--right{% endif %}">
+                <div class="image-with-text-2__image">
+                    {%- if block.settings.image == blank -%}
+                        <div class="placeholder-background">
+                            {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' }}
+                        </div>
+                    {%- else -%}
+                        <img class="lazyload" data-srcset="{{ block.settings.image | img_url: 'master' }}" alt="{{ block.settings.image.alt }}" data-image />
+                    {%- endif -%}
+                    {%- if block.settings.enable_video -%}
+                    {%- if block.settings.video_link != blank or block.settings.video_mp4_link != blank -%}
+                        {%- assign video = true -%}
+                        <div class="block-content-video">
+                            <a href="javascript:void(0)" data-toggle="modal" data-target="#popup_video_{{ section.id }}" class="btn-popup-video has-{{ block.settings.type_video }}" data-src="{% if block.settings.type_video == 'youtube' %}{{ block.settings.video_link }}{% else %}{{ block.settings.video_mp4_link }}{% endif %}" data-id="{{ section.id }}" aria-label="link">
+                                <svg viewBox="0 0 200 200" class="icon icon-video">
+                                    <circle cx="100" cy="100" r="90" fill="none" stroke-width="8"></circle> 
+                                    <polygon points="70, 50 70, 145 155, 100"></polygon> 
+                                </svg>
+                                <span class="btn-video">{{ 'collections.banner.button_video' | t }}</span>
+                            </a>
+                        </div>
+                    {%- endif -%}
+                    {%- endif -%}
+                </div>
+                <div class="image-with-text-2__content">
+                    <div class="section-header">
+                        {%- if block.settings.subtitle != blank -%}
+                            <h5 class="subtitle">{{ block.settings.subtitle }}</h5>
+                        {%- endif -%}
+                        {%- if block.settings.title != blank -%}
+                            <h2 class="title">{{ block.settings.title }}</h2>
+                        {%- endif -%}
+                        {%- if block.settings.description != blank -%}
+                            <p>{{ block.settings.description }}</p>
+                        {%- endif -%}
+                        {%- if block.settings.button != blank -%}
+                            <a href="{{ block.settings.button_link }}" class="btn btn--primary" aria-label="link">
+                                {{ block.settings.button }}
+                            </a>
+                        {%- endif -%}
+                    </div>
+                </div>
+            </div>
+        {%- endfor -%}
+    </div>
+    {%- if video -%}
+    <div id="popup_video_{{ section.id }}" class="modal fade halo_modal halo_modal_video" role="dialog" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-video">
+        </div>
+    </div>
+    {%- endif -%}
+{% endif %}
+
+
+{% schema %}
+{
+    "name": "Collection Block Bottom",
+    "max_blocks": 4,
+    "settings": [
+        {
+            "type": "header",
+            "content": "Section Layout"
+        },
+        {
+            "type": "checkbox",
+            "id": "enable_layout",
+            "label": "Enable Layout",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "background-color",
+            "label": "Background Color Custom",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "border-top",
+            "label": "show border top",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "border-bottom",
+            "label": "show border bottom",
+            "default": false
+        },
+        {
+            "type": "range",
+            "id": "top",
+            "label": "Spacing Top",
+            "default": 30,
+            "min": 0,
+            "max": 100,
+            "step": 10,
+            "unit": "px"
+        },
+        {
+            "type": "range",
+            "id": "bottom",
+            "label": "Spacing bottom",
+            "default": 30,
+            "min": 0,
+            "max": 100,
+            "step": 10,
+            "unit": "px"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "image_item",
+            "name": "Another Image",
+            "settings": [
+                {
+                    "type": "header",
+                    "content": "Layout"
+                },
+                {
+                    "type": "select",
+                    "id": "layout",
+                    "label": "Layout",
+                    "default": "left",
+                    "options": [
+                        {
+                            "value": "left",
+                            "label": "Image Left"
+                        },
+                        {
+                            "value": "right",
+                            "label": "Image Right"
+                        }
+                    ]
+                },
+                {
+                    "type": "header",
+                    "content": "Banner Image"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "enable_video",
+                    "label" : "Enable Video?"
+                },
+                {
+                    "type": "select",
+                    "id": "type_video",
+                    "label": "Video type",
+                    "default": "youtube",
+                    "options": [
+                    {
+                        "value": "youtube",
+                        "label": "Youtube"
+                    },
+                    {
+                        "value": "mp4",
+                        "label": "mp4"
+                    }]
+                },
+                {
+                    "type": "text",
+                    "id": "video_link",
+                    "label": "YouTube video ID",
+                    "default": "_9VUPq3SxOc",
+                    "info": "[Find your YouTube video ID](https://docs.joeworkman.net/rapidweaver/stacks/youtube/video-id)."
+                },
+                {
+                    "type": "text",
+                    "id": "video_mp4_link",
+                    "label": "Video link"
+                },
+                {
+                    "type": "header",
+                    "content": "Content"
+                },
+                {
+                    "type": "text",
+                    "id": "subtitle",
+                    "label": "SubTitle"
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Title",
+                    "default": "Image With Text"
+                },
+                {
+                    "type": "textarea",
+                    "id": "description",
+                    "label": "Description"
+                },
+                {
+                    "type": "text",
+                    "id": "button",
+                    "label": "Button"
+                },
+                {
+                    "type": "url",
+                    "id": "button_link",
+                    "label": "Button link"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

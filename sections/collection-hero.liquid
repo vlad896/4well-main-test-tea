@@ -1,0 +1,129 @@
+{%- if section.settings.enable_bannerImage -%}
+<div id="collection-hero">
+    {%- if section.settings.display_collection_image_all -%}
+        <div class="collection-hero {% if section.settings.enable_parallax %}is--pallarax{% endif %}" style="
+        {% if section.settings.collection_image != blank %}background-image:url({{ section.settings.collection_image | img_url: 'master' }});{% endif %}
+        min-height: {{ section.settings.min_height }}px;">
+            {%- if section.settings.title != blank or section.settings.des != blank -%}
+            <div class="container">
+                <div class="collection-hero__heading">
+                    {%- if section.settings.title != blank -%}
+                    <h3 class="title">{{section.settings.title}}</h3>
+                    {%- endif -%}
+                    {%- if section.settings.des != blank -%}
+                    <p class="des">{{section.settings.des}}</p>
+                    {%- endif -%}
+                </div>
+            </div>
+            {%- endif -%}
+        </div>
+    {%- else -%}
+        {%- for block in section.blocks -%}
+            {%- assign collection_id = collections[block.settings.collection_id] -%}
+            {%- if collection_id.handle == collection.handle -%}
+                {%- if block.settings.title != blank or block.settings.des != blank or block.settings.image != blank -%}
+                    <div class="collection-hero {% if section.settings.enable_parallax %}is--pallarax{% endif %}" style="
+                    {% if block.settings.image != blank %}background-image:url({{ block.settings.image | img_url: 'master' }});{% endif %}
+                    min-height: {{ section.settings.min_height }}px;">
+                        {%- if block.settings.title != blank or block.settings.des != blank -%}
+                        <div class="container">
+                            <div class="collection-hero__heading">
+                                {%- if block.settings.title != blank -%}
+                                <h3 class="title">{{block.settings.title}}</h3>
+                                {%- endif -%}
+                                {%- if block.settings.des != blank -%}
+                                <p class="des">{{block.settings.des}}</p>
+                                {%- endif -%}
+                            </div>
+                        </div>
+                        {%- endif -%}
+                    </div>
+                {%- endif-%}
+            {%- endif-%}
+        {%- endfor -%}
+    {%- endif-%}
+</div>
+{%- endif-%}
+
+{% schema %}
+{
+    "name": "Collection Banners",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Banner Image"
+        },
+        {
+            "type": "checkbox",
+            "id": "enable_bannerImage",
+            "label": "Enable Banner Image",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "display_collection_image_all",
+            "label": "Enable All Collection Banner?",
+            "default": false
+        },
+        {
+            "type": "image_picker",
+            "id": "collection_image",
+            "label": "Image All Collection"
+        },
+        {
+            "label": "Title",
+            "id": "title",
+            "type": "text"
+        },
+        {
+            "label": "Content",
+            "id": "des",
+            "type": "textarea"
+        },
+        {
+            "type": "checkbox",
+            "id": "enable_parallax",
+            "label": "Effect Parallax",
+            "default": true
+        },
+        {
+            "type": "range",
+            "id": "min_height",
+            "min": 200,
+            "max": 300,
+            "step": 50,
+            "unit": "px",
+            "label": "Min height",
+            "default": 300
+        }
+    ],
+    "blocks": [
+        {
+            "type": "collection",
+            "name": "Collection",
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image"
+                },
+                {
+                    "label": "Collection",
+                    "id": "collection_id",
+                    "type": "collection"
+                },
+                {
+                    "label": "Title",
+                    "id": "title",
+                    "type": "text"
+                },
+                {
+                    "label": "Content",
+                    "id": "des",
+                    "type": "textarea"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

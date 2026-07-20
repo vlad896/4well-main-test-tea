@@ -1,0 +1,272 @@
+{%- liquid 
+    assign column = column | default: section.settings.column
+
+    if current_tags == blank
+        assign has_refined = false
+    else
+        assign has_refined = true 
+    endif
+
+    if cart.attributes.pagination != blank and cart.attributes.pagination
+        assign limit = cart.attributes.pagination
+    else
+        assign limit = section.settings.limit
+    endif
+
+-%}
+
+{% paginate collection.products by limit %}
+
+<div id="page-collection" data-section-id="{{ section.id }}" data-section-type="collection-template">
+    <!-- Filter and short -->
+    <div class="collection-toolbar">
+        <div class="collection-toolbar__item collection-toolbar__item--2 {% unless settings.enable_header_effect %}header-nosticky{% endunless %}">
+            <div class="collection-sortBy text-right">
+                <div class="collection-sortBy--viewProduct">
+                    <!-- sidebar mobile icon -->
+                    <div class="sidebar_mobile_wrapper">
+                        <div class="sidebar_mobile">
+                            <span class='text'>{{ 'general.sidebar.title' | t }}:</span>
+                            <svg class="icon"><use xlink:href="#icon-sidebar" /></svg>
+                        </div>
+                    </div>
+                    {% if section.settings.enable_sort %}
+                        <div class="filters-toolbar__mobile">
+                            <div data-sort-product-mb></div>
+                        </div>
+                    {% endif %}
+                    <!-- end sidebar mobile icon -->
+                    {% if section.settings.enable_viewProduct %}
+                        <div class="collection-viewProduct__item text-left">
+                            <label class="filters-toolbar__label select-label" for="ViewProduct">{{ 'collections.view.title' | t }} </label>
+                            <div class="filters-toolbar__input-list text">
+                                <div data-viewproduct data-value="grid" {% if section.settings.layout_type == 'grid' %}class="active"{% endif %}>
+                                    <svg class="icon"><use xlink:href="#icon-grid"></use></svg>
+                                </div>
+                                <div data-viewproduct data-value="list" id="list-view" {% if section.settings.layout_type == 'list' %}class="active"{% endif %}></div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="filters-toolbar__item-wrapper">
+                    {% if section.settings.enable_viewItem %}
+                    <div class="filters-toolbar__item-child" data-limited-view>
+                        <label class="filters-toolbar__label select-label" for="showPagination">{{ 'general.filters.show' | t }}</label>
+                        <div class="filters-toolbar__input-wrapper select-group">
+                            <select name="paginateBy" id="showPagination" class="filters-toolbar__input">
+                                {%- assign view_length_handles = '6|12|18|24|30|36|42' | split: '|' -%}
+                                {%- for i in view_length_handles -%}
+                                    {% assign v = i | plus: 0 %}
+                                    <option data-url="{{ collection.url }}" value="{{ v }}" 
+                                    {% if cart.attributes.pagination != blank %}
+                                        {% if cart.attributes.pagination == i %}selected{% endif %}
+                                    {% else %}
+                                        {% if limit == v %}selected{% endif %}
+                                    {% endif %}> {{ i }} {{ 'general.pagination.item_per_page' | t }}</option>
+                                {% endfor %} 
+                            </select>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if section.settings.enable_sort %}
+                        <div class="filters-toolbar__item-child" data-sort-product>
+                            {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+                            <label class="filters-toolbar__label select-label" for="SortBy">
+                                {{ 'collections.sorting.title' | t }}
+                                <span class="hide"><svg class="icon"><use xlink:href="#icon-chevron-down"></use></svg></span>
+                            </label>
+                            <div class="filters-toolbar__input-wrapper select-group">
+                                <select name="sort_by" id="SortBy"
+                                    class="filters-toolbar__input hidden"
+                                    aria-describedby="a11y-refresh-page-message a11y-selection-message"
+                                    data-default-sortby="{{ collection.default_sort_by }}"
+                                >
+                                    {%- for option in collection.sort_options -%}
+                                        <option value="{{ option.value }}" {% if option.value == sort_by %}selected="selected"{% endif %}>{{ option.name }}</option>
+                                    {%- endfor -%}
+                                </select>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% if section.settings.enable_sort %}
+                    <div class="collection-sortBy__item text-left" style="display: none">
+                        {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+                        <label class="filters-toolbar__label select-label" for="SortBy">
+                            {{ 'collections.sorting.title' | t }}
+                        </label>
+                        <div class="filters-toolbar__input-wrapper select-group" data-select="SortBy" id="SortBy">
+                            <div class="filters-toolbar__input-title">
+                                <h3 class="title"></h3>
+                                <svg class="icon"><use xlink:href="#icon-chevron-down" /></svg>
+                            </div>
+                            <div class="filters-toolbar__input-content">
+                                <div class="filters-toolbar__input-list text">
+                                    {% for option in collection.sort_options %}
+                                        <div data-sortby data-value="{{ option.value }}"{% if option.value == sort_by %} class="active"{% endif %}>{{ option.name }}</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Filter and Short -->
+    <div id="collection" class="halo-column column-{{ column }}{% if section.settings.layout_type == 'list' %} list{% endif %}" data-collection="{{ section.settings.pagination_type }}" >
+        {% if collection.products_count > 0 %}
+            {% for product in collection.products %}
+                <div class="halo-column__item">
+                    {% render 'product-card-list', product: product, serial: forloop.index, compare: settings.enable_compare_product %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-collection-content text-center padding-top-60">
+                <h3 class="collection--empty-message">{{ 'collections.general.title_no_matches' | t }}</h3>
+                <p>
+                  {{ 'collections.general.no_matches' | t }}
+                </p>
+                <a {% if settings.redirect_button == 'go_back' %}
+                    href="javascript:void(0)" onclick="window.history.back();"
+                    {% else %} href="{{ settings.link_to_redirect }}"{% endif %} class="btn btn--primary btn--has-icon-after cart__continue-btn">
+                    {{ 'cart.general.continue_shopping' | t }}
+                </a>
+            </div>
+        {% endif %}
+    </div>
+    <!-- Pagination -->
+    {% if section.settings.pagination_type == 'infiniteScroll' %}
+        {% if paginate.next.is_link %}
+            <div class="infinite-scrolling text-center" {% if section.settings.enable_autoInfinite %}data-auto-infinite{% endif %}>
+                <a class="btn btn--primary btn--large" data-href="{{ paginate.next.url }}">
+                    <svg class="icon"><use xlink:href="#icon-loading" /></svg>
+                    {{ 'general.filters.show_more' | t }}
+                </a>
+            </div>
+        {% endif %}
+    {% else %}
+        {% if paginate.pages > 1 %}
+            <div class="pagination-wrapper text-center">
+                {% assign current = paginate.current_offset | plus: 1 %}
+                {% if paginate.next %}
+                    {% assign pageSize = paginate.current_offset | plus: paginate.page_size %}
+                {% else %}
+                    {% assign pageSize = paginate.items %}
+                {% endif %}
+                <div class="page-total">
+                    <p>{{ 'general.pagination.current_page' | t: current: current, pageSize: pageSize, total: paginate.items }}</p>
+                </div>
+                {% render 'pagination', paginate: paginate %}
+            </div>
+        {% endif %}
+    {% endif %}
+    <!-- End Pagination -->
+</div>
+
+{% if settings.enable_compare_product %}
+    <div class="compare-link">
+        <a class="btn btn--primary btn--compare" href="javascript:void(0)" data-toggle="modal" data-target="#compare" data-compare-selected>
+            <span class="compare-text">{{ 'general.compare.title' | t }}</span><span class="compare-countPill" data-compare-count></span>
+        </a>
+    </div>
+{% endif %}
+
+{% endpaginate %}
+
+
+{% schema %}
+{
+    "name": "Collection Content",
+    "class": "page-content",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Layout"
+        },
+        {
+            "type": "range",
+            "id": "column",
+            "label": "Column (Use for layout Grid)",
+            "default": 4,
+            "min": 1,
+            "max": 6,
+            "step": 1
+        },
+        {
+            "type": "range",
+            "id": "limit",
+            "label": "Limits product per page",
+            "default": 18,
+            "min": 6,
+            "max": 42,
+            "step": 6
+        },
+        {
+            "type": "radio",
+            "id": "layout_type",
+            "label": "Select Layout of collection",
+            "default": "grid",
+            "options": [
+                {
+                    "value": "grid",
+                    "label": "Grid"
+                },
+                {
+                    "value": "list",
+                    "label": "List"
+                }
+            ]
+        },
+        {
+            "type": "header",
+            "content": "View & Sorting"
+        },
+        {
+            "type": "checkbox",
+            "id": "enable_viewProduct",
+            "label": "Enable Product View",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "enable_viewItem",
+            "label": "Enable view item per Page",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "enable_sort",
+            "label": "Enable sorting",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Pagination"
+        },
+        {
+            "type": "radio",
+            "id": "pagination_type",
+            "label": "Select Pagination to show",
+            "default": "pagination",
+            "options": [
+                {
+                    "value": "pagination",
+                    "label": "Pagination"
+                },
+                {
+                    "value": "infiniteScroll",
+                    "label": "Show more"
+                }
+            ]
+        },
+        {
+            "type": "checkbox",
+            "id": "enable_autoInfinite",
+            "label": "Enable Auto Infinite Scroll",
+            "default": true,
+            "info": "This setting is not available for the Paging option"
+        }
+    ]
+}
+{% endschema %}

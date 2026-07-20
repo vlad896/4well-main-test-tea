@@ -1,0 +1,623 @@
+
+{% if section.settings.border-top %}
+    {% assign border_top = 'halo-section-border-top' %}
+{% endif %}
+
+{% if section.settings.border-bottom %}
+    {% assign border_bottom = 'halo-section-border-bottom' %}
+{% endif %}
+
+{% assign top = top | default: section.settings.top %}
+{% assign bottom = bottom | default: section.settings.bottom %}
+
+{% if section.settings.custom_color %}
+<style>
+    [data-section-id='{{ section.id }}'] .custom-block-row-product .title {
+        color: {{ section.settings.color_heading }};
+    }
+    [data-section-id='{{ section.id }}'] .custom-block-row-product p {
+        color: {{ section.settings.color_text }};
+    }
+    [data-section-id='{{ section.id }}'] .custom-block-row-product h4 {
+        color: {{ section.settings.color_sub_heading }};
+    }
+    .custom-block--item_content .title {
+        color: {{ section.settings.color_block_heading }};
+    }
+    .custom-block--item_content .description,
+    .custom-block--item_content .description p {
+        color: {{ section.settings.color_block_text }};
+    }
+    .custom-block--item_content .btn {
+        color: {{ section.settings.color_block_button }};
+        background-color: {{ section.settings.bg_color_block_button }};
+        border-color: {{ section.settings.border_color_block_button }};
+    }
+    
+</style>
+{% endif %}
+
+<div class="halo-section padding-top-{{ top }} padding-bottom-{{ bottom }} {{ background_color }} {{ border_top }} {{ border_bottom }}" data-section-id="{{ section.id }}" data-section-type="product-custom-block">
+    <div class="container-fluid">
+        {% if section.settings.enable_banner %}
+        <div class="halo-column-custom-block-product">
+            <div class="custom-block-row-product">
+                <div class="custom-block_slide">
+                    <div class="custom-block_slide--item {% if section.settings.slide_image == blank %}no-image{% endif %}">
+                        {% if section.settings.slide_image == blank %}
+                            <div class="placeholder-background">
+                                <span class="recommended_size">1920x700</span>
+                                {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                            </div>
+                        {% else %}
+                            <img class="block_slide__image lazyload" data-srcset="{{ section.settings.slide_image | img_url: 'master' }}" alt="" data-image />
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="custom-block--content">
+                    {% if section.settings.sub_title != blank %}
+                        <h4 class="sub_title">{{ section.settings.sub_title }}</h4>
+                    {% endif %}
+                    {% if section.settings.title != blank %}
+                        <h2 class="title mega-title--{{ section.settings.text_size }}">{{ section.settings.title }}</h2>
+                    {% endif %}
+                    {% if section.settings.description != blank %}
+                        <p>{{ section.settings.description }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% if section.settings.content != blank %}
+            <div class="custom-block-bottom text-left">
+                <div class="rte">
+                    {{ section.settings.content }}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+        {% if section.blocks.size > 0 %}
+            <div class="container">
+                <div class="halo-column-custom-block_items">
+                    {% for block in section.blocks %}
+                        {% if block.type == 'block_style_1' %}
+                        <div class="custom-block--item{% if block.settings.alignment == 'right' %} reverse-column{% endif %}">
+                            <div class="custom-block--item_image{% if block.settings.image == blank %} no-image{% endif %}">
+                                {% if block.settings.image == blank %}
+                                    <div class="placeholder-background">
+                                        <span class="recommended_size">550x550</span>
+                                        {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                                    </div>
+                                {% else %}
+                                    <div class="zoom-border-effect">
+                                        <img class="block_slide__image lazyload" data-srcset="{{ block.settings.image | img_url: 'master' }}" data-image alt="" />
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="custom-block--item_content">
+                                <div class="content">
+                                    {% if block.settings.title != blank %}
+                                        <h3 class="title">{{ block.settings.title }}</h3>
+                                    {% endif %} 
+                                    {% if block.settings.description != blank %} 
+                                        <div class="description">{{ block.settings.description }}</div>
+                                    {% endif %}
+                                    {% if block.settings.button_text != blank %}
+                                        <div class="action">
+                                            <a href="{{ block.settings.button_link }}" class="btn btn--primary">{{ block.settings.button_text }}</a>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+
+                        <div class="custom-block--item custom-block-item_style_2{% if block.settings.alignment == 'right' %} reverse-column{% endif %}">
+                            <div class="custom-block--item_image{% if block.settings.image == blank %} no-image{% endif %}">
+                                {% if block.settings.image == blank %}
+                                    <div class="placeholder-background">
+                                        <span class="recommended_size">550x550</span>
+                                        {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                                    </div>
+                                {% else %}
+                                    <div class="zoom-border-effect">
+                                        <img class="block_slide__image lazyload" data-srcset="{{ block.settings.image | img_url: 'master' }}" alt="" data-image />
+                                    </div>
+                                {% endif %}
+                                {% if block.settings.enable_video %}
+                                {% if block.settings.video_link != blank or block.settings.video_mp4_link != blank %}
+                                    <div class="block-content-video">
+                                        <a href="javascript:void(0)" data-toggle="modal" data-target="#popup_video_{{ section.id }}" class="btn-popup-video has-{{ block.settings.type_video }}" data-src="{% if block.settings.type_video == 'youtube' %}{{ block.settings.video_link }}{% else %}{{ block.settings.video_mp4_link }}{% endif %}" data-id="{{ section.id }}" aria-label="link">
+                                            <svg viewBox="0 0 200 200" class="icon icon-video"> 
+                                                <circle cx="100" cy="100" r="90" fill="none" stroke-width="8"></circle> 
+                                                <polygon points="70, 50 70, 145 155, 100"></polygon> 
+                                            </svg>
+                                        </a>
+                                    </div>
+                                {% endif %}
+                                {% endif %}
+                            </div>
+                            <div class="custom-block--item_content text-center" 
+                                {% if section.blocks.size > 1 %}
+                                    data-slick='{
+                                        "rtl": false,
+                                        "rows": 0,
+                                        "dots": true,
+                                        "arrows": false,
+                                        "infinite": true,
+                                        "adaptiveHeight": true,
+                                        "slidesToScroll": 1,
+                                        "mobileFirst": true,
+                                        "responsive": [
+                                            {
+                                                "breakpoint": 1100,
+                                                "settings": {
+                                                    "dots": true,
+                                                    "arrows": false
+                                                }
+                                            }
+                                        ]
+                                    }'
+                                {% endif %}>
+                                {% for i in (1..3) %}
+                                    {% capture enable_quote %}enable_quote_{{ i }}{% endcapture %}
+                                    {% capture icon %}icon_user_{{ i }}{% endcapture %}
+                                    {% capture name %}name_{{ i }}{% endcapture %}
+                                    {% capture info %}info_{{ i }}{% endcapture %}
+                                    {% capture title %}title_{{ i }}{% endcapture %}
+                                    {% capture description %}description_{{ i }}{% endcapture %}
+                                    {% if block.settings[enable_quote] %}
+                                    <div class="content">
+                                        <div class="info-user">
+                                            <div class="icon-user zoom-border-effect">
+                                                {% if block.settings[icon] != blank %}
+                                                    <img class="lazyload" data-srcset="{{ block.settings[icon] | img_url: '64x64' }}" data-image />
+                                                {% else %}
+                                                    <svg class="icon"><use xlink:href="#icon-user"></use></svg>
+                                                {% endif %}
+                                            </div>
+                                            <div class="info">
+                                                <h4 class="name">{{ block.settings[name] }}</h4>
+                                                <i>{{ block.settings[info] }}</i>
+                                            </div>
+                                        </div>
+                                        {% if block.settings[title] != blank %}
+                                            <h3 class="title">{{ block.settings[title] }}</h3>
+                                        {% endif %} 
+                                        {% if block.settings[description] != blank %} 
+                                            <div class="description">{{ block.settings[description] }}</div>
+                                        {% endif %}
+                                    </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+<div id="popup_video_{{ section.id }}" class="modal fade halo_modal halo_modal_video" role="dialog" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-video">
+    </div>
+</div>
+
+{% schema %}
+{
+    "name": "Product Custom Block",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Section Layout"
+        },
+        {
+            "type": "checkbox",
+            "id": "border-top",
+            "label": "show border top",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "border-bottom",
+            "label": "show border bottom",
+            "default": false
+        },
+        {
+            "type": "range",
+            "id": "top",
+            "label": "Spacing Top",
+            "default": 30,
+            "min": 0,
+            "max": 100,
+            "step": 10,
+            "unit": "px"
+        },
+        {
+            "type": "range",
+            "id": "bottom",
+            "label": "Spacing bottom",
+            "default": 30,
+            "min": 0,
+            "max": 100,
+            "step": 10,
+            "unit": "px"
+        },
+        {
+            "type": "checkbox",
+            "id": "enable_banner",
+            "label": "Enable Banner Top?",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Heading Section"
+        },
+        {
+            "type": "select",
+            "id": "text_size",
+            "label": "Text size",
+            "default": "large",
+            "options": [
+                {
+                    "label": "Small",
+                    "value": "small"
+                },
+                {
+                    "label": "Medium",
+                    "value": "medium"
+                },
+                {
+                    "label": "Large",
+                    "value": "large"
+                }
+            ]
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Cosmo Milancelos"
+        },
+        {
+            "type": "text",
+            "id": "sub_title",
+            "label": "Sub Title",
+            "default": "The Tea Bridge"
+        },
+        {
+            "type": "textarea",
+            "id": "description",
+            "label": "Description"
+        },
+        {
+            "type": "header",
+            "content": "Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "slide_image",
+            "label" : "Image"
+        },
+        {
+            "type": "header",
+            "content": "Bottom CMS Block"
+        },
+        {
+            "type": "textarea",
+            "id": "content",
+            "label": "Content"
+        },
+        {
+            "type": "header",
+            "content": "Custom Color"
+        },
+        {
+            "type": "checkbox",
+            "id": "custom_color",
+            "label": "Turn on custom color",
+            "default": false
+        },
+        {
+            "type": "color",
+            "id": "color_heading",
+            "label": "Heading Color"
+        },
+        {
+            "type": "color",
+            "id": "color_sub_heading",
+            "label": "Sub Heading Color"
+        },
+        {
+            "type": "color",
+            "id": "color_text",
+            "label": "Description Color"
+        },
+        {
+            "type": "header",
+            "content": "Custom Block Color"
+        },
+        {
+            "type": "color",
+            "id": "color_block_heading",
+            "label": "Heading Color"
+        },
+        {
+            "type": "color",
+            "id": "color_block_text",
+            "label": "Description Color"
+        },
+        {
+            "type": "color",
+            "id": "color_block_button",
+            "label": "Button Color"
+        },
+        {
+            "type": "color",
+            "id": "bg_color_block_button",
+            "label": "Button Background Color"
+        },
+        {
+            "type": "color",
+            "id": "border_color_block_button",
+            "label": "Button Border Color"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "block_style_1",
+            "name": "Block Style 1",
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image"
+                },
+                {
+                    "type": "select",
+                    "id": "alignment",
+                    "label": "Text alignment",
+                    "default": "left",
+                    "options": [
+                    {
+                        "value": "left",
+                        "label": "Left"
+                    },
+                    {
+                        "value": "right",
+                        "label": "Right"
+                    }
+                    ]
+                },
+                {
+                    "type": "header",
+                    "content": "Heading block"
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Title",
+                    "default": "Title block"
+                },
+                {
+                    "type": "textarea",
+                    "id": "description",
+                    "label": "Description"
+                },
+                {
+                    "type": "text",
+                    "id": "button_text",
+                    "label": "Button Text"
+                },
+                {
+                    "type": "url",
+                    "id": "button_link",
+                    "label": "Button Link"
+                }
+            ]
+        },
+        {
+            "type": "block_style_2",
+            "name": "Block Style 2",
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image"
+                },
+                {
+                    "type": "select",
+                    "id": "alignment",
+                    "label": "Text alignment",
+                    "default": "right",
+                    "options": [
+                    {
+                        "value": "left",
+                        "label": "Left"
+                    },
+                    {
+                        "value": "right",
+                        "label": "Right"
+                    }
+                    ]
+                },
+                {
+                    "type": "header",
+                    "content": "Video"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "enable_video",
+                    "label" : "Enable Video?"
+                },
+                {
+                    "type": "select",
+                    "id": "type_video",
+                    "label": "Video type",
+                    "default": "youtube",
+                    "options": [
+                    {
+                        "value": "youtube",
+                        "label": "Youtube"
+                    },
+                    {
+                        "value": "mp4",
+                        "label": "mp4"
+                    }]
+                },
+                {
+                    "type": "text",
+                    "id": "video_link",
+                    "label": "YouTube video ID",
+                    "default": "_9VUPq3SxOc",
+                    "info": "[Find your YouTube video ID](https://docs.joeworkman.net/rapidweaver/stacks/youtube/video-id)."
+                },
+                {
+                    "type": "text",
+                    "id": "video_mp4_link",
+                    "label": "Video link"
+                },
+                {
+                    "type": "header",
+                    "content": "Quote 1"
+                },
+                {
+                    "type": "header",
+                    "content": "Info user"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "enable_quote_1",
+                    "label": "Enable??",
+                    "default": true
+                },
+                {
+                    "type": "image_picker",
+                    "id": "icon_user_1",
+                    "label": "Avatar"
+                },
+                {
+                    "type": "text",
+                    "id": "name_1",
+                    "label": "Name",
+                    "default": "Annie Lee"
+                },
+                {
+                    "type": "text",
+                    "id": "info_1",
+                    "label": "Info",
+                    "default": "Tea Taster"
+                },
+                {
+                    "type": "header",
+                    "content": "Heading block"
+                },
+                {
+                    "type": "text",
+                    "id": "title_1",
+                    "label": "Title",
+                    "default": "Title block"
+                },
+                {
+                    "type": "textarea",
+                    "id": "description_1",
+                    "label": "Description"
+                },
+                {
+                    "type": "header",
+                    "content": "Quote 2"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "enable_quote_2",
+                    "label": "Enable??",
+                    "default": false
+                },
+                {
+                    "type": "header",
+                    "content": "Info user"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "icon_user_2",
+                    "label": "Avatar"
+                },
+                {
+                    "type": "text",
+                    "id": "name_2",
+                    "label": "Name",
+                    "default": "Annie Lee"
+                },
+                {
+                    "type": "text",
+                    "id": "info_2",
+                    "label": "Info",
+                    "default": "Tea Taster"
+                },
+                {
+                    "type": "header",
+                    "content": "Heading block"
+                },
+                {
+                    "type": "text",
+                    "id": "title_2",
+                    "label": "Title",
+                    "default": "Title block"
+                },
+                {
+                    "type": "textarea",
+                    "id": "description_2",
+                    "label": "Description"
+                },
+                {
+                    "type": "header",
+                    "content": "Quote 3"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "enable_quote_3",
+                    "label": "Enable??",
+                    "default": false
+                },
+                {
+                    "type": "header",
+                    "content": "Info user"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "icon_user_3",
+                    "label": "Avatar"
+                },
+                {
+                    "type": "text",
+                    "id": "name_3",
+                    "label": "Name",
+                    "default": "Annie Lee"
+                },
+                {
+                    "type": "text",
+                    "id": "info_3",
+                    "label": "Info",
+                    "default": "Tea Taster"
+                },
+                {
+                    "type": "header",
+                    "content": "Heading block"
+                },
+                {
+                    "type": "text",
+                    "id": "title_3",
+                    "label": "Title",
+                    "default": "Title block"
+                },
+                {
+                    "type": "textarea",
+                    "id": "description_3",
+                    "label": "Description"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

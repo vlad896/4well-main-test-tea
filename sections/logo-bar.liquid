@@ -1,0 +1,265 @@
+{% if section.settings.background-color %}
+    {% assign background_color = 'halo-section-background-gray' %}
+{% endif %}
+
+{% if section.settings.border-top %}
+    {% assign border_top = 'halo-section-border-top' %}
+{% endif %}
+
+{% if section.settings.border-bottom %}
+    {% assign border_bottom = 'halo-section-border-bottom' %}
+{% endif %}
+
+{% assign top = top | default: section.settings.top %}
+{% assign bottom = bottom | default: section.settings.bottom %}
+
+{% assign layout = layout | default: section.settings.layout %}
+{% assign column = column | default: section.settings.column %}
+{% assign arrows = arrows | default: section.settings.carousel-arrows %}
+{% assign dots = dots | default: section.settings.carousel-dots %}
+
+{% if section.settings.custom_color %}
+<style>
+    [data-section-id='{{ section.id }}'] .section-header .title {
+        color: {{ section.settings.color_heading }}
+    }
+
+    [data-section-id='{{ section.id }}'] .section-header > p {
+        color: {{ section.settings.color_text }}
+    }
+</style>
+{% endif %}
+
+<div class="halo-section padding-top-{{ top }} padding-bottom-{{ bottom }} {{ background_color }} {{ border_top }} {{ border_bottom }}" data-section-id="{{ section.id }}" data-section-type="logo-bar">
+    <div class="container">
+        {% if section.settings.title != blank %}
+            <div class="section-header text-center">
+                <h2 class="title">{{ section.settings.title }}</h2>
+                {% if section.settings.description != blank %}
+                    <p>{{ section.settings.description }}</p>
+                {% endif %}
+            </div>
+        {% endif %}
+        {% if layout == 'carousel' %}
+            <div class="halo-row column-{{ column }}"
+                data-slick-pc data-slick='{
+                    "rows": 0,
+                    "rtl": false,
+                    "dots": {{ dots }},
+                    "arrows": {{ arrows }},
+                    "infinite": false,
+                    "adaptiveHeight": true,
+                    "slidesToShow": {{ column }},
+                    "slidesToScroll": 1,
+                    "prevArrow": "<div class=&apos;slick-prev slick-arrow&apos;><svg class=&apos;icon&apos;><use xlink:href=&apos;#icon-chevron-left&apos; /></svg></div>", 
+                    "nextArrow": "<div class=&apos;slick-next slick-arrow&apos;><svg class=&apos;icon&apos;><use xlink:href=&apos;#icon-chevron-right&apos; /></svg></div>"
+                }'>
+                {% for block in section.blocks %}
+                    <div class="halo-row__item text-center">
+                        <div class="logo-bar">
+                            <div class="logo__image">
+                                {% if block.settings.image != blank %}
+                                    <img class="lazyload" data-srcset="{{ block.settings.image | img_url: 'master' }}" alt="" data-image>
+                                {% else %}
+                                    <span class="recommended_size">160x60</span>
+                                    {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                                {% endif %}
+                            </div>
+                            {% if block.settings.link != blank %}
+                            <a href="{{ block.settings.link }}" class="logo__link" aria-label="link"></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="halo-column halo-row--mobile column-{{ column }}">
+                {% for block in section.blocks %}
+                    <div class="halo-column__item text-center">
+                        <div class="logo-bar">
+                            <div class="logo__image">
+                                {% if block.settings.image != blank %}
+                                    <img class="lazyload" src="{{ 'loading.svg' | asset_url }}" data-src="{{ block.settings.image | img_url: 'master' }}" alt="" data-image>
+                                {% else %}
+                                    <span class="recommended_size">160x60</span>
+                                    {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                                {% endif %}
+                            </div>
+                            {% if block.settings.link != blank %}
+                            <a href="{{ block.settings.link }}" class="logo__link" aria-label="link"></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{% schema %}
+{
+    "name": "Logo Bar",
+    "max_blocks": 20,
+    "settings": [
+        {
+            "type": "header",
+            "content": "Section Layout"
+        },
+        {
+            "type": "checkbox",
+            "id": "background-color",
+            "label": "Background Color Custom",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "border-top",
+            "label": "show border top",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "border-bottom",
+            "label": "show border bottom",
+            "default": false
+        },
+        {
+            "type": "range",
+            "id": "top",
+            "label": "Spacing Top",
+            "default": 30,
+            "min": 0,
+            "max": 100,
+            "step": 10,
+            "unit": "px"
+        },
+        {
+            "type": "range",
+            "id": "bottom",
+            "label": "Spacing bottom",
+            "default": 30,
+            "min": 0,
+            "max": 100,
+            "step": 10,
+            "unit": "px"
+        },
+        {
+            "type": "header",
+            "content": "Heading Section"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Logo bar"
+        },
+        {
+            "type": "textarea",
+            "id": "description",
+            "label": "Description"
+        },
+        {
+            "type": "header",
+            "content": "Layout"
+        },
+        {
+            "type": "select",
+            "id": "layout",
+            "label": "Layout",
+            "default": "carousel",
+            "options": [
+                {
+                    "value": "grid",
+                    "label": "Grid"
+                },
+                {
+                    "value": "carousel",
+                    "label": "Carousel"
+                }
+            ]
+        },
+        {
+            "type": "range",
+            "id": "column",
+            "label": "Column",
+            "default": 5,
+            "min": 1,
+            "max": 10,
+            "step": 1
+        },
+        {
+            "type": "checkbox",
+            "id": "carousel-arrows",
+            "label": "show arrows (Layout carousel)",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "carousel-dots",
+            "label": "show dots (Layout carousel)",
+            "default": false
+        },
+        {
+            "type": "header",
+            "content": "Custom Color"
+        },
+        {
+            "type": "checkbox",
+            "id": "custom_color",
+            "label": "Turn on custom color",
+            "default": false
+        },
+        {
+            "type": "color",
+            "id": "color_heading",
+            "label": "Heading Color"
+        },
+        {
+            "type": "color",
+            "id": "color_text",
+            "label": "Description Color"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "logo_image",
+            "name": "Another Logo",
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image"
+                },
+                {
+                    "type": "url",
+                    "id": "link",
+                    "label": "Link (Optional)"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Logo Bar",
+            "category": "Logo",
+            "blocks": [
+                {
+                    "type": "logo_image"
+                },
+                {
+                    "type": "logo_image"
+                },
+                {
+                    "type": "logo_image"
+                },
+                {
+                    "type": "logo_image"
+                },
+                {
+                    "type": "logo_image"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

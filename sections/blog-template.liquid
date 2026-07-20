@@ -1,0 +1,63 @@
+<div class="sidebar_mobile_wrapper">
+    <div class="sidebar_mobile">
+        <span class='text'>{{ 'general.sidebar.title' | t }}:</span>
+        <svg class="icon"><use xlink:href="#icon-sidebar" /></svg>
+    </div>
+</div>
+
+{% paginate blog.articles by section.settings.number %}
+
+    <div class="halo-column column-1">
+        {% for article in blog.articles %}
+            <div class="halo-column__item">
+                {% render 'featured-blog-item-1' with article as article %}
+            </div>
+        {% endfor %}
+    </div> 
+
+    {% if paginate.pages > 1 %}
+        <div class="pagination-wrapper text-right">
+            {% render 'pagination', paginate: paginate %}
+        </div>
+    {% endif %}
+
+{% endpaginate %}
+
+{% schema %}
+{
+    "name": "Blog Content",
+    "class": "page-content",
+    "settings": [
+        {
+            "type": "checkbox",
+            "id": "blog_show_date",
+            "label": "Show date",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "blog_show_author",
+            "label": "Show author",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "show_blog_categories",
+            "label": "Show blog categories",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "show_blog_comment",
+            "label": "Show number Comment",
+            "default": true
+        },
+        {
+            "type": "text",
+            "id": "number",
+            "label": "Number of blog to show",
+            "default": "3"
+        }
+    ]
+}
+{% endschema %}

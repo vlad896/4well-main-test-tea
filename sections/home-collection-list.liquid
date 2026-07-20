@@ -1,0 +1,296 @@
+{%- liquid
+    if section.settings.background-color
+    assign background_color = 'halo-section-background-gray'
+    endif
+    if section.settings.border-top
+    assign border_top = 'halo-section-border-top'
+    endif
+    if section.settings.border-bottom
+    assign border_bottom = 'halo-section-border-bottom'
+    endif
+    assign top = top | default: section.settings.top
+    assign bottom = bottom | default: section.settings.bottom
+-%}
+
+{%- if section.settings.custom_color -%}
+<style>
+    [data-section-id='{{ section.id }}'] .section-header .title {
+        color: {{ section.settings.color_heading }};
+    }
+
+    [data-section-id='{{ section.id }}'] .section-header > p {
+        color: {{ section.settings.color_text }};
+    }
+
+    [data-section-id='{{ section.id }}'] .section-header .link {
+        color: {{ section.settings.button_color }};
+    }
+
+    [data-section-id='{{ section.id }}'] .section-header .link:hover {
+        filter: brightness(85%);
+    }
+</style>
+{%- endif -%}
+
+
+<div class="halo-section padding-top-{{ top }} padding-bottom-{{ bottom }} {{ background_color }} {{ border_top }} {{ border_bottom }}" data-section-id="{{ section.id }}" data-section-type="home-collection-list">
+    <div class="container-fluid">
+        {%- if section.settings.title != blank -%}
+            <div class="container">
+                <div class="section-header text-center">
+                    <h2 class="title">{{ section.settings.title }}</h2>
+                    {%- if section.settings.description != blank -%}
+                        <p>{{ section.settings.description }}</p>
+                    {%- endif -%}
+                    {%- if section.settings.button != blank -%}
+                        <a href="{{ section.settings.button_link }}" class="link" aria-label="link">
+                            {{ section.settings.button }}
+                        </a>
+                    {%- endif -%}
+                </div>
+            </div>
+        {%- endif -%}
+        <div class="halo-column-collection-list">
+            <div class="halo-column-collection-list__item">
+                {%- if section.settings.select_list == 'menu' -%}
+                    {%- for link in linklists[section.settings.select_menu].links limit: 3 -%}
+
+                    <div class="collection-list-item text-left">
+                        <div class="image--hover collection-list-item__image image-with-text-overlay__image {% if link.object == blank %}no-image{% endif %}">
+                            {%- assign imgColl = link.object.image | img_url :"640x", format: 'jpg' -%}
+                            {%- if link.object != blank -%}
+                                <img class="lazyload"
+                                    data-srcset="{{ imgColl }} 180w, {{ imgColl }} 768w"
+                                    data-sizes="auto" alt="{{ l.title }}" data-image>
+                            {%- else -%}
+                                <div class="placeholder-background">
+                                    <span class="recommended_size">640x470</span>
+                                    {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                                </div>
+                            {%- endif -%}
+                            <a href="{{ link.url }}" aria-label="link"></a>
+                        </div>
+                        <div class="collection-list-item__content">
+                            {%- if link.object.title -%}
+                                <h3 class="title">{{ link.object.title }}</h3>
+                            {%- endif -%}
+                            {%- if link.object.description != blank -%}
+                                <p class="content">{{ link.object.description }}</p>
+                            {%- endif -%}
+                            {%- if section.settings.button_text != blank -%}
+                                <a href="{{ link.url }}" class="btn btn--primary" aria-label="link">{{ section.settings.button_text | replace: '[title]',link.object.title }}</a>
+                            {%- endif -%}
+                        </div>
+                    </div>
+                    {%- endfor -%}
+                {%- else -%}
+                    {%- assign blog = blogs[section.settings.select_blog] -%}
+                    {%- for article in blog.articles limit: 3 -%}
+                    <div class="collection-list-item text-left">
+                        <div class="image--hover collection-list-item__image image-with-text-overlay__image {% unless article.image %}no-image{% endunless %}">
+                            {%- if article.image -%}
+                                {%- assign img_url = article.image | img_url: 'master' -%}
+                                <img class="lazyload"
+                                    data-srcset="{{ img_url }} 180w, {{ img_url }} 768w"
+                                    data-sizes="auto" alt="{{ l.title }}" data-image>
+                            {%- else -%}
+                                <div class="placeholder-background">
+                                    <span class="recommended_size">640x470</span>
+                                    {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                                </div>
+                            {%- endif -%}
+                            <a href="{{ article.url }}" aria-label="link"></a>
+                        </div>
+                        <div class="collection-list-item__content">
+                            {%- if section.settings.blog_show_author or section.settings.blog_show_date -%}
+                            <div class="featured-blog__meta">
+                                {%- if section.settings.blog_show_author -%}
+                                    <span class="featured-blog__meta--item featured-blog__author">{{ 'blogs.article.by_author' | t: author: article.author }}</span>
+                                {%- endif -%}
+                                {%- if section.settings.blog_show_date -%}
+                                    <span class="featured-blog__meta--item featured-blog__date">
+                                        on {{ article.published_at | time_tag: format: 'date' }}
+                                    </span>
+                                {%- endif -%}
+                            </div>
+                            {%- endif -%}
+                            <h3 class="title">{{ article.title }}</h3>
+                            {%- if article.excerpt.size > 0 -%}
+                                {{ article.excerpt }}
+                            {%- else -%}
+                                <p class="content">{{ article.content | strip_html | truncate: 120 }}&hellip;</p>
+                            {%- endif -%}
+                            {%- if section.settings.button_text != blank -%}
+                                <a href="{{ article.url }}" class="btn btn--primary" aria-label="link">{{ section.settings.button_text | replace: '[title]',article.title }}</a>
+                            {%- endif -%}
+                        </div>
+                    </div>
+                    {%- endfor -%}
+                {%- endif -%}
+                    
+            </div>
+        </div>
+    </div>
+</div>
+
+{% schema %}
+{
+    "name": "Home Collection List",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Section Layout"
+        },
+        {
+            "type": "checkbox",
+            "id": "background-color",
+            "label": "Background Color Custom",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "border-top",
+            "label": "show border top",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "border-bottom",
+            "label": "show border bottom",
+            "default": false
+        },
+        {
+            "type": "range",
+            "id": "top",
+            "label": "Spacing Top",
+            "default": 30,
+            "min": 0,
+            "max": 100,
+            "step": 10,
+            "unit": "px"
+        },
+        {
+            "type": "range",
+            "id": "bottom",
+            "label": "Spacing bottom",
+            "default": 30,
+            "min": 0,
+            "max": 100,
+            "step": 10,
+            "unit": "px"
+        },
+        {
+            "type": "header",
+            "content": "Heading Section"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Most popular"
+        },
+        {
+            "type": "textarea",
+            "id": "description",
+            "label": "Description"
+        },
+        {
+            "type": "text",
+            "id": "button",
+            "label": "Button"
+        },
+        {
+            "type": "url",
+            "id": "button_link",
+            "label": "Button link"
+        },
+        {
+            "type": "header",
+            "content": "Select Menu or Blog List"
+        },
+        {
+            "type": "select",
+            "id": "select_list",
+            "label": "Select type",
+            "default": "menu",
+            "options": [
+                {
+                    "label": "Menu",
+                    "value": "menu"
+                },
+                {
+                    "label": "Blog",
+                    "value": "blog"
+                }
+            ]
+        },
+        {
+            "type": "text",
+            "id": "button_text",
+            "label": "Button Text",
+            "default": "Shop [title]"
+        },
+        {
+            "type": "header",
+            "content": "Option use for Type Menu"
+        },
+        {
+            "type": "link_list",
+            "id": "select_menu",
+            "label": "Select Menu"
+        },
+        {
+            "type": "header",
+            "content": "Option use for Type Blog"
+        },
+        {
+            "type": "blog",
+            "id": "select_blog",
+            "label": "Select Blog"
+        },
+        {
+            "type": "checkbox",
+            "id": "blog_show_author",
+            "label": "Show Author?",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "blog_show_date",
+            "label": "Show Date?",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Custom Color"
+        },
+        {
+            "type": "checkbox",
+            "id": "custom_color",
+            "label": "Turn on custom color",
+            "default": false
+        },
+        {
+            "type": "color",
+            "id": "color_heading",
+            "label": "Heading Color"
+        },
+        {
+            "type": "color",
+            "id": "color_text",
+            "label": "Description Color"
+        },
+        {
+            "type": "color",
+            "id": "button_color",
+            "label": "Button Color"
+        }
+    ],
+    "presets": [
+        {
+            "name": "Collection or Article List",
+            "category": "Collection"
+        }
+    ]
+}
+{% endschema %}

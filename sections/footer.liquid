@@ -1,0 +1,288 @@
+
+{%- for block in section.blocks -%}
+    {%- case block.type -%}
+        {%- when 'logo' -%}
+            {%- capture logo -%}
+                <div class="footer-logo text-left">
+                    {%- if  block.settings.logo_footer != blank -%}
+                        <div class="footer-logo__item">
+                            <a href="{{ routes.root_url }}" aria-label="link" style="width: {{ block.settings.logo_max_width }}px"><img class="lazyload" data-srcset="{{ block.settings.logo_footer | img_url: 'x40' }}" alt="" data-image></a>
+                        </div>
+                    {%- else -%}
+                        <div class="footer-logo__item footer-logo--text">
+                            <a href="{{ routes.root_url }}" aria-label="link" style="width: {{ block.settings.logo_max_width }}px">
+                                {%- if block.settings.logo_footer_text != blank -%}
+                                    {{ block.settings.logo_footer_text }}
+                                {%- else -%}
+                                    {{ shop.name }}
+                                {%- endif -%}
+                            </a>
+                        </div>
+                    {%- endif -%}
+                    {%- if  block.settings.logo_footer_content != blank -%}
+                        <div class="footer-logo__item">{{ block.settings.logo_footer_content }}</div>
+                    {%- endif -%}
+                    
+                </div>
+            {%- endcapture -%}
+    {%- endcase -%}
+{%- endfor -%}
+
+<footer class="site-footer" data-section-type="footer">
+    {%- if section.settings.footer_middle -%}
+        <div class="site-footer__middle">
+            <div class="container">
+                <div class="footer-row">
+                    {%- for block in section.blocks -%}
+                        {%- case block.type -%}
+                            {%- when 'logo' -%}
+                                <div class="footer-row__item footer-logo" style="width: {{ block.settings.style_width }}%">
+                                    {{ logo }}
+                                </div>
+                            {%- when 'navigation_list' -%}
+                                <div class="footer-row__item footer-row__item--mobile footer-navigation_list" style="width: {{ block.settings.style_width }}%">
+                                    {%- if block.settings.title != blank -%}
+                                        <h5 class="footer-heading">{{ block.settings.title }}</h5>
+                                    {%- endif -%}
+                                    <ul class="footer-list">
+                                        {%- for link in linklists[block.settings.navigation].links -%}
+                                            <li {% if forloop.last %}class="last"{% endif %}>
+                                                <a href="{{ link.url }}" aria-label="link">
+                                                    {{ link.title | escape }}
+                                                </a>
+                                            </li>
+                                        {%- endfor -%}
+                                    </ul>
+                                </div>
+                            {%- when 'social' -%}
+                                <div class="footer-row__item footer-social" style="width: {{ block.settings.style_width }}%">
+                                    {%- if block.settings.title != blank -%}
+                                        <h5 class="footer-heading">{{ block.settings.title }}</h5>
+                                    {%- endif -%}
+                                    {%- render 'social-media' -%}
+                                    {%- if block.settings.enable -%}
+                                    <div class="footer-fb_link">
+                                        {{ block.settings.code }}
+                                    </div>
+                                    {%- endif -%}
+                                </div>
+                        {%- endcase -%}
+                    {%- endfor -%}
+                </div>
+            </div>
+        </div>
+    {%- endif -%}
+    {%- if section.settings.footer_bottom -%}
+        <div class="site-footer__bottom">
+            <div class="container">
+                {%- if section.settings.copyright != blank -%}
+                    <div class="site-footer__bottom__item">
+                        <div class="footer-copyright">
+                            {{ section.settings.copyright }}
+                        </div>
+                    </div>
+                {%- endif -%}
+                <div class="site-footer__bottom__item">
+                    <div class="payment-methods">
+                        {%- assign payment_string = '1,2,3,4,5,6,7,8' -%}
+                        {%- assign methods = payment_string | split: ',' -%}
+                        {%- for method in methods -%}
+                            {%- assign current_method_icon = method | prepend: 'payment_image_' -%}
+                            {%- if section.settings[current_method_icon] != blank -%}
+                            <div class="payment-methods--item">
+                                {{ section.settings[current_method_icon] }}
+                            </div>
+                            {%- endif -%}
+                        {%- endfor -%}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {%- endif -%}
+</footer>
+
+{% schema %}
+    {
+        "name": "Footer",
+        "settings": [
+            {
+                "type": "header",
+                "content": "Footer Top"
+            },
+            {
+                "type": "checkbox",
+                "id": "footer_middle",
+                "label": "Show Footer Top",
+                "default": true,
+                "info": "Please add block content for Footer Top"
+            },
+            {
+                "type": "header",
+                "content": "Footer Bottom"
+            },
+            {
+                "type": "checkbox",
+                "id": "footer_bottom",
+                "label": "Show Footer Bottom",
+                "default": false
+            },
+            {
+                "type": "richtext",
+                "id": "copyright",
+                "label": "Copyright left"
+            },
+            {
+                "type": "text",
+                "id": "payment_image_1",
+                "label": "Payment methods 1",
+                    "info": "Use SVG Icon to load pages faster [(Where do I find SVG Icon)](https:\/\/github.com\/aaronfagan\/svg-credit-card-payment-icons)"
+            },
+            {
+                "type": "text",
+                "id": "payment_image_2",
+                "label": "Payment methods 2",
+                    "info": "Use SVG Icon to load pages faster [(Where do I find SVG Icon)](https:\/\/github.com\/aaronfagan\/svg-credit-card-payment-icons)"
+            },
+            {
+                "type": "text",
+                "id": "payment_image_3",
+                "label": "Payment methods 3",
+                    "info": "Use SVG Icon to load pages faster [(Where do I find SVG Icon)](https:\/\/github.com\/aaronfagan\/svg-credit-card-payment-icons)"
+            },
+            {
+                "type": "text",
+                "id": "payment_image_4",
+                "label": "Payment methods 4",
+                    "info": "Use SVG Icon to load pages faster [(Where do I find SVG Icon)](https:\/\/github.com\/aaronfagan\/svg-credit-card-payment-icons)"
+            },
+            {
+                "type": "text",
+                "id": "payment_image_5",
+                "label": "Payment methods 5",
+                    "info": "Use SVG Icon to load pages faster [(Where do I find SVG Icon)](https:\/\/github.com\/aaronfagan\/svg-credit-card-payment-icons)"
+            },
+            {
+                "type": "text",
+                "id": "payment_image_6",
+                "label": "Payment methods 6",
+                    "info": "Use SVG Icon to load pages faster [(Where do I find SVG Icon)](https:\/\/github.com\/aaronfagan\/svg-credit-card-payment-icons)"
+            },
+            {
+                "type": "text",
+                "id": "payment_image_7",
+                "label": "Payment methods 7",
+                    "info": "Use SVG Icon to load pages faster [(Where do I find SVG Icon)](https:\/\/github.com\/aaronfagan\/svg-credit-card-payment-icons)"
+            },
+            {
+                "type": "text",
+                "id": "payment_image_8",
+                "label": "Payment methods 8",
+                    "info": "Use SVG Icon to load pages faster [(Where do I find SVG Icon)](https:\/\/github.com\/aaronfagan\/svg-credit-card-payment-icons)"
+            }
+        ],
+        "blocks": [
+            {
+                "type": "logo",
+                "name": "Logo Footer",
+                "settings": [
+                    {
+                        "type": "range",
+                        "id": "style_width",
+                        "label": "Style Width Column",
+                        "default": 20,
+                        "min": 1,
+                        "max": 100,
+                        "step": 1,
+                        "unit": "%"
+                    },
+                    {
+                        "type": "text",
+                        "id": "logo_footer_text",
+                        "label": "Logo text"
+                    },
+                    {
+                        "type": "image_picker",
+                        "id": "logo_footer",
+                        "label": "Logo image"
+                    },
+                    {
+                        "type": "range",
+                        "id": "logo_max_width",
+                        "label": "Custom Logo Image",
+                        "min": 50,
+                        "max": 250,
+                        "step": 5,
+                        "unit": "px",
+                        "default": 100
+                    },
+                    {
+                        "type": "richtext",
+                        "id": "logo_footer_content",
+                        "label": "Logo content"
+                    }
+                ]
+            },
+            {
+                "type": "navigation_list",
+                "name": "Navigation Vertical",
+                "settings": [
+                    {
+                        "type": "range",
+                        "id": "style_width",
+                        "label": "Style Width Column",
+                        "default": 20,
+                        "min": 1,
+                        "max": 100,
+                        "step": 1,
+                        "unit": "%"
+                    },
+                    {
+                        "type": "text",
+                        "id": "title",
+                        "label": "Heading",
+                        "default": "Navigation"
+                    },
+                    {
+                        "type": "link_list",
+                        "id": "navigation",
+                        "label": "Navigation",
+                        "default": "main-menu"
+                    }
+                ]
+            },
+            {
+                "type": "social",
+                "name": "Media Social",
+                "settings": [
+                    {
+                        "type": "range",
+                        "id": "style_width",
+                        "label": "Style Width Column",
+                        "default": 20,
+                        "min": 1,
+                        "max": 100,
+                        "step": 1,
+                        "unit": "%"
+                    },
+                    {
+                        "type": "text",
+                        "id": "title",
+                        "label": "Heading",
+                        "default": "Follow us"
+                    },
+                    {
+                        "type": "checkbox",
+                        "id": "enable",
+                        "label": "Enable Facebook Like",
+                        "default": true
+                    },
+                    {
+                        "type": "textarea",
+                        "id": "code",
+                        "label": "Code"
+                    }
+                ]
+            }
+        ]
+    }
+{% endschema %}

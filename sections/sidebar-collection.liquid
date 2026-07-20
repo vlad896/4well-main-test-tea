@@ -1,0 +1,265 @@
+{% if section.settings.display_sidebar == false %}
+    <style>
+        .page .page-sidebar,
+        .page .sidebar_mobile_wrapper .sidebar_mobile {
+            display: none !important;
+        }
+
+        .page .page-content,
+        .page .page-sidebar + .page-content {
+            display: block;
+            width: 100%;
+            padding-left: 0;
+        }
+    </style>
+{% endif %}
+
+{% if section.settings.position_sidebar == 'right' %}
+    <style>
+        @media only screen and (min-width: 1025px) {
+            .page .page-sidebar {
+                float: right;
+                padding-left: 15px;
+                padding-right: 0;
+            }
+
+            .page .page-sidebar + .page-content {
+                padding-left: 0;
+                padding-right: 15px;
+            }
+        }
+    </style>
+{% endif %}
+
+{% if current_tags == blank %}
+    {% assign has_refined = false %}
+{% else %}
+    {% assign has_refined = true %} 
+{% endif %}
+
+{% if section.settings.display_sidebar == true %}
+<div class="page-sidebar__close">
+    <a href="javascript:void(0)" class="close">
+        <span class="icon">&#215;</span>
+        <span class="text">{{ 'general.accessibility.close_modal' | t }}</span>
+    </a>
+</div>
+<div class="page-sidebar__content" id="page-sidebar">
+    <div class="sidebarBlock refined-widgets" {% if has_refined == false %} style="display:none"{% endif %}>
+        <h3 class="sidebarBlock__heading">
+            <span>{{ 'collections.filters.refined_by' | t }} </span>
+            <a href="javascript:void(0)" class="clear text-hover" {% if has_refined == false %}style="display:none"{% endif %}>
+                {{ 'collections.filters.clear_all' | t }}
+            </a>
+        </h3>
+        <div class="sidebarBlock__content">
+            <ul class="refined">    
+                {% for t in current_tags %}
+                {% assign tag = t | strip %}
+                {% assign tag_value = tag | handleize %}
+                <li>
+                    <input type="checkbox" value="{{ tag_value }}" {% if current_tags contains tag %}checked{% endif %}/>
+                    <a href="{{tag_value}}" class="selected-tag">
+                      <span>{{ tag }} <b>&nbsp;X</b></span>
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% for block in section.blocks %}
+        {% case block.type %}
+            {% when 'product' %}
+                {% render 'widget-product', block: block %}
+            {% when 'collection' %}
+                {% render 'widget-collection', block: block %}
+            {% when 'quote' %}
+                {% render 'widget-cms-block', block: block %}
+            {% when 'image' %}
+                {% render 'widget-image-ads', block: block %}
+            {% when 'filter_text' %}
+                {% render 'widget-filter-text', block: block %}
+            {% when 'filter_color' %}
+                {% render 'widget-filter-color', block: block %}
+        {% endcase %}
+    {% endfor %}
+</div>
+{% endif %}
+
+{% schema %}
+{
+    "name": "Collection Sidebar",
+    "class": "page-sidebar",
+    "settings": [
+        {
+            "type": "checkbox",
+            "id": "display_sidebar",
+            "label": "Enable Sidebar",
+            "default": false
+        },
+        {
+            "type": "select",
+            "id": "position_sidebar",
+            "label": "Position Sidebar on:",
+            "options": [
+                {
+                    "value": "left",
+                    "label": "Left"
+                },
+                {
+                    "value": "right",
+                    "label": "Right"
+                }
+            ],
+            "default": "left"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "product",
+            "name": "Product",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Heading",
+                    "default": "Heading"
+                },
+                {
+                    "id": "collection",
+                    "type": "collection",
+                    "label": "Collection"
+                },
+                {
+                    "type": "text",
+                    "id": "number",
+                    "label": "Number of products to show",
+                    "default": "3"
+                },
+                {
+                    "type": "checkbox",
+                    "id": "enable_button",
+                    "label": "Enable button?",
+                    "default": true
+                },
+                {
+                    "type": "text",
+                    "id": "button_text",
+                    "label": "Button text",
+                    "default": "View all"
+                }
+            ]
+        },
+        {
+            "type": "collection",
+            "name": "Collection Block",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Heading",
+                    "default": "Heading"
+                },
+                {
+                    "type": "radio",
+                    "id": "collection_id",
+                    "label": "Show all \/ Only a few Collection",
+                    "options": [
+                        {
+                            "value": "show_all",
+                            "label": "Show Collection (1 level)"
+                        },
+                        {
+                            "value": "collection_3level",
+                            "label": "Show Collection (3 level)"
+                        }                    
+                    ]
+                },
+                {
+                    "type": "link_list",
+                    "id": "link_list",
+                    "label": "Choose a Collection",
+                    "default": "main-menu"
+                }
+            ]
+        },
+        {
+            "type": "image",
+            "name": "Image Block",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Heading",
+                    "default": "Heading"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image",
+                    "info": "Recommended Image: 225x225"
+                },
+                {
+                    "type": "url",
+                    "id": "link",
+                    "label": "Link",
+                    "info": "Optional"
+                }
+            ]
+        },
+        {
+            "type": "quote",
+            "name": "Custom Block",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Heading",
+                    "default": "Heading"
+                },
+                {
+                    "type": "richtext",
+                    "id": "text",
+                    "label": "Text",
+                    "default": "<p>Use overlay text to give your customers insight into your brand. Select image and text that relates to your style and story.</p>"
+                }
+            ]
+        },
+        {
+            "type": "filter_text",
+            "name": "Filter Text",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Heading",
+                    "default": "Heading"
+                },
+                {
+                    "type": "textarea",
+                    "id": "list_tags",
+                    "label": "List Tags",
+                    "info": "Separate by a comma, i.e \"Dincidunteros, Nectellus, Solutmades\"."
+                }
+            ]
+        },
+        {
+            "type": "filter_color",
+            "name": "Filter Color",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Heading"
+                },
+                {
+                    "type": "textarea",
+                    "id": "list_tags",
+                    "label": "List Tags",
+                    "info": "Separate by a comma, i.e \"red, blue, yellow\"."
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

@@ -1,0 +1,156 @@
+{% if section.settings.enable_layout %}
+    {% if section.settings.border-top %}
+        {% assign border_top = 'halo-section-border-top' %}
+    {% endif %}
+
+    {% if section.settings.border-bottom %}
+        {% assign border_bottom = 'halo-section-border-bottom' %}
+    {% endif %}
+
+    {% assign top = top | default: section.settings.top %}
+    {% assign bottom = bottom | default: section.settings.bottom %}
+
+    {% assign collection = collections[section.settings.collection] %}
+    {% assign product_limit = product_limit | default: section.settings.limit %}
+
+    {% assign column = column | default: section.settings.column %}
+    {% assign arrows = arrows | default: section.settings.carousel-arrows %}
+    {% assign dots = dots | default: section.settings.carousel-dots %}
+
+    {% if recommendations.performed %}
+        {% if recommendations.products_count > 0 %}
+            <div class="product-recommendations__inner halo-section padding-top-{{ top }} padding-bottom-{{ bottom }} {{ border_top }} {{ border_bottom }}">
+                {% if section.settings.title != blank %}
+                    <div class="section-header text-center">
+                        <h2 class="title">{{ section.settings.title }}</h2>
+                        {% if section.settings.description != blank %}
+                            <p>{{ section.settings.description }}</p>
+                        {% endif %}
+                    </div>
+                {% endif %}
+                <div class="halo-row column-{{ column }} text-center"
+                    data-slick-pc data-slick='{
+                       "rows": 0,
+                        "rtl": false,
+                        "dots": {{ dots }},
+                        "arrows": {{ arrows }},
+                        "infinite": false,
+                        "adaptiveHeight": true,
+                        "slidesToShow": {{ column }},
+                        "slidesToScroll": 1,
+                        "prevArrow": "<div class=&apos;slick-prev slick-arrow slick-arrow--large&apos;><svg class=&apos;icon&apos;><use xlink:href=&apos;#icon-chevron-left&apos; /></svg></div>", 
+                        "nextArrow": "<div class=&apos;slick-next slick-arrow slick-arrow--large&apos;><svg class=&apos;icon&apos;><use xlink:href=&apos;#icon-chevron-right&apos; /></svg></div>"
+                    }'>
+                    {% for product in recommendations.products limit: product_limit %}
+                        <div class="halo-row__item">
+                            {% render 'product-card-grid' with product as product, serial: forloop.index %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    {% else  %}
+        <div data-base-url="{{ routes.product_recommendations_url }}" data-product-id="{{ product.id }}" data-limit="{{ product_limit }}" data-section-id="{{ section.id }}" data-section-type="product-recommendations"></div>
+    {% endif %}
+{% endif %}
+
+
+{% schema %}
+{
+    "name": "Product Recommendations",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Section Layout"
+        },
+        {
+            "type": "checkbox",
+            "id": "enable_layout",
+            "label": "Enable Layout",
+            "default": true,
+            "info": "Dynamic recommendations change and improve with time. [Learn more](https://help.shopify.com/en/themes/development/recommended-products)"
+        },
+        {
+            "type": "checkbox",
+            "id": "border-top",
+            "label": "show border top",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "border-bottom",
+            "label": "show border bottom",
+            "default": false
+        },
+        {
+            "type": "range",
+            "id": "top",
+            "label": "Spacing Top",
+            "default": 60,
+            "min": 0,
+            "max": 100,
+            "step": 10,
+            "unit": "px"
+        },
+        {
+            "type": "range",
+            "id": "bottom",
+            "label": "Spacing bottom",
+            "default": 60,
+            "min": 0,
+            "max": 100,
+            "step": 10,
+            "unit": "px"
+        },
+        {
+            "type": "header",
+            "content": "Heading Section"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Product recommendations"
+        },
+        {
+            "type": "textarea",
+            "id": "description",
+            "label": "Description"
+        },
+        {
+            "type": "header",
+            "content": "Layout"
+        },
+        {
+            "type": "range",
+            "id": "column",
+            "label": "Column show",
+            "min": 1,
+            "max": 6,
+            "step": 1,
+            "default": 5
+        },
+        {
+            "type": "range",
+            "id": "limit",
+            "label": "Limit product",
+            "min": 1,
+            "max": 20,
+            "step": 1,
+            "default": 6
+        },
+        {
+            "type": "checkbox",
+            "id": "carousel-arrows",
+            "label": "show arrows (Layout carousel)",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "carousel-dots",
+            "label": "show dots (Layout carousel)",
+            "default": false
+        }
+    ]
+}
+{% endschema %}

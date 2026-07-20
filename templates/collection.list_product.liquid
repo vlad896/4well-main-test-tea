@@ -1,0 +1,13 @@
+{% layout none %}
+{%- for tag in current_tags -%}
+    {%- if tag contains 'limit=' -%}
+        {%- assign limit = tag | remove: 'limit=' -%}        
+    {%- elsif tag contains 'layout=' -%}
+        {%- assign layout = tag | remove: 'layout=' -%}        
+    {%- endif -%}
+{%- endfor -%}
+{%- for product in collections[collection.handle].products limit: limit -%}
+    <div class="{% if layout == 'carousel' %}halo-row__item{% else %}halo-column__item{% endif %}">
+        {%- render 'product-card-grid' with product as product, serial: forloop.index, column: section.settings.column -%}
+    </div>
+{%- endfor -%}

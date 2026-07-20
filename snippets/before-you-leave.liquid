@@ -1,0 +1,86 @@
+{% assign beforeYouLeave_time = beforeYouLeave_time | default: settings.before_you_leave_expire | times: 60000 %}
+{% assign collection = collections[settings.before_you_leave_products] %}
+
+
+<div class="before-you-leave__wrapper" data-time="{{beforeYouLeave_time}}">
+    {% if settings.before_you_leave_logo != blank %}
+        <div class="before-you-leave__header text-center">
+            {% assign img_url = settings.before_you_leave_logo | img_url: '120x' %}
+            <img class="lazyload" data-srcset="{{ img_url }}" alt="" data-image>
+        </div>
+    {% else %}
+        <div class="before-you-leave__header before-you-leave__header--text text-center">
+            {% if settings.before_you_leave_logo_text != blank %}
+                {{ settings.before_you_leave_logo_text }}
+            {% else %}
+                {{ shop.name }}
+            {% endif %}
+        </div>
+    {% endif %}
+    <div class="before-you-leave__bg text-center">
+        {% if settings.before_you_leave_bg != blank %}
+            {% assign img_url = settings.before_you_leave_bg | img_url: '470x' %}
+            {% assign img_url_2 = settings.before_you_leave_bg | img_url: '331x' %}
+            <img class="before-you-leave__img lazyload" 
+                data-srcset="{{ img_url_2 }} 180w, {{ img_url }} 400w"
+                data-sizes="auto" alt="" data-image>
+        {% endif %}
+        <div class="rte">
+            {{ settings.before_you_leave_des }}
+        </div>
+        <a class="btn btn--secondary" {% if settings.redirect_button == 'go_back' %}
+                    href="javascript:void(0)" onclick="window.history.back();"
+                    {% else %} href="{{ settings.link_to_redirect }}"{% endif %}> {{ 'general.beforeyouleave.continue_shopping' | t }} </a>
+    </div>
+    {% if settings.before_you_leave_products != blank %}
+    <div class="before-you-leave__content">
+        <div class="before-you-leave__content--title">
+            <p class="title">
+                {{ 'general.beforeyouleave.recommended' | t }} {% if collection.products_count != blank %}<span class="count">{{ collection.products_count }}</span>{% endif %}
+            </p>
+            <a class="search" href="javascript:void(0)" aria-label="search" data-search-popup>
+                <svg class="icon icon-search"><use xlink:href="#icon-search"></use></svg>
+                <svg class="icon icon-close"><use xlink:href="#icon-close"></use></svg>
+            </a>
+        </div>
+        <div class="before-you-leave__content--product">
+            <div class="halo-column column-1" data-slick='{
+                "rtl": false,
+                "rows": 2,
+                "dots": true,
+                "arrows": true,
+                "infinite": false,
+                "adaptiveHeight": true,
+                "mobileFirst": true,
+                "slidesToShow": 1,
+                "slidesToScroll": 1,
+                "prevArrow": "<div class=&apos;slick-prev slick-arrow&apos;><svg class=&apos;icon&apos;><use xlink:href=&apos;#icon-arrow-left&apos; /></svg></div>", 
+                "nextArrow": "<div class=&apos;slick-next slick-arrow&apos;><svg class=&apos;icon&apos;><use xlink:href=&apos;#icon-arrow-right&apos; /></svg></div>",
+                "responsive": [
+                    {
+                        "breakpoint": 1025,
+                        "settings": {
+                            "rows": 2
+                        }
+                    },
+                    {
+                        "breakpoint": 1281,
+                        "settings": {
+                            "rows": 3
+                        }
+                    }
+                ]
+            }'>
+                {% for product in collection.products limit: 10 %}
+                    <div class="halo-column__item">
+                        {% render 'product-card-grid-2' with product as product, serial: forloop.index %}
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="before-you-leave__button">
+                <a class="btn btn--secondary" href="{{ routes.root_url }}"> {{ 'general.beforeyouleave.back_to_store' | t }} </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>

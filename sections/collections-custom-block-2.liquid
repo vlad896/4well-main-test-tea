@@ -1,0 +1,199 @@
+
+{% if section.settings.border-top %}
+    {% assign border_top = 'halo-section-border-top' %}
+{% endif %}
+
+{% if section.settings.border-bottom %}
+    {% assign border_bottom = 'halo-section-border-bottom' %}
+{% endif %}
+
+{% assign top = top | default: section.settings.top %}
+{% assign bottom = bottom | default: section.settings.bottom %}
+
+{% if section.settings.custom_color %}
+<style>
+    {% if section.settings.color_heading != 'rgba(0,0,0,0)' %}
+    [data-section-id='{{ section.id }}'] .custom-block-column_left .title {
+        color: {{ section.settings.color_heading }};
+    }
+    {% endif %}
+
+    {% if section.settings.color_text != 'rgba(0,0,0,0)' %}
+    [data-section-id='{{ section.id }}'] .custom-block-column_left p {
+        color: {{ section.settings.color_text }};
+    }
+    {% endif %}
+</style>
+{% endif %}
+
+<div class="halo-section padding-top-{{ top }} padding-bottom-{{ bottom }} {{ background_color }} {{ border_top }} {{ border_bottom }}" data-section-id="{{ section.id }}" data-section-type="collections-custom-block-2">
+    <div class="container-fluid">
+        <div class="halo-column-custom-block">
+            {% if section.settings.content != blank %}
+            <div class="custom-block-top text-center">
+                <div class="rte">
+                    {{ section.settings.content }}
+                </div>
+            </div>
+            {% endif %}
+            <div class="custom-block-row">
+                <div class="custom-block-column_right">
+                    <div class="custom-block_slide">
+                        <div class="custom-block_slide--item {% if section.settings.slide_image == blank %}no-image{% endif %}">
+                            {% if section.settings.slide_image == blank %}
+                                <div class="placeholder-background">
+                                    <span class="recommended_size">1920x780</span>
+                                    {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                                </div>
+                            {% else %}
+                                <img class="block_slide__image" srcset="{{ section.settings.slide_image | img_url: 'master' }}" alt="" />
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="custom-block-column_left">
+                    <div class="custom-block--content">
+                        {% if section.settings.title != blank %}
+                            <h2 class="title mega-title--{{ section.settings.text_size }}">{{ section.settings.title }}</h2>
+                        {% endif %}
+                        {% if section.settings.description != blank %}
+                            <p>{{ section.settings.description }}</p>
+                        {% endif %}
+                        {% if section.settings.button != blank %}
+                            <a href="{{ section.settings.button_link }}" class="btn btn--secondary" aria-label="link">
+                                {{ section.settings.button }}
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% schema %}
+{
+    "name": "Custom Block 2",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Section Layout"
+        },
+        {
+            "type": "checkbox",
+            "id": "border-top",
+            "label": "show border top",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "border-bottom",
+            "label": "show border bottom",
+            "default": false
+        },
+        {
+            "type": "range",
+            "id": "top",
+            "label": "Spacing Top",
+            "default": 30,
+            "min": 0,
+            "max": 100,
+            "step": 10,
+            "unit": "px"
+        },
+        {
+            "type": "range",
+            "id": "bottom",
+            "label": "Spacing bottom",
+            "default": 30,
+            "min": 0,
+            "max": 100,
+            "step": 10,
+            "unit": "px"
+        },
+        {
+            "type": "header",
+            "content": "Top CMS Block"
+        },
+        {
+            "type": "textarea",
+            "id": "content",
+            "label": "Content"
+        },
+        {
+            "type": "header",
+            "content": "Heading Section"
+        },
+        {
+            "type": "select",
+            "id": "text_size",
+            "label": "Text size",
+            "default": "large",
+            "options": [
+                {
+                    "label": "Small",
+                    "value": "small"
+                },
+                {
+                    "label": "Medium",
+                    "value": "medium"
+                },
+                {
+                    "label": "Large",
+                    "value": "large"
+                }
+            ]
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Excellent quality and taste."
+        },
+        {
+            "type": "textarea",
+            "id": "description",
+            "label": "Description"
+        },
+        {
+            "type": "text",
+            "id": "button",
+            "label": "Button"
+        },
+        {
+            "type": "url",
+            "id": "button_link",
+            "label": "Button link"
+        },
+        {
+            "type": "header",
+            "content": "Image"
+        },
+        {
+            "type": "image_picker",
+            "id": "slide_image",
+            "label" : "Image"
+        },
+        {
+            "type": "header",
+            "content": "Custom Color"
+        },
+        {
+            "type": "checkbox",
+            "id": "custom_color",
+            "label": "Turn on custom color",
+            "default": false
+        },
+        {
+            "type": "color",
+            "id": "color_heading",
+            "label": "Heading Color"
+        },
+        {
+            "type": "color",
+            "id": "color_text",
+            "label": "Description Color"
+        }
+    ]
+}
+{% endschema %}

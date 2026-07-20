@@ -1,0 +1,7 @@
+<a class="navUser-action" href="{% if pagename == 'cart' %}{{ routes.cart_url }}{% else %}javascript:void(0){% endif %}" aria-label="cart" data-cart-pc>
+    <svg class="icon"><use xlink:href="#icon-cart1" /></svg>
+    <span class="countPill cart-quantity" data-cart-count>{{ cart.item_count }}</span>
+</a>
+{% unless template == 'cart' %}
+{% render 'cart-quickview' %}
+{% endunless %}

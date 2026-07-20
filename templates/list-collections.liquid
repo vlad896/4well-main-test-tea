@@ -1,0 +1,17 @@
+{% comment %}
+    The contents of the lists-collections.liquid template can be found in /sections/lists-collections-template.liquid
+{% endcomment %}
+
+{% render 'breadcrumb', breadcrumb_top: true %}
+
+
+<div class="page-collectionList">
+	<div class="container">
+    	{% section 'collections-template' %}
+    </div>
+    {% section 'collections-custom-block' %}
+    <div class="container">
+    	{% section 'collections-products' %}
+    </div>
+    {% section 'collections-custom-block-2' %}
+</div>

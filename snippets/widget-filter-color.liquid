@@ -1,0 +1,34 @@
+<div class="sidebarBlock filter-color">
+    {% if block.settings.title != blank %}
+    <h3 class="sidebarBlock__heading" data-toggle="collapse" href="#{{ block.id }}">
+        <svg class="icon icon-dropdown"><use xlink:href="#icon-chevron-up" /></svg>
+        <span>{{ block.settings.title }}</span>
+        <a href="javascript:void(0)" class="clear" aria-label="link" {% if has_refined == false %}style="display:none"{% endif %}>
+            {{ 'collections.filters.clear' | t }}
+        </a>
+    </h3>
+    {% endif %}
+    <div class="sidebarBlock__content show" id="{{ block.id }}">
+        <ul class="list-tags content">
+            {% assign tags = block.settings.list_tags | split: ',' %}
+            {% for t in tags %}
+                {% assign tag = t | strip %}
+                {% assign tag_value = tag | handleize %} 
+                {% assign current_tags_value = current_tags | handleize %}
+                {% if current_tags contains tag %}
+                    <li>
+                        <input type="checkbox" value="{{ tag_value }}" id="{{ tag_value }}" checked/>
+                        <label for="{{ tag_value }}"><span style="background-color: {{ tag_value }}; {% if settings.show_product_color_img %}background-image: url({{ tag_value | handle | append: '.png' | file_url }}){% endif %}">{{ tag }}</span></label>
+                    </li>
+                {% else %}
+                    {% if collection.tags contains tag %} 
+                        <li>
+                            <input type="checkbox" value="{{ tag_value }}" id="{{ tag_value }}"/>
+                            <label for="{{ tag_value }}"><span style="background-color: {{ tag_value }}; {% if settings.show_product_color_img %}background-image: url({{ tag_value | handle | append: '.png' | file_url }}){% endif %}">{{ tag }}</span></label>
+                        </li>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+</div>

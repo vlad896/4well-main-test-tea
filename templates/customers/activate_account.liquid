@@ -1,0 +1,37 @@
+{% render 'breadcrumb', breadcrumb_top: true %}
+<div class="container">
+    <div class="page page-login">
+        <div class="section-header text-left">
+            <h2 class="title title--large">
+                {{ 'customer.activate_account.title' | t }}
+            </h2>
+        </div>
+        <div class="form-vertical">
+            {% form 'activate_customer_password' %}
+                <h3 class="loginTitle">
+                    {{ 'customer.activate_account.password' | t }}
+                </h3>
+                <p class="loginDes">{{ 'customer.activate_account.subtext' | t }}</p>
+                {%- if form.errors -%}
+                    <div class="form-message form-message--error">
+                        {{ form.errors | default_errors }}
+                    </div>
+                {%- endif -%}
+                <div class="halo-column column-2">
+                    <div class="halo-column__item">
+                        <label for="CustomerPassword" class="form-label label--hidden">{{ 'customer.activate_account.password' | t }}</label>
+                        <input type="password" value="" name="customer[password]" id="CustomerPassword" placeholder="{{ 'customer.activate_account.password' | t }}">
+                    </div>
+                    <div class="halo-column__item">
+                        <label for="CustomerPasswordConfirmation" class="form-label label--hidden">{{ 'customer.activate_account.password_confirm' | t }}</label>
+                        <input type="password" value="" name="customer[password_confirmation]" id="CustomerPasswordConfirmation" placeholder="{{ 'customer.activate_account.password_confirm' | t }}">
+                    </div>
+                </div>
+                <div class="button-group button-group--two">
+                    <input type="submit" class="btn btn--primary" value="{{ 'customer.activate_account.submit' | t }}">
+                    <input type="submit" class="btn btn--primary" name="decline" value="{{ 'customer.activate_account.cancel' | t }}">
+                </div>
+            {% endform %}
+        </div>
+    </div>
+</div>

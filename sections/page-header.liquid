@@ -1,0 +1,114 @@
+<div class="page-header">
+  {% render 'breadcrumb' %}
+  <div class="container">
+    <h1>
+      {{page.title}}
+    </h1>
+  </div>
+</div>  
+<div class="page-navigation">
+  <div class="container">
+    <ul class="page-nav">
+      {% for link in linklists[section.settings.menu].links %}
+      <li class="item {% if link.active%}active{%endif%}">
+        <a href="{{link.url}}">{{link.title}}</a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+<style>
+    
+  .page-header{
+    {% if section.settings.background != blank %}
+    background-image:url({{section.settings.background | img_url:'master'}});
+    background-size: cover;
+    background-position: center center;
+    {% else %}
+    background-color:rgba(35,35,35,0.2);
+    {% endif %}
+    color:{{section.settings.text_color}};
+  }
+  
+  .breadcrumb *,.page-header h1 {
+    color:{{section.settings.text_color}};
+  }
+  .page-navigation{
+    background-color: {{section.settings.menu_bar_background}};
+    border-bottom: 1px solid {{section.settings.menu_bar_border}};
+  }
+  
+  .page-navigation ul li{
+    border-color:{{section.settings.menu_bar_border}};
+  }
+  .page-navigation ul li a{
+    background:{{section.settings.menu_item_background}};
+    color:{{section.settings.menu_item_text_color}};
+  }
+  .page-navigation ul li a:hover,
+  .page-navigation ul li.active a{
+    color:{{section.settings.menu_item_text_color_h}};
+    background-color: {{section.settings.menu_item_background_color_h}};
+  }
+  .page-navigation ul li a:before{
+    background-color:{{section.settings.menu_item_text_color_h}};
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Page Header",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "background",
+      "label": "Background Image"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text Color"
+    },
+    {
+      "type": "header",
+      "content": "Pages Menu"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Choose Menu"
+    },
+    {
+      "type": "color",
+      "id": "menu_bar_background",
+      "label": "Menu Bar Background Color"
+    },
+    {
+      "type": "color",
+      "id": "menu_bar_border",
+      "label": "Menu Bar Border Color"
+    },
+    {
+      "type": "color",
+      "id": "menu_item_background",
+      "label": "Menu Item Background Color"
+    },
+    {
+      "type": "color",
+      "id": "menu_item_text_color",
+      "label": "Menu Item Text Color"
+    },
+    {
+      "type": "color",
+      "id": "menu_item_background_color_h",
+      "label": "Menu Item Background Color Hover"
+    },
+    {
+      "type": "color",
+      "id": "menu_item_text_color_h",
+      "label": "Menu Item Text Color Hover"
+    }
+  ]
+}
+{% endschema %}

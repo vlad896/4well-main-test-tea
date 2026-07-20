@@ -1,0 +1,274 @@
+{%- liquid
+    if section.settings.background-color
+    assign background_color = 'halo-section-background-gray'
+    endif
+    if section.settings.border-top
+    assign border_top = 'halo-section-border-top'
+    endif
+    if section.settings.border-bottom
+    assign border_bottom = 'halo-section-border-bottom'
+    endif
+    assign top = top | default: section.settings.top
+    assign bottom = bottom | default: section.settings.bottom
+-%}
+
+{%- if section.settings.custom_color -%}
+<style>
+    [data-section-id='{{ section.id }}'] .section-header .title {
+        color: {{ section.settings.color_heading }};
+    }
+
+    [data-section-id='{{ section.id }}'] .image-with-text-overlay__content .btn {
+        color: {{ section.settings.color_btn_text }};
+        border-color: {{ section.settings.color_btn_border }};
+        background-color: {{ section.settings.color_btn_bg }};
+    }
+
+    [data-section-id='{{ section.id }}'] .image-with-text-overlay__content .btn:hover {
+        filter: brightness(85%);
+    }
+</style>
+{%- endif -%}
+
+
+<div class="halo-section padding-top-{{ top }} padding-bottom-{{ bottom }} {{ background_color }} {{ border_top }} {{ border_bottom }}" data-section-id="{{ section.id }}" data-section-type="image-with-text-overlay">
+    <div class="container">
+        {%- if section.settings.title != blank -%}
+            <div class="section-header text-center">
+                <h2 class="title">{{ section.settings.title }}</h2>
+            </div>
+        {%- endif -%}
+        <div class="halo-column-image-with-text-overlay">
+            <div class="halo-column-image-with-text-overlay__item" 
+                {%- if section.blocks.size > 1 -%} 
+                    data-slick='{
+                        "rtl": false,
+                        "rows": 0,
+                        "dots": false,
+                        "arrows": true,
+                        "autoplay": false,
+                        "infinite": true,
+                        "adaptiveHeight": true,
+                        "slidesToScroll": 1,
+                        "slidesToShow": 2,
+                        "mobileFirst": true,
+                        "prevArrow": "<div class=&apos;slick-prev slick-arrow slick-arrow--large&apos;><svg class=&apos;icon&apos;><use xlink:href=&apos;#icon-chevron-left&apos; /></svg></div>", 
+                        "nextArrow": "<div class=&apos;slick-next slick-arrow slick-arrow--large&apos;><svg class=&apos;icon&apos;><use xlink:href=&apos;#icon-chevron-right&apos; /></svg></div>",
+                        "responsive": [
+                            {
+                                "breakpoint": 992,
+                                "settings": {
+                                    "slidesToShow": 2
+                                }
+                            },
+                            {
+                                "breakpoint": 210,
+                                "settings": {
+                                    "slidesToShow": 1
+                                }
+                            }
+                        ]
+                    }'
+                    data-slick-pc
+                {%- endif -%}>
+
+                {%- for block in section.blocks -%}
+                    {%- assign img_url = block.settings.image | img_url: 'master' -%}
+                    {%- assign img_url_2 = block.settings.image | img_url: '300x' -%}
+                    <div class="image-with-text-overlay overlay--{{ block.settings.overlay }} text-center">
+                        <div class="image--hover ">
+                            <div class="image-with-text-overlay__image  {% if block.settings.image == blank %}no-image{% endif %}">
+                                {%- if block.settings.image != blank -%}
+                                    <img class="lazyload"
+                                        data-srcset="{{ img_url_2 }} 180w, {{ img_url }} 768w"
+                                        data-sizes="auto" alt="" data-image>
+                                {%- else -%}
+                                    <div class="placeholder-background">
+                                        <span class="recommended_size">670x550</span>
+                                        {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                                    </div>
+                                {%- endif -%}
+                                {%- if block.settings.link_url != blank -%}
+                                    <a href="{{ block.settings.link_url }}" aria-label="link"></a>
+                                {%- endif -%}
+                            </div>
+                            <div class="image-with-text-overlay__content">
+                                {%- if block.settings.title != blank -%}
+                                    <h3 class="title">{{ block.settings.title }}</h3>
+                                {%- endif -%}
+                                {%- if block.settings.description != blank -%}
+                                    <p class="content">{{ block.settings.description }}</p>
+                                {%- endif -%}
+                                {%- if block.settings.link != blank -%}
+                                    <a href="{{ block.settings.link_url }}" class="btn" aria-label="link">{{ block.settings.link }}</a>
+                                {%- endif -%}
+                            </div>
+                        </div>
+                    </div>
+                {%- endfor -%}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% schema %}
+{
+    "name": "Image With Text Overlay",
+    "max_blocks": 20,
+    "settings": [
+        {
+            "type": "header",
+            "content": "Section Layout"
+        },
+        {
+            "type": "checkbox",
+            "id": "background-color",
+            "label": "Background Color Custom",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "border-top",
+            "label": "show border top",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "border-bottom",
+            "label": "show border bottom",
+            "default": false
+        },
+        {
+            "type": "range",
+            "id": "top",
+            "label": "Spacing Top",
+            "default": 30,
+            "min": 0,
+            "max": 100,
+            "step": 10,
+            "unit": "px"
+        },
+        {
+            "type": "range",
+            "id": "bottom",
+            "label": "Spacing bottom",
+            "default": 30,
+            "min": 0,
+            "max": 100,
+            "step": 10,
+            "unit": "px"
+        },
+        {
+            "type": "header",
+            "content": "Heading Section"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Image With Text"
+        },
+        {
+            "type": "header",
+            "content": "Custom Color"
+        },
+        {
+            "type": "checkbox",
+            "id": "custom_color",
+            "label": "Turn on custom color",
+            "default": false
+        },
+        {
+            "type": "color",
+            "id": "color_heading",
+            "label": "Heading Color"
+        },
+        {
+            "type": "color",
+            "id": "color_btn_text",
+            "label": "Button Color"
+        },
+        {
+            "type": "color",
+            "id": "color_btn_border",
+            "label": "Button Border Color"
+        },
+        {
+            "type": "color",
+            "id": "color_btn_bg",
+            "label": "Button Background Color"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "image_item",
+            "name": "Another image",
+            "settings": [
+                {
+                    "type": "select",
+                    "id": "overlay",
+                    "label": "Content",
+                    "default": "light",
+                    "options": [
+                        {
+                            "label": "Dark",
+                            "value": "dark"
+                        },
+                        {
+                            "label": "Light",
+                            "value": "light"
+                        }
+                    ]
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image"
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Title",
+                    "default": "Image With Text"
+                },
+                {
+                    "type": "textarea",
+                    "id": "description",
+                    "label": "Content"
+                },
+                {
+                    "type": "text",
+                    "id": "link",
+                    "label": "Link Text",
+                    "default": "shop now"
+                },
+                {
+                    "type": "url",
+                    "id": "link_url",
+                    "label": "Link Url(Optional)"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Image With Text Overlay",
+            "category": "Images",
+            "blocks": [
+                {
+                    "type": "image_item"
+                },
+                {
+                    "type": "image_item"
+                },
+                {
+                    "type": "image_item"
+                },
+                {
+                    "type": "image_item"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

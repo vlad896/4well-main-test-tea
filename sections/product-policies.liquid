@@ -1,0 +1,145 @@
+{% assign top = top | default: section.settings.top %}
+{% assign bottom = bottom | default: section.settings.bottom %}
+
+<div class="halo-section padding-top-{{ top }} padding-bottom-{{ bottom }}" data-section-id="{{ section.id }}" data-section-type="product-policies">
+    <div class="halo-row halo-wrapper column-{{ section.settings.column }}" data-slick='{
+        "dots": false,
+        "arrows": true,
+        "infinite": false,
+        "mobileFirst": true,
+        "adaptiveHeight": true,
+        "slidesToShow": 1,
+        "slidesToScroll": 1,
+        "prevArrow": "<div class=&apos;slick-prev slick-arrow&apos;><svg class=&apos;icon&apos;><use xlink:href=&apos;#icon-chevron-left&apos; /></svg></div>", 
+        "nextArrow": "<div class=&apos;slick-next slick-arrow&apos;><svg class=&apos;icon&apos;><use xlink:href=&apos;#icon-chevron-right&apos; /></svg></div>",
+        "responsive": [
+            {
+                "breakpoint": 180,
+                "settings": {
+                    "slidesToShow": 1,
+                    "dots": true,
+                    "arrows": false
+                }
+            },
+            {
+                "breakpoint": 551,
+                "settings": {
+                    "slidesToShow": 2,
+                    "dots": true,
+                    "arrows": false
+                }
+            },
+            {
+                "breakpoint": 991,
+                "settings": {
+                    "slidesToShow": 3,
+                    "dots": true,
+                    "arrows": false
+                }
+            },
+            {
+                "breakpoint": 1100,
+                "settings": {
+                    "slidesToShow": {{ section.settings.column }},
+                    "dots": true,
+                    "arrows": false
+                }
+            }
+        ]}'>
+        {% for block in section.blocks %}
+            <div class="halo-row__item text-center">
+                <div class="policy-with-text text-center">
+                    <div class="policy-with-text__icon">
+                        {% if block.settings.icon != blank %}
+                            <img class="lazyload" data-srcset="{{ block.settings.icon | img_url: '100x100' }}" alt="" data-image>
+                        {% else %}
+                            <div class="not_img">
+                                <span class="recommended_size">100x100</span>
+                                {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="policy-with-text__content">
+                        {% if block.settings.title != blank %}
+                            <h3 class="title"{% if section.settings.color_title != '' %} style="color: {{ section.settings.color_title }}"{% endif %}>{{ block.settings.title }}</h3>
+                        {% endif %} 
+                        {% if block.settings.description != blank %} 
+                            <div class="description">{{ block.settings.description }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% schema %}
+{
+    "name": "Product Policies",
+    "max_blocks": 20,
+    "settings": [
+        {
+            "type": "header",
+            "content": "Section Layout"
+        },
+        {
+            "type": "range",
+            "id": "top",
+            "label": "Spacing Top",
+            "default": 30,
+            "min": 0,
+            "max": 100,
+            "step": 10,
+            "unit": "px"
+        },
+        {
+            "type": "range",
+            "id": "bottom",
+            "label": "Spacing bottom",
+            "default": 30,
+            "min": 0,
+            "max": 100,
+            "step": 10,
+            "unit": "px"
+        },
+        {
+            "type": "header",
+            "content": "Layout"
+        },
+        {
+            "type": "range",
+            "id": "column",
+            "label": "Column show",
+            "min": 1,
+            "max": 6,
+            "step": 1,
+            "default": 4
+        }
+    ],
+    "blocks": [
+        {
+            "type": "icon_item",
+            "name": "Another image",
+            "settings": [
+                {
+                    "type": "image_picker",
+                    "id": "icon",
+                    "label": "Icon image"
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Title",
+                    "default": "Icon With text"
+                },
+                {
+                    "type": "richtext",
+                    "id": "description",
+                    "label": "Description",
+                    "default": "<p>Description For Icon With text</p>"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

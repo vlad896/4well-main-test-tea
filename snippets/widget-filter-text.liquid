@@ -1,0 +1,33 @@
+<div class="sidebarBlock filter-text">
+    {% if block.settings.title != blank %}
+    <h3 class="sidebarBlock__heading" data-toggle="collapse" href="#{{ block.id }}">
+        <svg class="icon icon-dropdown"><use xlink:href="#icon-chevron-up" /></svg>
+        <span>{{ block.settings.title }}</span>
+        <a href="javascript:void(0)" class="clear" aria-label="link" {% if has_refined == false %}style="display:none"{% endif %}>
+            {{ 'collections.filters.clear' | t }}
+        </a>
+    </h3>
+    {% endif %}
+    <div class="sidebarBlock__content show" id="{{ block.id }}">
+        <ul class="list-tags content">
+            {% assign tags = block.settings.list_tags | split: ',' %}
+            {% for t in tags %}
+                {% assign tag = t | strip %}
+                {% assign tag_value = tag | handleize %} 
+                {% if current_tags contains tag %}
+                    <li>
+                        <input type="checkbox" value="{{ tag_value }}" id="{{ tag_value }}"  checked/>
+                        <label for="{{ tag_value }}">{{ tag }}</label>
+                    </li>
+                {% else %}
+                    {% if collection.tags contains tag %} 
+                        <li>
+                            <input type="checkbox" value="{{ tag_value }}" id="{{ tag_value }}"/>
+                            <label for="{{ tag_value }}">{{ tag }}</label>
+                        </li>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+</div>

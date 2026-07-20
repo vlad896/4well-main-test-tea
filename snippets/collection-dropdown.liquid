@@ -1,0 +1,21 @@
+<ul class="collection-list level-2">
+    {% for link_child_item in linklists[link].links %}
+        <li class="collection-list__item {% if link_child_item.active or link_child_item.child_active %}active-item{% endif %}">
+            {% if linklists[link_child_item.handle] == empty %}
+                <a class="collection-list__action collection-list__action--end {% if link_child_item.active %}active{% endif %}" href="{{ link_child_item.url }}" aria-label="link">{{ link_child_item.title }}</a>
+            {% else %}
+                <p class="collection-list__action--wrapper">
+                    <a class="collection-list__action has-subMenu {% if link_child_item.active %}active{% endif %}" href="{{ link_child_item.url }}" aria-label="link">{{ link_child_item.title }}</a>
+                    <svg class="icon icon-dropdown"><use xlink:href="#icon-chevron-right" /></svg>
+                </p>
+                <ul class="collection-list level-3">
+                    {% for n in linklists[link_child_item.handle].links %}
+                        <li class="collection-list__item {% if n.active %}active-item{% endif %}">
+                            <a class="collection-list__action collection-list__action--end {% if n.active %}active{% endif %}" href="{{ n.url }}" aria-label="link">{{ n.title }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>

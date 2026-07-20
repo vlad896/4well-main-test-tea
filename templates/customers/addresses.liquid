@@ -1,0 +1,235 @@
+
+{% paginate customer.addresses by 5 %}
+
+<div class="container">
+    <div class="page page-login">
+        <div class="section-header text-left">
+            <h2 class="title">
+                {{ 'customer.account.title' | t }}
+            </h2>
+        </div>
+        <div class="text-left padding-bottom-50 padding-top-10">
+            <button type="button" class="btn btn--secondary btn--big2 address-new-toggle" id="AddressNewButton" aria-expanded="false" aria-owns="AddressNewForm">{{ 'customer.addresses.add_new' | t }}</button>
+            <div class="clearfix"></div>
+            <a class="btn btn--tertiary btn--return mt-4" href="{{ routes.account_url }}">{{ 'customer.account.return' | t }}</a>
+        </div>
+        {% comment %}
+            Add address form, hidden by default
+        {% endcomment %}
+        <div id="AddressNewForm" class="form-vertical hide">
+            {% form 'customer_address', customer.new_address %}
+                <div class="halo-column column-2">
+                    <div class="halo-column__item">
+                        <label for="AddressFirstNameNew" class="form-label">{{ 'customer.addresses.first_name' | t }}</label>
+                        <input type="text" id="AddressFirstNameNew" name="address[first_name]" value="{{ form.first_name }}" autocomplete="given-name" class="form-control">
+                    </div>
+
+                    <div class="halo-column__item">
+                        <label for="AddressLastNameNew" class="form-label">{{ 'customer.addresses.last_name' | t }}</label>
+                        <input type="text" id="AddressLastNameNew" name="address[last_name]" value="{{ form.last_name }}" autocomplete="family-name" class="form-control">
+                    </div>
+                </div>
+
+                <div class="halo-column column-1">
+                    <div class="halo-column__item">
+                        <label for="AddressCompanyNew" class="form-label">{{ 'customer.addresses.company' | t }}</label>
+                        <input type="text" id="AddressCompanyNew" name="address[company]" value="{{ form.company }}" autocomplete="organization" class="form-control">
+                    </div>
+
+                    <div class="halo-column__item">
+                        <label for="AddressAddress1New" class="form-label">{{ 'customer.addresses.address1' | t }}</label>
+                        <input type="text" id="AddressAddress1New" name="address[address1]" value="{{ form.address1 }}" autocomplete="street-address address-line1" class="form-control">
+                    </div>
+
+                    <div class="halo-column__item">
+                        <label for="AddressAddress2New" class="form-label">{{ 'customer.addresses.address2' | t }}</label>
+                        <input type="text" id="AddressAddress2New" name="address[address2]" value="{{ form.address2 }}" autocomplete="street-address address-line2" class="form-control">
+                    </div>
+                </div>
+
+                <div class="halo-column column-2">
+                    <div class="halo-column__item">
+                        <label for="AddressCityNew" class="form-label">{{ 'customer.addresses.city' | t }}</label>
+                        <input type="text" id="AddressCityNew" name="address[city]" value="{{ form.city }}" autocomplete="address-level2" class="form-control">
+                    </div>
+
+                    <div class="halo-column__item">
+                        <label for="AddressCountryNew" class="form-label">{{ 'customer.addresses.country' | t }}</label>
+                        <select id="AddressCountryNew" name="address[country]" data-default="{{ form.country }}" autocomplete="country" class="form-control">{{ all_country_option_tags }}</select>
+                    </div>
+                </div>
+
+                <div class="halo-column column-1">
+                    <div id="AddressProvinceContainerNew" class="halo-column__item" style="display:none">
+                        <label for="AddressProvinceNew" class="form-label">{{ 'customer.addresses.province' | t }}</label>
+                        <select id="AddressProvinceNew" name="address[province]" data-default="{{ form.province }}" autocomplete="address-level1" class="form-control"></select>
+                    </div>
+
+                    <div class="halo-column__item">
+                        <label for="AddressZipNew" class="form-label">{{ 'customer.addresses.zip' | t }}</label>
+                        <input type="text" id="AddressZipNew" name="address[zip]" value="{{ form.zip }}" autocapitalize="characters" autocomplete="postal-code" class="form-control">
+                    </div>
+
+                    <div class="halo-column__item">
+                        <label for="AddressPhoneNew" class="form-label">{{ 'customer.addresses.phone' | t }}</label>
+                        <input type="tel" id="AddressPhoneNew" name="address[phone]" value="{{ form.phone }}" autocomplete="phone" class="form-control">
+                    </div>
+                </div>
+                <div class="halo-column column-1">
+                    <div class="halo-column__item">
+                        {{ form.set_as_default_checkbox }}
+                        <label for="address_default_address_new" class="form-label">{{ 'customer.addresses.set_default' | t }}</label>
+                    </div>
+                </div>
+                
+                <div class="button-group button-group--two">
+                    <input type="submit" class="btn btn--secondary btn--big" value="{{ 'customer.addresses.add' | t }}">
+                    <button type="button" class="text-link address-new-toggle btn btn--delete btn--big">{{ 'customer.addresses.cancel' | t }}</button>
+                </div>
+
+            {% endform %}
+            <hr>
+        </div>
+
+        {% comment %}
+            List all customer addresses with a unique edit form.
+            Also add pagination in case they have a large number of addresses
+        {% endcomment %}
+        {% if customer.addresses.size > 0 %}
+        <div class="heading-address-book">
+            <h4>{{ 'customer.addresses.title_address_book' | t }}</h4>
+        </div>
+        <ul class="text-left halo-row column-4">
+            {% for address in customer.addresses %}
+            <li class="halo-row__item">
+                <div class="address">
+                    <h5 class="name">{{ address.name }}</h5>
+                    <p class="info">
+                        {% if address.address1 != blank %}
+                            {{ address.address1 }}<br>
+                        {% endif %}
+                        {% if address.address1 != blank %}
+                            {{ address.address2 }}<br>
+                        {% endif %}
+                        {% if address.city != blank %}
+                            {{ address.city }}<br>
+                        {% endif %}
+                        {% if address.zip != blank %}
+                            {{ address.zip }}<br>
+                        {% endif %}
+                        {% if address.country != blank %}
+                            {{ address.country }}<br>
+                        {% endif %}
+                        {% comment %}
+                        {% if address.province != blank %}
+                            {{ address.province }}<br>
+                        {% endif %}
+                        {% endcomment %}
+                        {% if address.phone != blank %}
+                            {{ address.phone }}
+                        {% endif %}
+                    </p>
+                </div>
+
+                <div class="button-group button-group--two">
+                    <button
+                        id="EditFormButton_{{ address.id }}"
+                        type="button"
+                        class="btn btn--secondary address-edit-toggle"
+                        data-form-id="{{ address.id }}"
+                        aria-owns="EditAddress_{{ address.id }}"
+                        aria-expanded="false">
+                        <svg class="icon"><use xlink:href="#icon-edit1"></use></svg>
+                        {{ 'customer.addresses.edit' | t }}
+                    </button>
+                    <button
+                        type="button"
+                        class="btn btn--primary address-delete"
+                        data-target="{{ address.url }}"
+                        data-confirm-message="{{ 'customer.addresses.delete_confirm' | t }}">
+                        {{ 'customer.addresses.delete' | t }}
+                    </button>
+                </div>
+
+                <div id="EditAddress_{{ address.id }}" class="form-vertical hide">
+                    <hr>
+                    {% form 'customer_address', address %}
+
+                        <h3 class="loginTitle mb-4">{{ 'customer.addresses.edit_address' | t }}</h3>
+                        <div class="halo-column column-1">
+                            <div class="halo-column__item">
+                                <label for="AddressFirstName_{{ form.id }}" class="form-label">{{ 'customer.addresses.first_name' | t }}</label>
+                                <input type="text" id="AddressFirstName_{{ form.id }}" name="address[first_name]" value="{{ form.first_name }}" autocomplete="given-name" class="form-control">
+                            </div>
+
+                            <div class="halo-column__item">
+                                <label for="AddressLastName_{{ form.id }}" class="form-label">{{ 'customer.addresses.last_name' | t }}</label>
+                                <input type="text" id="AddressLastName_{{ form.id }}" name="address[last_name]" value="{{ form.last_name }}" autocomplete="family-name" class="form-control">
+                            </div>
+                        </div>
+                        <div class="halo-column column-1">
+                            <div class="halo-column__item">
+                                <label for="AddressCompany_{{ form.id }}" class="form-label">{{ 'customer.addresses.company' | t }}</label>
+                                <input type="text" id="AddressCompany_{{ form.id }}" name="address[company]" value="{{ form.company }}" autocomplete="organization" class="form-control">
+                            </div>
+                            <div class="halo-column__item">
+                                <label for="AddressAddress1_{{ form.id }}" class="form-label">{{ 'customer.addresses.address1' | t }}</label>
+                                <input type="text" id="AddressAddress1_{{ form.id }}" name="address[address1]" value="{{ form.address1 }}" autocomplete="street-address address-line1" class="form-control">
+                            </div>
+                            <div class="halo-column__item">
+                                <label for="AddressAddress2_{{ form.id }}" class="form-label">{{ 'customer.addresses.address2' | t }}</label>
+                                <input type="text" id="AddressAddress2_{{ form.id }}" name="address[address2]" value="{{ form.address2 }}" autocomplete="street-address address-line2" class="form-control">
+                            </div>
+                        </div>
+                        <div class="halo-column column-1">
+                            <div class="halo-column__item">
+                                <label for="AddressCity_{{ form.id }}" class="form-label">{{ 'customer.addresses.city' | t }}</label>
+                                <input type="text" id="AddressCity_{{ form.id }}" name="address[city]" value="{{ form.city }}" autocomplete="address-level2" class="form-control">
+                            </div>
+                            <div class="halo-column__item">
+                                <label for="AddressCountry_{{ form.id }}" class="form-label">{{ 'customer.addresses.country' | t }}</label>
+                                <select id="AddressCountry_{{ form.id }}" class="address-country-option" data-form-id="{{ form.id }}" name="address[country]" data-default="{{ form.country }}" autocomplete="country" class="form-control">{{ all_country_option_tags }}</select>
+                            </div>
+                        </div>
+
+                        <div class="halo-column column-1">
+                            <div id="AddressProvinceContainer_{{ form.id }}" class="halo-column__item" style="display:none">
+                                <label for="AddressProvince_{{ form.id }}" class="form-label">{{ 'customer.addresses.province' | t }}</label>
+                                <select id="AddressProvince_{{ form.id }}" name="address[province]" data-default="{{ form.province }}" autocomplete="address-level1" class="form-control"></select>
+                            </div>
+
+                            <div class="halo-column__item">
+                                <label for="AddressZip_{{ form.id }}" class="form-label">{{ 'customer.addresses.zip' | t }}</label>
+                                <input type="text" id="AddressZip_{{ form.id }}" name="address[zip]" value="{{ form.zip }}" autocapitalize="characters" autocomplete="postal-code" class="form-control">
+                            </div>
+
+                            <div class="halo-column__item">
+                                <label for="AddressPhone_{{ form.id }}" class="form-label">{{ 'customer.addresses.phone' | t }}</label>
+                                <input type="tel" id="AddressPhone_{{ form.id }}" name="address[phone]" value="{{ form.phone }}" autocomplete="phone" class="form-control">
+                            </div>
+                        </div>
+                        <div class="halo-column column-1">
+                            <div class="halo-column__item">
+                                {{ form.set_as_default_checkbox }}
+                                <label for="address_default_address_{{ form.id }}" class="form-label">{{ 'customer.addresses.set_default' | t }}</label>
+                            </div>
+                        </div>
+                        <div class="button-group button-group--two">
+                            <input type="submit" class="btn btn--secondary btn--big" value="{{ 'customer.addresses.update' | t }}">
+                            <button type="button" class="text-link address-edit-toggle btn btn--delete btn--big" data-form-id="{{ form.id }}">{{ 'customer.addresses.cancel' | t }}</button>
+                        </div>
+                    {% endform %}
+                    <hr>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% if paginate.pages > 1 %}
+            {% render 'pagination', paginate: paginate %}
+        {% endif %}
+    </div>
+</div>
+
+{% endpaginate %}

@@ -1,0 +1,62 @@
+{% comment %}
+        Renders a list of products from a collection
+
+        Accepts:
+        - collection: {Object} Collection Liquid object (required)
+
+        Usage:
+        {% include 'collection-grid-item', collection: collection %}
+{% endcomment %}
+
+{% if collection.image %}
+    {%- assign collection_image = collection.image -%}
+{% elsif collection.products.first and collection.products.first.images != empty %}
+    {%- assign collection_image = collection.products.first.featured_image -%}
+{% else %}
+    {% assign collection_image = blank %}
+{% endif %}
+
+<div class="collection-grid-item">
+    {% unless collection_image == blank %}
+        <div class="grid-item__overlay">
+            <img class="lazyload" 
+                    data-srcset="{{ collection_image | img_url: 'master' }} 1025w"
+                    data-sizes="auto" alt="" data-image>
+        </div>
+    {% else %}
+        {% if collection == empty %}
+            <div class="collection-grid-item__overlay">
+                {% capture current %}{% cycle 1, 2, 3 %}{% endcapture %}
+                {{ 'collection-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+            </div>
+        {% else %}
+            {% capture current %}{% cycle 1, 2, 3 %}{% endcapture %}
+            <div class="collection-grid-item__overlay">
+                {{ 'collection-' | append: current | placeholder_svg_tag: 'placeholder-svg' }}
+            </div>
+        {% endif %}
+    {% endunless %}
+    <div class="collection-grid-item__content text-left">
+        <div class="collection-grid-item__title-wrapper">
+            <h3 class="collection-grid-item__title">
+                {% if collection.title == blank %}
+                    {{ 'homepage.onboarding.collection_title' | t }}
+                {% else %}
+                    {{ collection.title }}
+                {% endif %}
+            </h3>
+            <p class="collection-grid-item__product">
+                {{ 'collections.general.items_with_count' | t: count: collection.all_products_count }}
+            </p>
+            <p class="collection-grid-item__description">
+                {{ collection.description }}
+            </p>
+        </div>
+        <div class="collection-grid-item__button">
+            <a href="{% if collection.products == empty %}#{% else %}{{ collection.url }}{% endif %}" class="btn btn--primary">{{ 'collections.general.shop_now' | t }}</a>
+        </div>
+    </div>
+
+    <a href="{% if collection.products == empty %}#{% else %}{{ collection.url }}{% endif %}" class="collection-grid-item__link">
+    </a>
+</div>

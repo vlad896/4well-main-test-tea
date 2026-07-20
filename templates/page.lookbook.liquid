@@ -1,0 +1,12 @@
+<div id="lookbook-page">
+	{% render 'breadcrumb' %}
+	<div class="container">
+	    <div class="page page-lookbook">
+	        <div class="section-header text-left">
+	            <h1 class="title">{{ page_title }}</h1>
+	        </div>
+	        {% section 'lookbook-template' %}
+			{% section 'lookbook-product' %}
+	    </div>
+	</div>
+</div>

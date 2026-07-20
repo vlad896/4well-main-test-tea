@@ -1,0 +1,182 @@
+{%- liquid
+    if section.settings.border-top
+    assign border_top = 'halo-section-border-top'
+    endif
+    if section.settings.border-bottom
+    assign border_bottom = 'halo-section-border-bottom'
+    endif
+    assign top = top | default: section.settings.top
+    assign bottom = bottom | default: section.settings.bottom
+-%}
+
+{%- if section.settings.custom_color -%}
+<style>
+    [data-section-id='{{ section.id }}'] .section-header .title {
+        color: {{ section.settings.color_heading }};
+    }
+
+    [data-section-id='{{ section.id }}'] .section-header > p {
+        color: {{ section.settings.color_text }};
+    }
+
+</style>
+{%- endif -%}
+
+<div class="halo-section padding-top-{{ top }} padding-bottom-{{ bottom }} {{ border_top }} {{ border_bottom }}" data-section-id="{{ section.id }}" data-section-type="newsletter">
+    <!-- <div class="newsletter_pallarax {% if section.settings.background_image == blank %}no-image{% endif %}" {%- if section.settings.background_image != blank -%}style="background-image: url({{ section.settings.background_image | img_url: 'master' }});"{%- endif -%}> -->
+    <div id="newsletter_pallarax" class="newsletter_pallarax {% if section.settings.background_image == blank %}no-image{% endif %}" {%- if section.settings.background_image != blank -%}data-image="{{ section.settings.background_image | img_url: 'master' }}"{%- endif -%}>
+        {%- if section.settings.background_image == blank -%}
+            <div class="placeholder-background">
+                <span class="recommended_size">1920x1200</span>
+                {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+            </div>
+        {%- endif -%}
+        <div class="container">
+            <div class="newsletter_content">
+                {%- if section.settings.title != blank -%}
+                    <div class="section-header">
+                        <h2 class="title mega-title--large">{{ section.settings.title }}</h2>
+                        {%- if section.settings.description != blank -%}
+                            <p>{{ section.settings.description }}</p>
+                        {%- endif -%}
+                    </div>
+                {%- endif -%}
+                
+                {%- assign formId = 'Contact_' | append: section.id -%}
+                {%- form 'customer', id: formId, class: 'contact-form form-single-field' -%}
+                    {%- if form.posted_successfully? -%}
+                        <p class="form-message form-message--success" tabindex="-1" data-form-status>
+                            {{ 'general.newsletter_form.confirmation' | t }}
+                        </p>
+                    {% else %}
+                        <p class="form-message form-message--error" tabindex="-1" data-form-status style="display: none">
+                            {{ 'general.newsletter_form.error' | t }}
+                        </p>
+                    {%- endif -%}
+
+                    <input type="hidden" name="contact[tags]" value="newsletter">
+                    <div class="input-group">
+                        <input type="email"
+                            name="contact[email]"
+                            id="{{ formId }}-email"
+                            class="input-group__field{% if form.errors %} input--error{% endif %}"
+                            value="{{ form.email }}"
+                            placeholder="{{ 'general.newsletter_form.email_placeholder' | t }}"
+                            aria-label="{{ 'general.newsletter_form.email_placeholder' | t }}"
+                            aria-required="true"
+                            autocapitalize="off"
+                            {%- if form.errors -%}
+                                aria-invalid="true"
+                                aria-describedby="{{ formId }}-email-error"
+                                data-form-status
+                            {%- endif -%}
+                            >
+                        <span class="input-group__btn">
+                            <button type="submit" class="btn btn--secondary" name="commit" id="Subscribe">{{ 'general.newsletter_form.submit' | t }}</button>
+                        </span>
+                    </div>
+                    {%- if form.errors contains 'email' -%}
+                        <span id="{{ formId }}-email-error" class="input-error-message">
+                            <svg class="icon"><use xlink:href="#icon-error" /></svg> {{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}.
+                        </span>
+                    {%- endif -%}
+                {%- endform -%}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% schema %}
+{
+    "name": "Newsletter",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Section Layout"
+        },
+        {
+            "type": "checkbox",
+            "id": "border-top",
+            "label": "show border top",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "border-bottom",
+            "label": "show border bottom",
+            "default": false
+        },
+        {
+            "type": "range",
+            "id": "top",
+            "label": "Spacing Top",
+            "default": 30,
+            "min": 0,
+            "max": 100,
+            "step": 10,
+            "unit": "px"
+        },
+        {
+            "type": "range",
+            "id": "bottom",
+            "label": "Spacing bottom",
+            "default": 30,
+            "min": 0,
+            "max": 100,
+            "step": 10,
+            "unit": "px"
+        },
+        {
+            "type": "image_picker",
+            "id": "background_image",
+            "label": "background Image"
+        },
+        {
+            "type": "header",
+            "content": "Heading Section"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Subscribe to our newsletter"
+        },
+        {
+            "type": "textarea",
+            "id": "description",
+            "label": "Description",
+            "default": "A short sentence describing what someone will receive by subscribing"
+        },
+        {
+            "type": "paragraph",
+            "content": "Any customers who sign up will have an account created for them in Shopify. [View customers](/admin/customers?query=&accepts_marketing=1)"
+        },
+        {
+            "type": "header",
+            "content": "Custom Color"
+        },
+        {
+            "type": "checkbox",
+            "id": "custom_color",
+            "label": "Turn on custom color",
+            "default": false
+        },
+        {
+            "type": "color",
+            "id": "color_heading",
+            "label": "Heading Color"
+        },
+        {
+            "type": "color",
+            "id": "color_text",
+            "label": "Description Color"
+        }
+    ],
+    "presets": [
+        {
+            "name": "Newsletter",
+            "category": "Promotional"
+        }
+    ]
+}
+{% endschema %}

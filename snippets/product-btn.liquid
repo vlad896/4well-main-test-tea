@@ -1,0 +1,37 @@
+{% if show_product_button %}
+    {% assign variantCount = product.variants | size %}
+    <div class="product-card__button">
+        <form action="/cart/add" method="post" class="variants" id="{{id}}-{{ product.id }}" data-id="product-actions-{{ product.id }}" enctype="multipart/form-data" data-product-form2>
+            {% if product.available %}
+                {% if variantCount > 1 %}
+                    <a class="product-card__btn product-card__btn--quick" href="{{ product.url | within: collection }}" aria-label="button">
+                        + {{ 'products.product.select_options' | t }}
+                    </a>
+                {% else %}
+                    <input type="hidden" name="id" value="{{ product.variants[0].id }}" />
+                    <input type="hidden" name="quantity" value="1" />
+                    <a data-btn-addToCart class="product-card__btn btn" type="submit" data-form-id="#{{id}}-{{ product.id }}" aria-disabled="true">
+                        <span class="hide" data-loader>
+                            <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-spinner" viewBox="0 0 20 20"><path d="M7.229 1.173a9.25 9.25 0 1 0 11.655 11.412 1.25 1.25 0 1 0-2.4-.698 6.75 6.75 0 1 1-8.506-8.329 1.25 1.25 0 1 0-.75-2.385z" fill="#919EAB"></path></svg>
+                        </span>
+                        <span {% if variant.inventory_quantity <= 0 %} class="data-pre-order-text"{% endif %}>
+                            {% if variant.inventory_management %}
+                                {% if variant.inventory_quantity > 0 %}
+                                    {{ 'products.product.add_to_cart' | t }}
+                                {% else %}
+                                    {{ 'products.product.pre_order' | t }}
+                                {% endif %}
+                            {% else %}
+                                {{ 'products.product.add_to_cart' | t }}
+                            {% endif %}
+                        </span>
+                    </a>
+                {% endif %}
+            {% else %}
+                <button class="product-card__btn product-card__btn-soldOut" type="submit" disabled="disabled">
+                    {{ 'products.product.unavailable' | t }}
+                </button>
+            {% endif %}
+        </form> 
+    </div>
+{% endif %}

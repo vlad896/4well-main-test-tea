@@ -1,0 +1,320 @@
+{%- liquid
+    if section.settings.background-color
+    assign background_color = 'halo-section-background-gray'
+    endif
+    if section.settings.border-top
+    assign border_top = 'halo-section-border-top'
+    endif
+    if section.settings.border-bottom
+    assign border_bottom = 'halo-section-border-bottom'
+    endif
+    assign top = top | default: section.settings.top
+    assign bottom = bottom | default: section.settings.bottom
+    assign column = column | default: section.settings.column
+    assign arrows = arrows | default: section.settings.carousel-arrows
+    assign dots = dots | default: section.settings.carousel-dots
+-%}
+
+{%- if section.settings.custom_color -%}
+<style>
+    {%- if section.settings.color_heading != 'rgba(0,0,0,0)' -%}
+    [data-section-id='{{ section.id }}'] .section-header .title {
+        color: {{ section.settings.color_heading }}
+    }
+    {%- endif -%}
+
+    {%- if section.settings.color_btn_text != 'rgba(0,0,0,0)' -%}
+    [data-section-id='{{ section.id }}'] .section-header .link {
+        color: {{ section.settings.color_btn_text }};
+    }
+
+    [data-section-id='{{ section.id }}'] .section-header .link:hover {
+        filter: brightness(85%);
+    }
+    {%- endif -%}
+</style>
+{%- endif -%}
+
+<div class="halo-section padding-top-{{ top }} padding-bottom-{{ bottom }} {{ background_color }} {{ border_top }} {{ border_bottom }}" data-section-id="{{ section.id }}" data-section-type="customer-review">
+    <div class="container">
+        {%- if section.settings.title != blank -%}
+            <div class="section-header text-center">
+                <h2 class="title">{{ section.settings.title }}</h2>
+                {%- if section.settings.link != blank -%}
+                    <a class="link" href="{{ section.settings.url }}">{{ section.settings.link }}</a>
+                {%- endif -%}
+            </div>
+        {%- endif -%}
+        {%- if section.blocks.size > 0 -%}
+            <div class="halo-row column-{{ column }} halo-wrapper"
+                data-slick='{
+                    "rows": 0,
+                    "rtl": false,
+                    "dots": true,
+                    "arrows": false,
+                    "infinite": false,
+                    "adaptiveHeight": true,
+                    "mobileFirst": true,
+                    "slidesToShow": 1,
+                    "slidesToScroll": 1,
+                    "prevArrow": "<div class=&apos;slick-prev slick-arrow&apos;><svg class=&apos;icon&apos;><use xlink:href=&apos;#icon-chevron-left&apos; /></svg></div>", 
+                    "nextArrow": "<div class=&apos;slick-next slick-arrow&apos;><svg class=&apos;icon&apos;><use xlink:href=&apos;#icon-chevron-right&apos; /></svg></div>",
+                    "responsive": [
+                        {
+                            "breakpoint": 551,
+                            "settings": {
+                                "slidesToShow": 2
+                            }
+                        },
+                        {
+                            "breakpoint": 991,
+                            "settings": {
+                                "slidesToShow": 3
+                            }
+                        },
+                        {
+                            "breakpoint": 1025,
+                            "settings": {
+                                "dots": {{ dots }},
+                                "arrows": {{ arrows }},
+                                "slidesToShow": {{ column }}
+                            }
+                        }
+                    ]
+                }'>
+                {%- for block in section.blocks -%}
+                    <div class="halo-row__item halo-row-review__item">
+                        <div class="item-user zoom-border-effect">
+                          {%- if block.settings.user != blank -%}
+                              <img class="lazyload"
+                                        data-srcset="{{ block.settings.user | img_url: '86x' }}"
+                                        data-sizes="auto" alt="{{ block.settings.name }}" data-image>
+                          {%- else -%}
+                            <svg class="icon"><use xlink:href="#icon-user"></use></svg>
+                          {%- endif -%}
+                        </div>
+                        <div class="content-review">
+                            {%- if block.settings.reviews_title != blank -%}
+                            <div class="title-reviews">
+                              <h3>
+                                {{ block.settings.reviews_title }}
+                              </h3>
+                            </div>
+                            {%- endif -%}
+                            {%- if block.settings.product_purchased != blank -%}
+                            <div class="product-purchased">
+                                {{ block.settings.product_purchased }}
+                            </div>
+                            {%- endif -%}
+                            <div class="star-reviews {{block.settings.rating}}">
+                                <svg class="icon"><use xlink:href="#icon-star"></use></svg>
+                                <svg class="icon"><use xlink:href="#icon-star"></use></svg>
+                                <svg class="icon"><use xlink:href="#icon-star"></use></svg>
+                                <svg class="icon"><use xlink:href="#icon-star"></use></svg>
+                                <svg class="icon"><use xlink:href="#icon-star"></use></svg>
+                            </div>
+                            {%- if block.settings.body_review != blank -%}
+                            <div class="body-review">
+                              <p>{{ block.settings.body_review }}</p>
+                            </div>
+                            {%- endif -%}
+                            {%- if block.settings.name != blank -%}
+                            <div class="name-review">
+                              <h4>
+                                {{ block.settings.name }}
+                              </h4>
+                            </div>
+                            {%- endif -%}
+                        </div>
+                    </div>
+                {%- endfor -%}
+            </div>
+        {%- endif -%}
+    </div>
+</div>
+
+
+
+{% schema %}
+{
+    "name": "Customer Review",
+    "max_blocks": 10,
+    "settings": [
+        {
+            "type": "header",
+            "content": "Section Layout"
+        },
+        {
+            "type": "checkbox",
+            "id": "background-color",
+            "label": "Background Color Custom",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "border-top",
+            "label": "show border top",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "border-bottom",
+            "label": "show border bottom",
+            "default": false
+        },
+        {
+            "type": "range",
+            "id": "top",
+            "label": "Spacing Top",
+            "default": 30,
+            "min": 0,
+            "max": 100,
+            "step": 10,
+            "unit": "px"
+        },
+        {
+            "type": "range",
+            "id": "bottom",
+            "label": "Spacing bottom",
+            "default": 30,
+            "min": 0,
+            "max": 100,
+            "step": 10,
+            "unit": "px"
+        },
+        {
+            "type": "header",
+            "content": "Heading Section"
+        },
+        {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Testimonials"
+        },
+        {
+            "type": "text",
+            "id": "link",
+            "label": "Button"
+        },
+        {
+            "type": "url",
+            "id": "url",
+            "label": "Link"
+        },
+        {
+            "type": "header",
+            "content": "Layout"
+        },
+        {
+            "type": "range",
+            "id": "column",
+            "label": "Column",
+            "min": 1,
+            "max": 5,
+            "step": 1,
+            "default": 3
+        },
+        {
+            "type": "checkbox",
+            "id": "carousel-arrows",
+            "label": "show arrows (Layout carousel)",
+            "default": true
+        },
+        {
+            "type": "checkbox",
+            "id": "carousel-dots",
+            "label": "show dots (Layout carousel)",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Custom Color"
+        },
+        {
+            "type": "checkbox",
+            "id": "custom_color",
+            "label": "Turn on custom color",
+            "default": false
+        },
+        {
+            "type": "color",
+            "id": "color_heading",
+            "label": "Heading Color"
+        },
+        {
+            "type": "color",
+            "id": "color_btn_text",
+            "label": "Button Color"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "review",
+            "name": "Review",
+            "settings": [
+                {
+                    "type" : "image_picker",
+                    "id" : "user",
+                    "label" : "Select image"
+                },
+                {
+                    "type" : "text",
+                    "id" : "reviews_title",
+                    "label" : "Reviews Title",
+                    "default" : "Title"
+                },
+                {
+                    "type" : "text",
+                    "id" : "product_purchased",
+                    "label" : "Product Purchased",
+                    "default" : "has purchased a Kukicha karigane green tea"
+                },
+                {
+                    "type": "select",
+                    "id": "rating",
+                    "label": "Rating",
+                    "options": [
+                      { "value": "star0", "label": "0 star" },
+                      { "value": "star1", "label": "1 star" },
+                      { "value": "star2", "label": "2 star" },
+                      { "value": "star3", "label": "3 star" },
+                      { "value": "star4", "label": "4 star" },
+                      { "value": "star5", "label": "5 star" }
+                    ],
+                    "default": "star5"
+                },
+                {
+                    "type": "textarea",
+                    "id": "body_review",
+                    "label": "Body of Review",
+                    "default": "Body of Review"
+                },
+                {
+                    "type" : "text",
+                    "id" : "name",
+                    "label" : "Name",
+                    "default" : "Name"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Customer Review",
+            "category": "Text",
+            "blocks": [
+                {
+                    "type": "review"
+                },
+                {
+                    "type": "review"
+                },
+                {
+                    "type": "review"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

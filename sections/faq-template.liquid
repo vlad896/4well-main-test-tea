@@ -1,0 +1,200 @@
+{% render 'breadcrumb', breadcrumb_top: true %}
+
+<div class="container">
+    <div class="page page-faq">
+        <div class="section-header text-left">
+            <h1 class="title">{{ page_title }}</h1>
+        </div>
+        {% if page.content.size > 0 %}
+            <div class="rte">
+                {{ page.content }}
+            </div>
+        {% endif %}
+        
+        <div class="sidebar_mobile_wrapper">
+            <div class="sidebar_mobile">
+                <span class='text'>{{ 'general.sidebar.title' | t }}:</span>
+                <svg class="icon"><use xlink:href="#icon-sidebar" /></svg>
+            </div>
+        </div>
+        <div class="page-sidebar page-sidebar--sticky">
+            <div class="page-sidebar__close">
+                <a href="javascript:void(0)" class="close">
+                    <span class="icon">&#215;</span>
+                    <span class="text">{{ 'general.accessibility.close_modal' | t }}</span>
+                </a>
+            </div>
+            <div class="faq-contact text-center">
+                <h3 class="faq-title">{{ 'general.faq.need_help' | t }}</h3>
+                <div class="faq-group">
+                    <div class="faq-group__item text-center">
+                        <a href="{{ section.settings.link_1 }}">
+                            <svg class="icon"><use xlink:href="#icon-messenger" /></svg>
+                            <span class="text">{{ 'general.faq.message' | t }}</span>
+                        </a>
+                    </div>
+                    <div class="faq-group__item text-center">
+                        <a href="{{ section.settings.link_2 }}">
+                            <svg class="icon"><use xlink:href="#icon-email" /></svg>
+                            <span class="text">{{ 'general.faq.contact' | t }}</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="page-content">
+            {% if section.settings.show_faqs_1 %}
+                <div class="faqs-paragraph">
+                    <h3 class="faq-title">{{ section.settings.faqs_1_title }}</h3>
+                    <div id="accordion">
+                        {% for block in section.blocks %}
+                            {% if block.settings.faq_type == '1' %}
+                            <div class="card">
+                                <div class="card-header" id="heading-{{ block.id }}">
+                                    <button class="title collapsed text-left" data-toggle="collapse" data-target="#{{ block.id }}" aria-expanded="true" aria-controls="{{ block.id }}">
+                                        <span>{{ 'general.faq.question' | t }}</span>
+                                        {{ block.settings.question_faqs }}
+                                    </button>
+                                    <span class="icon-plus"></span>
+                                </div>
+                                <div id="{{ block.id }}" class="collapse" aria-labelledby="heading-{{ block.id }}" data-parent="#accordion">
+                                    
+                                    <div class="card-body">
+                                        {{ block.settings.answer_faqs }}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+            {% if section.settings.show_faqs_2 %}
+                <div class="faqs-paragraph">
+                    <h3 class="faq-title">{{ section.settings.faqs_2_title }}</h3>
+                    <div id="accordion">
+                        {% for block in section.blocks %}
+                            {% if block.settings.faq_type == '2' %}
+                            <div class="card">
+                                <div class="card-header" id="heading-{{ block.id }}">
+                                    <button class="title collapsed text-left" data-toggle="collapse" data-target="#{{ block.id }}" aria-expanded="true" aria-controls="{{ block.id }}">
+                                        <span>{{ 'general.faq.question' | t }}</span>
+                                        {{ block.settings.question_faqs }}
+                                    </button>
+                                    <span class="icon-plus"></span>
+                                </div>
+                                <div id="{{ block.id }}" class="collapse" aria-labelledby="heading-{{ block.id }}" data-parent="#accordion">
+                                    
+                                    <div class="card-body">
+                                        {{ block.settings.answer_faqs }}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+            {% if section.settings.faq_text != blank %}
+                <div class="faq-content text-right">{{ section.settings.faq_text }}</div>
+            {% endif %}
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+{% schema %}
+{
+    "name": "Page Content",
+    "class": "page-content",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Link Contact"
+        },
+        {
+            "type": "url",
+            "id": "link_1",
+            "label": "Messenger link"
+        },
+        {
+            "type": "url",
+            "id": "link_2",
+            "label": "Contact link"
+        },
+        {
+            "type": "header",
+            "content": "FAQs"
+        },
+        {
+            "type" : "checkbox",
+            "id" : "show_faqs_1",
+            "label" : "Show FAQs Paragraph 1",
+            "default": true
+        },
+        {
+            "type" : "text",
+            "id" : "faqs_1_title",
+            "label" : "FAQs Paragraph 1 Title",
+            "default": "Pre-Sales Questions"
+        },
+        {
+            "type" : "checkbox",
+            "id" : "show_faqs_2",
+            "label" : "Show FAQs Paragraph 2",
+            "default": true
+        },
+        {
+            "type" : "text",
+            "id" : "faqs_2_title",
+            "label" : "FAQs Paragraph 2 Title",
+            "default": "Theme Questions"
+        },
+        {
+            "type": "header",
+            "content": "Text on Bottom"
+        },
+        {
+            "type": "richtext",
+            "id": "faq_text",
+            "label": "Text"
+        }
+    ],
+    "blocks": [
+        {
+            "type" : "question",
+            "name" : "Question",
+            "settings":[
+                {
+                    "type" : "text",
+                    "id" : "question_faqs",
+                    "label" : "Question",
+                    "default": "Question"
+                },
+                {
+                    "type" : "html",
+                    "id" : "answer_faqs",
+                    "label" : "Answer",
+                    "default": "<p>Use overlay text to give your customers insight into your brand. Select image and text that relates to your style and story.</p>"
+                },
+                {
+                    "type": "select",
+                    "id": "faq_type",
+                    "label": "Position",
+                    "options": [
+                        {
+                            "value": "1",
+                            "label": "1"
+                        },
+                        {
+                            "value": "2",
+                            "label": "2"
+                        }
+                    ],
+                    "default": "1"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

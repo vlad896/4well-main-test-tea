@@ -1,0 +1,14 @@
+{% if show_product_wishlist or show_product_quickview %}
+<div class="product-card_label">
+    {% if show_product_wishlist %}
+        <a class="product-card_wishlist" aria-label="wishlist" href="javascript:void(0)" data-wishlist data-product-handle="{{ product.handle }}" data-id="{{ product.id }}">
+            <svg class="icon"><use xlink:href="#icon-heart" /></svg>
+        </a>
+    {% endif %}
+    {% if show_product_quickview %}
+        <a class="product-card_quickview" aria-label="quickview" href="javascript:void(0)" data-quickview data-link="{{ product.handle }}">
+            <svg class="icon"><use xlink:href="#icon-eye" /></svg>
+        </a>
+    {% endif %}
+</div>
+{% endif %}

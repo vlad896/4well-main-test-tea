@@ -1,0 +1,42 @@
+<div id="sizeChart-modal" class="modal">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            {% if section.settings.size_chart_text != blank %}
+            <div class="modal-header">
+                <div class="modal-content">{{ section.settings.size_chart_text }}</div>
+                <a href="javascript:void(0)" aria-label="close" title="close" class="close-chart">
+                    <svg class="icon icon-close"><use xlink:href="#icon-close"></use></svg>
+                </a>
+            </div>
+            {% else %}
+                <a href="javascript:void(0)" aria-label="close" title="close" class="close-chart">
+                    <svg class="icon icon-close"><use xlink:href="#icon-close"></use></svg>
+                </a>
+            {% endif %}
+            <div class="modal-body">
+                <div class="size-chart-img text-center">
+                    {% if section.settings.size_chart == 'product_vendor' %}          
+                        {% capture img_vendor %}
+                            {{ product.vendor | handle | append: '-sizechart.jpg' | file_url }}
+                        {% endcapture %}
+                        <img src="{{ img_vendor }}" alt="{{ section.settings.custom_size_chart_header }}"/>
+                    
+                    {% elsif section.settings.size_chart == 'product_type' %}          
+                        {% capture img_type %}
+                            {{ product.type | handle | append: '-sizechart.jpg' | file_url }}
+                        {% endcapture %}
+                        <img src="{{ img_type }}" alt="{{ section.settings.custom_size_chart_header }}"/>
+                    
+                    {% elsif section.settings.size_chart == 'different' %} 
+                        {% if product.metafields.halo['sizechart'] != blank %}
+                            {{ product.metafields.halo['sizechart'] }}
+                        {% endif %}
+
+                    {% elsif section.settings.size_chart == 'none' %} 
+                        <img src="{{ section.settings.custom_size_chart | img_url: 'original' }}" alt=""/>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

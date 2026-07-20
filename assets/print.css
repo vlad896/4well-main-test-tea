@@ -1,0 +1,13 @@
+@media print {
+  .myaccount {
+  	padding-left: 10px;
+  	padding-right: 10px;
+  }
+  .myaccount .alert {
+  	display: none;
+  }
+  .order-table__product a {
+  	border: 0!important;
+  	text-decoration: none!important;
+  }
+}

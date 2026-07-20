@@ -1,0 +1,52 @@
+<div class="product-card__variant--popup--content">
+    {% form 'product', product, class:form_classes, novalidate: 'novalidate', data-product-form2: '' %}
+        <div class="product-card__button2">
+            <input type="hidden" name="quantity" value="1" />
+            <button type="submit" name="add"
+                {% unless current_variant.available %} aria-disabled="true"{% endunless %}
+                aria-label="{% unless current_variant.available %}{{ 'products.product.sold_out' | t }}{% else %}{{ 'products.product.select_options' | t }}{% endunless %}"
+                class="product-card__btn btn--checkout"
+                data-add-to-cart>
+                <span data-add-to-cart-text>
+                    {% unless current_variant.available %}
+                        {{ 'products.product.sold_out' | t }}
+                    {% else %}
+                        {% if current_variant.inventory_quantity > 0 %}
+                            {{ 'products.product.add_to_cart' | t }}
+                        {% else %}
+                            {{ 'products.product.pre_order' | t }}
+                        {% endif %}
+                    {% endunless %}
+                </span>
+                <span class="hide" data-loader>
+                    <svg aria-hidden="true" focusable="false" role="presentation" class="icon icon-spinner" viewBox="0 0 20 20"><path d="M7.229 1.173a9.25 9.25 0 1 0 11.655 11.412 1.25 1.25 0 1 0-2.4-.698 6.75 6.75 0 1 1-8.506-8.329 1.25 1.25 0 1 0-.75-2.385z" fill="#919EAB"></path></svg>
+                </span>
+            </button>
+        </div>
+        <div class="product-card__Select" id="productCardSelect-{{ product.id }}-{{ section.id }}">
+            {% for variant in product.variants %}
+                <a data-title="{{ variant.title }}" value="{{ variant.id }}"{% if variant.available == false %} disabled="disabled"{% endif %}{% if variant == product.selected_or_first_available_variant %} class="active" {% endif %} href="javascript:void(0)">
+                    <span class="text">{{ variant.title }}{% unless variant.available %} - {{ 'products.product.sold_out' | t }}{% endunless %}</span>
+                    {{ variant.price | money }}
+                </a>
+            {% endfor %}
+        </div>
+        <select name="id" id="ProductSelect-{{ product.id }}-{{ section.id }}" class="product-form__variants no-js">
+            {% for variant in product.variants %}
+                {% if variant.available %}
+                    <option {% if variant == product.selected_or_first_available_variant %} selected="selected" {% endif %} value="{{ variant.id }}">
+                        {{ variant.title }}
+                    </option>
+                {% else %}
+                    <option disabled="disabled">{{ variant.title }} - {{ 'products.product.sold_out' | t }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+        <div class="product-form__error-message-wrapper product-form__error-message-wrapper--hidden"
+            data-error-message-wrapper role="alert">
+            <span class="visually-hidden">{{ 'general.accessibility.error' | t }} </span>
+            <svg class="icon"><use xlink:href="#icon-error" /></svg>
+            <span class="product-form__error-message" data-error-message>{{ 'products.product.quantity_minimum_message' | t }}</span>
+        </div>
+    {% endform %}
+</div>

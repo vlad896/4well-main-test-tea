@@ -1,0 +1,58 @@
+<div class="featured-blog text-left">
+    {% if article.image %}
+        <div class="featured-blog__image">
+            {% assign img_url = article.image | img_url: 'master' %}
+            <a class="featured-blog__link image--hover" href="{{ article.url }}" aria-label="link">
+                <img class="lazyload"
+                    data-srcset="{{ img_url }}"
+                    data-sizes="auto"
+                    alt="" data-image>
+            </a>
+        </div>
+    {% endif %}
+    <div class="featured-blog__content">
+        {% if 
+            section.settings.blog_show_author or 
+            section.settings.blog_show_date or 
+            section.settings.show_blog_categories or 
+            section.settings.show_blog_comment 
+        %}
+        <div class="featured-blog__meta">
+            {% if section.settings.blog_show_author %}
+                <span class="featured-blog__meta--item featured-blog__author">{{ 'blogs.article.by_author' | t: author: article.author }}</span>
+            {% endif %}
+            {% if section.settings.blog_show_date %}
+                <span class="featured-blog__meta--item featured-blog__date">
+                    on {{ article.published_at | time_tag: format: 'date' }}
+                </span>
+            {% endif %}
+            {% if section.settings.show_blog_categories %}
+                <span class="featured-blog__meta--item featured-blog__author {% if section.settings.blog_show_author or 
+            section.settings.blog_show_date %}has-icon{% endif %}">{{ 'blogs.article.by_categories' | t: categories: page_title }}</span>
+            {% endif %}
+            {% if section.settings.show_blog_comment %}
+                {%- if comment.status == 'pending' -%}
+                    {%- assign number_of_comments = article.comments_count | plus: 1 -%}
+                {%- else -%}
+                    {%- assign number_of_comments = article.comments_count -%}
+                {%- endif -%}
+                <span class="featured-blog__meta--item article__comment {% if section.settings.blog_show_author or 
+            section.settings.blog_show_date or section.settings.show_blog_categories %}has-icon{% endif %}">{{ 'blogs.comments.comments_with_count' | t: count: number_of_comments }}</span>
+            {% endif %}
+        </div>
+        {% endif %}
+        <h3 class="featured-blog__title">
+            <a href="{{ article.url }}" aria-label="link">{{ article.title }}</a>
+        </h3>
+        <div class="featured-blog__excerpt">
+            {% if article.excerpt.size > 0 %}
+                {{ article.excerpt }}
+            {% else %}
+                {{ article.content | strip_html | truncate: 380 }}
+            {% endif %}
+            <div class="featured-blog__button">
+                <a href="{{ article.url }}" class="link" aria-label="link">{{ 'blogs.article.read_more' | t }}</a>
+            </div>
+        </div>
+    </div>
+</div>

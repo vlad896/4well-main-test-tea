@@ -1,0 +1,32 @@
+<div class="cart-popup-wrapper cart-popup-wrapper--hidden" role="dialog" aria-modal="true" aria-labelledby="CartPopupHeading" data-cart-popup-wrapper>
+    <div class="cart-popup" data-cart-popup tabindex="-1">
+        <button class="cart-popup__close" aria-label="{{ 'general.accessibility.close_modal' | t }}" data-cart-popup-close>
+            <span aria-hidden="true">&#215;</span>
+        </button>
+        <div class="cart-popup-item">
+            <div class="cart-popup-item__image-wrapper hide" data-cart-popup-image-wrapper>
+                <div class="cart-popup-item__image cart-popup-item__image--placeholder" data-cart-popup-image-placeholder>
+                    <div data-placeholder-size></div>
+                    <div class="placeholder-background placeholder-background--animation"></div>
+                </div>
+            </div>
+            <div class="cart-popup-item__description">
+                <div class="cart-popup-item__title" data-cart-popup-title></div>
+                <ul class="product-details" aria-label="{{ 'cart.popup.product_details' | t }}" data-cart-popup-product-details></ul>
+                <div class="cart-popup-desciption">{{ 'cart.popup.added_to_cart' | t }}</div>
+                
+            </div>
+        </div>
+        <div class="cart-popup_button">
+            <a class="cart-popup__dismiss-button text-link text-link--accent" data-cart-popup-dismiss
+                {% if settings.redirect_button == 'go_back' %}
+                href="javascript:void(0)" onclick="window.history.back();"
+                {% else %} href="{{ settings.link_to_redirect }}"{% endif %}>
+                {{ 'cart.general.continue_shopping' | t }}
+            </a>
+            <a href="{{ routes.cart_url }}" class="cart-popup__cta-link text-link">
+                {{ 'products.product.go_to_cart' | t }}
+            </a>
+        </div>
+    </div>
+</div>

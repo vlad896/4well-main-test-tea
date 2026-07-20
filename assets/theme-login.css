@@ -1,0 +1,334 @@
+.page-login {
+    max-width: 1370px;
+    margin: 0 auto;
+    padding-bottom: 50px;
+}
+
+.myaccount > .col-md-8 {
+    overflow-x: auto;
+}
+
+.alert {
+    border-radius: 0;
+}
+
+.alert-warning p {
+    color: inherit;
+}
+
+.btn--tertiary,
+.btn--tertiary:hover {
+    min-width: 0;
+}
+
+.section-header > .btn {
+    min-width: 0;
+    margin-top: 15px;
+} 
+
+.loginTitle {
+    font-size: 18px;
+    line-height: 20px;
+    margin-bottom: 20px;
+}
+
+.loginTitle--border {
+    padding-bottom: 12px;
+    border-bottom: 2px solid #e6e6e6;
+    margin-bottom: 30px;
+}
+
+.loginDes {
+    margin-bottom: 35px;
+    line-height: 24px;
+}
+
+.button-group {
+    position: relative;
+}
+
+.button-group--two {
+    font-size: 0;
+}
+
+.button-group--two .btn {
+    margin: 0;
+    min-width: 120px;
+    padding: 0 5px;
+}
+
+.section-header .btn-link {
+    margin-top: 25px;
+    display: inline-block;
+    font-size: 14px;
+    border-bottom: 1px solid;
+    color: #787878;
+    text-transform: capitalize;
+    text-decoration: none!important;
+}
+
+.section-header .btn-link:hover {
+    color: #1e1e1e;
+}
+
+.form-vertical .button-group--two .btn + .btn {
+    margin-top: 15px;
+    width: 100%;
+}
+
+.btn--big {
+    min-width: 150px;
+}
+
+.halo-column__item {
+    margin: 0;
+}
+
+.btn--return {
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.btn--delete {
+    color: #ffffff;
+    border-color: #e13f3f;
+    background-color: #e13f3f;
+}
+.btn--delete:hover {
+    color: #ffffff;
+    filter: brightness(85%);
+}
+
+.newCustomer--wrapper {
+    padding: 15px;
+    background-color: #fafafa;
+}
+
+.form-vertical [type="radio"], .form-vertical [type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    -webkit-appearance: checkbox;
+    -moz-appearance: checkbox;
+    appearance: checkbox;
+}
+
+.form-vertical .button-group {
+    margin-top: 25px;
+}
+
+.form-vertical .button-group .btn {
+    margin-bottom: 0px;
+}
+
+.form-vertical .button-group input.btn {
+    width: 100%;
+}
+
+#CustomerLoginForm .button-group input.btn,
+.newCustomer--wrapper .button-group input.btn {
+    width: auto;
+}
+
+#AddressNewForm {
+    max-width: 480px;
+}
+
+.RecoverPassword-wrapper {
+    margin-top: 30px;
+}
+
+hr {
+    border-bottom: 2px solid #e6e6e6;
+}
+
+/*------------ Address Page -----------*/
+
+.template-customers-addresses .address-new-toggle {
+    margin-top: 20px;
+}
+.template-customers-addresses .page-login {
+    padding-top: 35px;
+}
+.template-customers-addresses .btn--return {
+    font-size: 12px;
+    text-transform: unset;
+    border-bottom: 1px solid;
+    color: #787878;
+    padding-bottom: 3px;
+    font-weight: 400;
+}
+
+.column-4 {
+    white-space: normal;
+    padding-left: 0;
+}
+
+.column-4 li {
+    padding: 0 15px;
+    margin: 0 0 30px;
+    width: 100%;
+}
+
+.heading-address-book h4 {
+    font-size: 20px;
+    padding-top: 30px;
+    border-top: 1px solid #909195;
+    margin-top: 5px;
+    margin-bottom: 30px;
+}
+
+.halo-row__item .address {
+    border: 1px solid #e6e6e6;
+    padding: 30px 35px;
+}
+
+.address h5.name {
+    font-size: 14px;
+    letter-spacing: 0.2px;
+    text-transform: uppercase;
+    line-height: 26px;
+    margin-bottom: 10px;
+}
+
+.address .info {
+    line-height: 28px;
+}
+
+.halo-row__item > .button-group--two {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.button-group--two button {
+    width: calc(50% - 5px);
+    text-transform: capitalize;
+    font-weight: 400;
+}
+
+.button-group--two svg {
+    width: 14px;
+    height: 14px;
+    margin-right: 7px;
+}
+
+.halo-row__item .form-vertical > hr {
+    margin: 40px 0 30px;
+}
+
+.button-group:not(.button-group--two) a {
+    width: 100%;
+    padding: 0 10px;
+}
+
+.button-group .count_address {
+    height: 22px;
+    width: 22px;
+    line-height: 21px;
+    display: inline-block;
+    border-radius: 50%;
+    border: 1px solid #fff;
+    margin-left: 10px;
+}
+
+.button-group .RecoverPassword-wrapper a {
+    padding: 0!important;
+}
+
+.action-print {
+    cursor: pointer;
+    
+}
+.action-print span {
+    font-size: 14px;
+    border-bottom: 1px solid;
+    display: inline-block;
+    margin-left: 5px;
+    color: #17a8a3;
+    text-transform: uppercase;
+}
+.action-print svg {
+    color: #17a8a3;
+}
+
+@media (min-width: 551px) {
+    .newCustomer--wrapper,
+    .contact-infomation {
+        padding: 30px;
+    }
+
+    #CustomerLoginForm,
+    #RecoverPasswordForm {
+        padding-top: 30px;
+    }
+    .column-4 li.halo-row__item {
+        width: 50%!important;
+    }
+    .button-group:not(.button-group--two) a {
+        width: calc(50% - 15px);
+    }
+}
+
+@media (min-width: 1025px) {
+    .newCustomer--wrapper {
+        padding: 70px;
+    }
+
+    #CustomerLoginForm,
+    #RecoverPasswordForm {
+        padding-top: 70px;
+    }
+
+    .page-login {
+        min-height: calc(100vh - 175px);
+        padding-bottom: 150px;
+        padding-top: 25px;
+    }
+
+    .btn--big {
+        min-width: 170px;
+        padding-left: 40px;
+        padding-right: 40px;
+    }
+
+    .btn--big2 {
+        min-width: 270px;
+    }
+
+    .halo-column__item {
+        margin: 0;
+    }
+
+    .template-customers-account .section-header {
+        margin-bottom: 55px;
+        margin-top: 10px;
+    }
+    
+}
+
+@media (min-width: 1200px) {
+    .column-4 li.halo-row__item {
+        width: 25%!important;
+    }
+    .button-group:not(.button-group--two) a {
+        width: calc(25% - 21px);
+    }
+}
+
+@media print {
+  .myaccount {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .myaccount .alert {
+    display: none;
+  }
+  .order-table__product a {
+    border: 0!important;
+    text-decoration: none!important;
+  }
+  .loginTitle {
+    padding-top: 15px;
+  }
+}

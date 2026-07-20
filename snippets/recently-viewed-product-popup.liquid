@@ -1,0 +1,222 @@
+{% if settings.enable_recently_viewed_product %}
+    {% assign pagename = request.page_type | handle %}
+
+    <div class="lst-seen-widget slided-up{% unless settings.enable_recently_viewed_product_mb %} lst-seen-widget--disableMobile{% endunless %}">
+        <div class="collapse-icon"><svg class="icon"><use xlink:href="#icon-double-arrow-right" /></svg></div>
+        <div class="top{% if pagename == 'cart' %} hide{% endif %}">
+            <div class="cart-icon with-products">
+                <a href="javascript:void(0)" aria-label="link" data-cart-recently>
+                    <svg class="icon"><use xlink:href="#icon-cart1" /></svg>
+                    <span class="countPill cart-quantity" data-cart-count>{{ cart.item_count }}</span>
+                </a>
+           </div>
+        </div>
+        <div class="in-content">
+            <p class="title text-center">{{ 'general.recently_viewed.title' | t }}</p>
+            <div class="no-products hide">
+                <svg class="icon"><use xlink:href="#icon-nopicture" /></svg>
+            </div>
+            <div class="products-vertical-slider hide" id="recently-viewed-products-list">
+            </div>
+        </div>
+        <div class="bottom backtoTop">
+            <svg class="icon"><use xlink:href="#icon-arrow-right" /></svg>
+            <div class="text">{{ 'general.recently_viewed.top' | t }}</div>
+        </div>
+    </div>
+    <div class="wrap-icons{% unless settings.enable_recently_viewed_product_mb %} lst-seen-widget--disableMobile{% endunless %}">
+        <div class="expand"><svg class="icon"><use xlink:href="#icon-expand" /></svg></div>
+        <div class="backtoTop"><svg class="icon"><use xlink:href="#icon-arrow-right" /></svg></div>
+    </div>
+
+    <script src="{{ 'jquery.min.js' | asset_url }}"></script>
+    <script src="{{ 'jquery.tmpl.min.js' | asset_url }}"></script>
+    <script src="{{ 'jquery.products.min.js' | asset_url }}"></script>
+
+    {% raw %}
+    <script id="recently-viewed-product-add-on" type="text/x-jquery-tmpl">
+        <div class="item" data-target="img-1">
+            <div id="product-${handle}" class="product-recently-viewed" data-product-id="product-${id}">
+                <a href="${url}" class="recent_item_url" aria-label="link">
+                    <img srcset="${featured_image}" alt="${featured_image.alt}"/>
+                </a>
+                <div class="second-info">
+                    <div class="first product-recently-viewed-content product-card" data-product-id="product-${id}" data-product-card>
+                        {% endraw %}
+                            {% if settings.show_product_title %}
+                        {% raw %}
+                            <h4 class="product-card__title">
+                                <a href="${url}" data-collections-related="/collections/${collection}?view=related" aria-label="title">${title}</a>
+                            </h4>
+                        {% endraw %}
+                            {% endif %}
+                        {% raw %}
+
+                        {% endraw %}
+                            {% if settings.show_product_price %}
+                        {% raw %}
+                            <div class="product-card__price {{if compare_at_price_min > price_min}}price--on-sale{{/if}}" data-price>
+                                {{if compare_at_price_min > price_min}}
+                                    <span class="price-item price-item--regular" data-regular-price>
+                                        {{html Shopify.formatMoney(compare_at_price_min, theme.moneyFormat)}}
+                                    </span>
+                                    <span class="price-item price-item--sale">
+                                        {{if price_varies}}
+                                            {% endraw %}<em>{{ 'products.product.from_text_html' | t }}</em>{% raw %}
+                                        {{/if}}
+                                        {{html Shopify.formatMoney(price_min, theme.moneyFormat)}}
+                                    </span>
+                                {{else}}
+                                    <span class="price-item price-item--regular" data-regular-price>
+                                        {{if price_varies}}
+                                            {% endraw %}<em>{{ 'products.product.from_text_html' | t }}</em>{% raw %}
+                                        {{/if}}
+                                        {{html Shopify.formatMoney(price_min, theme.moneyFormat)}}
+                                    </span>
+                                    <span class="price-item price-item--sale"></span>
+                                {{/if}}
+                            </div>
+                        {% endraw %}
+                            {% endif %}
+                        {% raw %}
+
+                        {% endraw %}
+                            {% if settings.show_product_button %}
+                        {% raw %}
+                            <div class="product-card__button">
+                                <a class="product-card__btn--plus" href="${url}" title="${title}" aria-label="button">
+                                    <span>
+                                        {% endraw %}
+                                        {{ 'products.product.detail' | t }}
+                                        {% raw %}
+                                    </span>
+                                </a>
+                            </div>
+                        {% endraw %}
+                            {% endif %}
+                        {% raw %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </script>
+    {% endraw %}
+
+    <div id="sidebar-cart" class="menu menu-right sidebar-cart">
+      <div class="sidebar-cart-inner">
+        <div class="cart">
+            
+          <div class="cart-header">
+            <div class="wrap">
+              <div class="close-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><title>ic-close-circle</title><path d="M12 23c6.075 0 11-4.925 11-11S18.075 1 12 1 1 5.925 1 12s4.925 11 11 11zm0 1C5.373 24 0 18.627 0 12S5.373 0 12 0s12 5.373 12 12-5.373 12-12 12zm-.889-12L8 8.889 8.889 8 12 11.111 15.111 8l.889.889L12.889 12 16 15.111l-.889.889L12 12.889 8.889 16 8 15.111 11.111 12z"></path></svg>
+              </div>
+              <div class="title">
+                <h4 >{{ 'cart.general.title' | t }}</h4>
+                <div class="total">
+                  <span data-cart-count>{{ cart.item_count }}</span> 
+                  <span>{{ 'customer.order.product' | t }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {% if settings.enable_promotion %}
+          {% if settings.promotion_text_1 != blank or settings.promotion_text_2 != blank or settings.promotion_text_3 != blank %}
+          <div id="cart_slider">
+            <div class="cart_slider" data-policies-slider data-row="1">
+              {% if settings.promotion_text_1 != blank %}
+              <div class="item">{% render 'multilang' with settings.promotion_text_1 %}</div>
+              {% endif %}
+              {% if settings.promotion_text_2 != blank %}
+              <div class="item">{% render 'multilang' with settings.promotion_text_2 %}</div>
+              {% endif %}
+              {% if settings.promotion_text_3 != blank %}
+              <div class="item">{% render 'multilang' with settings.promotion_text_3 %}</div>
+              {% endif %}
+            </div>
+          </div>
+          {% endif %}
+          {% endif %}
+          
+        </div>
+      </div>
+    </div>
+
+    
+
+    <script>
+        function checkNeedToConvertCurrency() {
+            return (window.show_multiple_currencies && Currency.currentCurrency != shopCurrency) || window.show_auto_currency;
+        }
+
+        $('.lst-seen-widget').find(".no-products").removeClass('hide');
+
+        Shopify.Products.showRecentlyViewed({ 
+            howManyToShow: 5,
+            wrapperId: 'recently-viewed-products-list', 
+            templateId: 'recently-viewed-product-add-on',
+            onComplete: function() {
+                var recentlyViewBlock = $('.lst-seen-widget');
+                var recentlyGrid = recentlyViewBlock.find('.products-vertical-slider');
+                var productGrid = recentlyGrid.children();
+                if(productGrid.length) {
+                    recentlyViewBlock.find(".products-vertical-slider").removeClass('hide');
+                    recentlyViewBlock.find(".no-products").addClass('hide');
+                    var $rows = 3;
+                    if (productGrid.length > 3) {
+                        recentlyGrid.addClass('has-arrows');
+                    }
+                    if (productGrid.length >= 3) {
+                        recentlyGrid.slick({
+                            dots: false,
+                            arrows: true,
+                            speed: 1000,
+                            infinite: false,
+                            slidesToShow: $rows,
+                            vertical: true,
+                            adaptiveHeight: true,
+                            slidesToScroll: $rows,
+                            prevArrow: "<div class='slick-prev slick-arrow'><svg class='icon'><use xlink:href='#icon-chevron-up' /></svg></div>", 
+                            nextArrow: "<div class='slick-next slick-arrow'><svg class='icon'><use xlink:href='#icon-chevron-down' /></svg></div>",
+                            responsive: [
+                                {
+                                    breakpoint: 1400,
+                                    settings: {
+                                        slidesToScroll: 1,
+                                        slidesToShow: 2
+                                    }
+                                },
+                                {
+                                    breakpoint: 768,
+                                    settings: {
+                                        slidesToScroll: 1,
+                                        slidesToShow: 1
+                                    }
+                                }
+                            ]
+                        });
+                        recentlyGrid.prepend('<div class="product-info"></div>');
+                    }
+                    if (productGrid.length = 1) {
+                        recentlyGrid.slick({
+                            dots: false,
+                            arrows: false,
+                            speed: 1000,
+                            infinite: false,
+                            slidesToShow: 1,
+                            vertical: true,
+                            adaptiveHeight: true,
+                            slidesToScroll: 1
+                        });
+                        recentlyGrid.prepend('<div class="product-info"></div>');
+                    }
+                    if (checkNeedToConvertCurrency()) {
+                        Currency.convertAll(window.shop_currency, $('#currencies .active').attr('data-currency'), 'span.money', 'money_format');
+                    }
+                }
+            }
+        });
+
+        Shopify.Products.recordRecentlyViewed();
+    </script>
+{% endif %}

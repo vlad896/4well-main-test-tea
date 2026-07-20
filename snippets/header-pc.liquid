@@ -1,0 +1,74 @@
+{% assign pagename = request.page_type | handle %}
+
+<div class="header-PC">
+    <div class="container">
+        <div class="header-middle">
+            <div class="header-middle__left header-middle__navigation">
+                <div class="logo-wrapper" itemscope itemtype="http://schema.org/Organization">
+                    <meta itemprop="url" content="{{ shop.url }}">
+                    {% if section.settings.logo != blank %}
+                        {% assign img_size = section.settings.logo_max_width | append: 'x' %}
+                        {% assign img_url = section.settings.logo | img_url: 'master' %}
+                        <a href="{{ routes.root_url }}" class="site-header__logo-image" aria-label="logo" style="width: {{ section.settings.logo_max_width }}px; max-width: {{ section.settings.logo_max_width }}px">
+                            {% capture logo_alt %}{{ section.settings.logo.alt | default: shop.name }}{% endcapture %}
+                            <img itemprop="logo" src="{{ img_url }}" alt="{{ logo_alt | escape }}">
+                        </a>
+                    {% else %}
+                        <a class="logo_text" href="{{ routes.root_url }}" aria-label="logo" style="width: {{ section.settings.logo_max_width }}px">
+                            {% if section.settings.logo_text != blank %}
+                                {{ section.settings.logo_text }}
+                            {% else %}
+                                {{ shop.name }}
+                            {% endif %} 
+                        </a>
+                    {% endif %}
+                </div>
+                {% render 'site-nav', main_menu: section.settings.main_linklist %}
+            </div>
+            <div class="header-middle__right">
+                <div class="header-middle__item header-middle__item--special">
+                    {% if section.settings.enable-header-special and section.settings.image_special != blank %}
+                    <a class="navUser-action" href="{{ section.settings.url_special }}">
+                        <img class="lazyload" data-srcset="{{ section.settings.image_special | img_url: 'x500' }}" alt="" data-image>
+                    </a>
+                    {% endif %}
+                </div>
+                
+                {% if section.settings.enable-header-search %}
+                    <div class="header-middle__item header-middle__item--quickSearch">
+                        <a class="navUser-action" href="javascript:void(0)" aria-label="link" data-search-popup>
+                            <svg class="icon"><use xlink:href="#icon-search"></use></svg>
+                            <span>&#215;</span>
+                        </a>
+                    </div>
+                {% endif %}
+
+                {% if shop.customer_accounts_enabled %}
+                    {% if section.settings.enable-header-account %}
+                        <div class="header-middle__item header-middle__item--account">
+                            {% render 'header-account', pagename: pagename %}
+                        </div>
+                    {% endif %}
+                {% endif %}
+
+                {% if section.settings.enable-header-wishlist %}
+                    <div class="header-middle__item header-middle__item--wishlist">
+                        <a class="navUser-action" href="{{ pages['wish-list'].url }}" aria-label="link">
+                            <svg class="icon"><use xlink:href="#icon-heart"></use></svg>
+                        </a>
+                    </div>
+                {% endif %}
+
+                    <div class="header-middle__item header-middle__item--cart" 
+                    {% if section.settings.enable-header-cart == false %}style="display: none"{% endif %}>
+                        {% render 'header-cart', pagename: pagename %}
+                    </div>
+                
+
+            </div>
+            <div class="header-middle__search">
+                {% render 'search-bar' %}
+            </div>
+        </div>
+    </div>
+</div>

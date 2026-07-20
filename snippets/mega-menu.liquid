@@ -1,0 +1,555 @@
+
+{% if block_style == "style_1" %}
+    <div class="site-nav-dropdown dropdown-megamenu {{ block_style }}">
+        <div class="dropdown-megamenu-left dropdown-megamenu_item">
+            <div class="dropdown-megamenu--item">
+                {% if title_shop != blank %}
+                <ul class="site-nav-dropdown-child column-1">
+                    <li class="menu-lv-2{% if linklists[link_menu] != empty %} dropdown{% endif %}">
+                        <p class="nav-action {% if linklists[link_menu] == empty %}nav-action--end{% endif %}">
+                            <a href="{{ url_shop }}" class="link" aria-label="link">{{ title_shop }}</a>
+                            {% if linklists[link_menu] != empty %}
+                                <span class="icon-dropdown" data-toggle-menu-mb>&#10095;</span>
+                            {% endif %}
+                        </p>
+                        {% if linklists[link_menu] != empty %}
+                            <div class="dropdown-menu-mobile">
+                                <div class="nav-title-mobile text-center">
+                                    <span class="icon-dropdown">&#10094;</span>
+                                    {{ title_shop }}
+                                </div>
+                                <ul class="site-nav-dropdown">
+                                    <li class="menu-lv-3 hide_pc">
+                                        <a href="{{ url_shop }}" class="nav-action nav-action--end" aria-label="link">
+                                            <span class="text">{{ 'layout.navigation.menu_all' | t }} {{ title_shop }}</span>
+                                        </a>
+                                    </li>
+                                    {% for link_child_item in linklists[link_menu].links %}                
+                                        <li class="menu-lv-3">
+                                            <a href="{{ link_child_item.url }}" class="nav-action nav-action--end" aria-label="link">
+                                                <span class="icon-hover" >&#10095;</span>
+                                                <span class="text">{{ link_child_item.title }}</span>
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                    </li>
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+        <div class="dropdown-megamenu-center dropdown-megamenu_item">
+            
+            <div class="dropdown-megamenu-center--item">
+                <ul class="site-nav-dropdown-child column-3">
+                    {% for link_child_item in linklists[link_child].links %}
+                        <li class="menu-lv-2{% if linklists[link_child_item.handle] != empty %} dropdown{% endif %}">
+                            <p class="nav-action{%if linklists[link_child_item.handle] == empty %} nav-action--end{% endif %}">
+                                <a href="{{ link_child_item.url }}" class="link" aria-label="link">{{ link_child_item.title }}</a>
+                                {% if linklists[link_child_item.handle] != empty %}
+                                    <span class="icon-dropdown" data-toggle-menu-mb>&#10095;</span>
+                                {% endif %}
+                            </p>
+                            {% if linklists[link_child_item.handle] != empty %}
+                                <div class="dropdown-menu-mobile">
+                                    <div class="nav-title-mobile text-center">
+                                        <span class="icon-dropdown">&#10094;</span>
+                                        {{ link_child_item.title }}
+                                    </div>
+                                    <ul class="site-nav-dropdown">
+                                        <li class="menu-lv-3 hide_pc">
+                                            <a href="{{ link_child_item.url }}" class="nav-action nav-action--end" aria-label="link">
+                                                <span class="text">{{ 'layout.navigation.menu_all' | t }} {{ link_child_item.title }}</span>
+                                            </a>
+                                        </li>
+                                        {% for n in linklists[link_child_item.handle].links %}                
+                                            <li class="menu-lv-3">
+                                                <a href="{{ n.url }}" class="nav-action nav-action--end" aria-label="link">
+                                                    <span class="icon-hover" >&#10095;</span>
+                                                    <span class="text">{{ n.title }}</span>
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="dropdown-megamenu-center--item dropdown-megamenu-center--item--productList">
+                {% if title_featured_product != blank %}
+                    <h3 class="title">{{ title_featured_product }}</h3>
+                {% endif %}
+                <div class="dropdown-megamenu--carousel has-row">
+                    {% for product in collection.products limit: 6 %}
+                        <div class="items">
+                            {% render 'product-card-grid-2-2', product : product %}
+                        </div>
+                    {% else %}
+                        {% for i in (1..6) %}
+                            <div class="items">
+                                <div class="product-card product-card--2 text-left">
+                                    <div class="product-card__image">
+                                        <a class="product-card__link" href="#">
+                                            {{ 'product-1' |  placeholder_svg_tag: 'placeholder-svg' }}
+                                        </a>
+                                    </div>
+                                    <div class="product-card__content">
+                                        <h4 class="product-card__title">{{ 'homepage.onboarding.product_title' | t }}</h4>
+                                        {% assign price = 1999 %}
+                                        <div class="product-card__price" data-price>
+                                            <span class="price-item price-item--regular" data-regular-price>
+                                                {{ price | money }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="dropdown-megamenu-right dropdown-megamenu_item">
+
+            {% if banner_image_1 != blank %}
+                {% assign img_url = banner_image_1 | img_url: '470x' %}
+                {% assign img_url_2 = banner_image_1 | img_url: '330x' %}
+                <a href="{{ link_banner_image_1 }}" class="link image--hover">
+                    <img class="dropdown-megamenu__img lazyload" 
+                    data-srcset="{{ img_url_2 }} 180w, {{ img_url }} 1025w"
+                    data-sizes="auto" alt="" data-image>
+                </a>
+            {% else %}
+                <div class="{% if banner_image_1 == blank %}no-image{% endif %} no_image_style1">
+                    <div class="placeholder-background">
+                        <span class="recommended_size">470x270</span>
+                        {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                    </div>
+                </div>
+            {% endif %}
+            <div class="dropdown-megamenu-right--item">
+                {% if title_banner_1 != blank %}
+                    <h5>{{title_banner_1}}</h5>
+                {% endif %}
+                <a href="{{ link_banner_image_1 }}" class="link"><span>{{ button_banner_1 }}</span></a>
+            </div>
+        </div>
+    </div>
+{% elsif block_style == "style_2" %}
+    <div class="site-nav-dropdown dropdown-megamenu {{ block_style }}">
+        <div class="dropdown-megamenu-left dropdown-megamenu_item">
+            <div class="dropdown-megamenu--item">
+                {% if title_shop != blank %}
+                <ul class="site-nav-dropdown-child column-1">
+                    <li class="menu-lv-2{% if linklists[link_menu] != empty %} dropdown{% endif %}">
+                        <p class="nav-action {% if linklists[link_menu] == empty %}nav-action--end{% endif %}">
+                            <a href="{{ url_shop }}" class="link" aria-label="link">{{ title_shop }}</a>
+                            {% if linklists[link_menu] != empty %}
+                                <span class="icon-dropdown" data-toggle-menu-mb>&#10095;</span>
+                            {% endif %}
+                        </p>
+                        {% if linklists[link_menu] != empty %}
+                            <div class="dropdown-menu-mobile">
+                                <div class="nav-title-mobile text-center">
+                                    <span class="icon-dropdown">&#10094;</span>
+                                    {{ title_shop }}
+                                </div>
+                                <ul class="site-nav-dropdown">
+                                    <li class="menu-lv-3 hide_pc">
+                                        <a href="{{ url_shop }}" class="nav-action nav-action--end" aria-label="link">
+                                            <span class="text">{{ 'layout.navigation.menu_all' | t }} {{ title_shop }}</span>
+                                        </a>
+                                    </li>
+                                    {% for link_child_item in linklists[link_menu].links %}                
+                                        <li class="menu-lv-3">
+                                            <a href="{{ link_child_item.url }}" class="nav-action nav-action--end" aria-label="link">
+                                                <span class="icon-hover" >&#10095;</span>
+                                                <span class="text">{{ link_child_item.title }}</span>
+                                            </a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                    </li>
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+        <div class="dropdown-megamenu-center dropdown-megamenu_item">
+            
+            <div class="dropdown-megamenu-center--item">
+                <ul class="site-nav-dropdown-child column-3">
+                    {% for link_child_item in linklists[link_child].links %}
+                        <li class="menu-lv-2{% if linklists[link_child_item.handle] != empty %} dropdown{% endif %}">
+                            <p class="nav-action{%if linklists[link_child_item.handle] == empty %} nav-action--end{% endif %}">
+                                <a href="{{ link_child_item.url }}" class="link" aria-label="link">{{ link_child_item.title }}</a>
+                                {% if linklists[link_child_item.handle] != empty %}
+                                    <span class="icon-dropdown" data-toggle-menu-mb>&#10095;</span>
+                                {% endif %}
+                            </p>
+                            {% if linklists[link_child_item.handle] != empty %}
+                                <div class="dropdown-menu-mobile">
+                                    <div class="nav-title-mobile text-center">
+                                        <span class="icon-dropdown">&#10094;</span>
+                                        {{ link_child_item.title }}
+                                    </div>
+                                    <ul class="site-nav-dropdown">
+                                        <li class="menu-lv-3 hide_pc">
+                                            <a href="{{ link_child_item.url }}" class="nav-action nav-action--end" aria-label="link">
+                                                <span class="text">{{ 'layout.navigation.menu_all' | t }} {{ link_child_item.title }}</span>
+                                            </a>
+                                        </li>
+                                        {% for n in linklists[link_child_item.handle].links %}                
+                                            <li class="menu-lv-3">
+                                                <a href="{{ n.url }}" class="nav-action nav-action--end" aria-label="link">
+                                                    <span class="icon-hover" >&#10095;</span>
+                                                    <span class="text">{{ n.title }}</span>
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="dropdown-megamenu-center--item dropdown-megamenu-center--item--collectionList">
+                {% if title_featured_product != blank %}
+                    <h3 class="title">{{ title_featured_product }}</h3>
+                    {% if button_type != blank %}
+                        <a class="link" href="{{ button_type_url }}">{{ button_type }}</a>
+                    {% endif %}
+                {% endif %}
+                {% if linklists[link_menu_type] != empty %}
+                    <div class="megamenu-center--right">
+                        {% for link_child_item in linklists[link_menu_type].links %}                
+                            <div class="menu-lv-3 megamenu-center--right_item">
+                                <a href="{{ link_child_item.url }}" class="nav-action nav-action--end" aria-label="link">
+                                    <span class="">{{ link_child_item.title }}</span>
+                                </a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="dropdown-megamenu-right dropdown-megamenu_item">
+
+            <div class="dropdown-megamenu-right--item">
+                {% if banner_image_1 != blank %}
+                    {% assign img_url = banner_image_1 | img_url: '270x' %}
+                    {% assign img_url_2 = banner_image_1 | img_url: '330x' %}
+                    <a href="{{ link_banner_image_1 }}" class="link">
+                        <img class="dropdown-megamenu__img lazyload" 
+                        data-srcset="{{ img_url_2 }} 180w, {{ img_url }} 1025w"
+                        data-sizes="auto" alt="" data-image>
+                    </a>
+                {% else %}
+                    <a href="{{ link_banner_image_1 }}" class="link">
+                        <div class="{% if banner_image_1 == blank %}no-image{% endif %} no_image_style2">
+                            <div class="placeholder-background">
+                                <span class="recommended_size">270x365</span>
+                                {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                            </div>
+                        </div>
+                    </a>
+                {% endif %}
+                {% if banner_image_2 != blank %}
+                    {% assign img_url = banner_image_2 | img_url: '470x' %}
+                    {% assign img_url_2 = banner_image_2 | img_url: '330x' %}
+                    <a href="{{ link_banner_image_2 }}" class="link">
+                        <img class="dropdown-megamenu__img lazyload" 
+                        data-srcset="{{ img_url_2 }} 180w, {{ img_url }} 1025w"
+                        data-sizes="auto" alt="" data-image>
+                    </a>
+                {% else %}
+                    <a href="{{ banner_image_2 }}" class="link">
+                        <div class="{% if banner_image_1 == blank %}no-image{% endif %} no_image_style2">
+                            <div class="placeholder-background">
+                                <span class="recommended_size">270x365</span>
+                                {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                            </div>
+                        </div>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% elsif block_style == "style_3" %}
+    <div class="site-nav-dropdown dropdown-megamenu {{ block_style }}">
+        <div class="dropdown-megamenu--items">
+            <ul class="site-nav-dropdown-child column-5">
+                {% for l in linklists[link_child].links %}
+                <li class="menu-lv-2 {% if linklists[l.handle] != empty %} dropdown{% endif %}">
+                    <p class="nav-action{%if linklists[l.handle] == empty %} nav-action--end{% endif %}">
+                        <a href="{{ l.url }}" class="link" aria-label="link">
+                            {{ l.title }}
+                        </a>
+                        {% if linklists[l.handle] != empty %}
+                            <span class="icon-dropdown" data-toggle-menu-mb>&#10095;</span>
+                        {% endif %}
+                    </p>
+                    {% if linklists[l.handle] != empty %}
+                        <div class="dropdown-menu-mobile">
+                            <div class="nav-title-mobile text-center">
+                                <span class="icon-dropdown">&#10094;</span>
+                                {{ l.title }}
+                            </div>
+                            <ul class="site-nav-dropdown">
+                                <li class="menu-lv-3 menu-image">
+                                    {% if forloop.index == 1 %}
+                                        {% if banner_image_style_3_1 != blank %}
+                                        <a href="{{ l.url }}" class="current" aria-label="link">
+                                            <img class="lazyload" src="{{ 'loading.svg' | asset_url }}"  data-src="{{ banner_image_style_3_1 | img_url :'290x' }}" alt="" data-image/>
+                                        </a>
+                                        {% else %}
+                                        <a href="{{ l.url }}" class="link">
+                                            <div class="{% if banner_image_style_3_5 == blank %}no-image{% endif %} no_image_style3">
+                                                <div class="placeholder-background">
+                                                    <span class="recommended_size">290x130</span>
+                                                    {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                                                </div>
+                                            </div>
+                                        </a>
+                                        {% endif %}
+                                    {% elsif forloop.index == 2 %}
+                                        {% if banner_image_style_3_1 != blank %}
+                                        <a href="{{ l.url }}" class="current" aria-label="link">
+                                            <img class="lazyload" src="{{ 'loading.svg' | asset_url }}"  data-src="{{ banner_image_style_3_2 | img_url :'290x' }}" alt="" data-image/>
+                                        </a>
+                                        {% else %}
+                                        <a href="{{ l.url }}" class="link">
+                                            <div class="{% if banner_image_style_3_5 == blank %}no-image{% endif %} no_image_style3">
+                                                <div class="placeholder-background">
+                                                    <span class="recommended_size">290x130</span>
+                                                    {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                                                </div>
+                                            </div>
+                                        </a>
+                                        {% endif %}
+                                    {% elsif forloop.index == 3 %}
+                                        {% if banner_image_style_3_1 != blank %}
+                                        <a href="{{ l.url }}" class="current" aria-label="link">
+                                            <img class="lazyload" src="{{ 'loading.svg' | asset_url }}"  data-src="{{ banner_image_style_3_3 | img_url :'290x' }}" alt="" data-image/>
+                                        </a>
+                                        {% else %}
+                                        <a href="{{ l.url }}" class="link">
+                                            <div class="{% if banner_image_style_3_5 == blank %}no-image{% endif %} no_image_style3">
+                                                <div class="placeholder-background">
+                                                    <span class="recommended_size">290x130</span>
+                                                    {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                                                </div>
+                                            </div>
+                                        </a>
+                                        {% endif %}
+                                    {% elsif forloop.index == 4 %}
+                                        {% if banner_image_style_3_1 != blank %}
+                                        <a href="{{ l.url }}" class="current" aria-label="link">
+                                            <img class="lazyload" src="{{ 'loading.svg' | asset_url }}"  data-src="{{ banner_image_style_3_4 | img_url :'290x' }}" alt="" data-image/>
+                                        </a>
+                                        {% else %}
+                                        <a href="{{ l.url }}" class="link">
+                                            <div class="{% if banner_image_style_3_5 == blank %}no-image{% endif %} no_image_style3">
+                                                <div class="placeholder-background">
+                                                    <span class="recommended_size">290x130</span>
+                                                    {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                                                </div>
+                                            </div>
+                                        </a>
+                                        {% endif %}
+                                    {% elsif forloop.index == 5 %}
+                                        {% if banner_image_style_3_1 != blank %}
+                                        <a href="{{ l.url }}" class="current" aria-label="link">
+                                            <img class="lazyload" src="{{ 'loading.svg' | asset_url }}"  data-src="{{ banner_image_style_3_5 | img_url :'290x' }}" alt="" data-image/>
+                                        </a>
+                                        {% else %}
+                                        <a href="{{ l.url }}" class="link">
+                                            <div class="{% if banner_image_style_3_5 == blank %}no-image{% endif %} no_image_style3">
+                                                <div class="placeholder-background">
+                                                    <span class="recommended_size">290x130</span>
+                                                    {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                                                </div>
+                                            </div>
+                                        </a>
+                                        {% endif %}
+                                    {% endif %}
+                                </li>
+                                <li class="menu-lv-3 hide_pc">
+                                    <a href="{{ l.url }}" class="nav-action nav-action--end" aria-label="link">
+                                        <span class="text">{{ 'layout.navigation.menu_all' | t }} {{ l.title }}</span>
+                                    </a>
+                                </li>
+                                {% for n in linklists[l.handle].links %}                
+                                    <li class="menu-lv-3">
+                                        <a href="{{ n.url }}" class="nav-action nav-action--end" aria-label="link">
+                                            <span class="icon-hover" >&#10095;</span>
+                                            <span class="text">{{ n.title }}</span>
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% if countdown_text != blank or countdown_timer != blank %}
+        <div class="dropdown-megamenu--countdown">
+            <span class="countdown-text">{{countdown_text}}</span>
+            <div class="countdown_timer" data-countdown-mega data-countdown-value="{{ countdown_timer }}"></div>
+        </div>
+    {% endif %}
+{% elsif block_style == "style_4" %}
+    <div class="site-nav-dropdown dropdown-megamenu {{ block_style }}">
+        <div class="dropdown-megamenu-left">
+            {% if banner_image_1 != blank %}
+                {% assign img_url = banner_image_1 | img_url: '610x' %}
+                {% assign img_url_2 = banner_image_1 | img_url: '330x' %}
+                <a href="{{ link_banner_image_1 }}" class="link image--hover">
+                    <img class="dropdown-megamenu__img lazyload" 
+                    data-srcset="{{ img_url_2 }} 180w, {{ img_url }} 1025w"
+                    data-sizes="auto" alt="" data-image>
+                </a>
+            {% else %}
+                <a href="{{ link_banner_image_1 }}" class="link image--hover">
+                    <div class="{% if banner_image_1 == blank %}no-image{% endif %} no_image_style4">
+                        <div class="placeholder-background">
+                            <span class="recommended_size">605x450</span>
+                            {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                        </div>
+                    </div>
+                </a>
+            {% endif %}
+        </div>
+        <div class="dropdown-megamenu-center dropdown-megamenu_item">
+            
+            <div class="dropdown-megamenu-center--item">
+                <ul class="site-nav-dropdown-child column-3">
+                    <li class="menu-lv-3 hide_pc">
+                        <a href="{{ link_for_style_4.url }}" class="nav-action nav-action--end" aria-label="link">
+                            <span class="text">{{ 'layout.navigation.menu_all' | t }} {{ link_for_style_4.title }}</span>
+                        </a>
+                    </li>
+                    {% for link_child_item in linklists[link_child].links %}
+                        <li class="menu-lv-2{% if linklists[link_child_item.handle] != empty %} dropdown{% endif %}">
+                            <p class="nav-action{%if linklists[link_child_item.handle] == empty %} nav-action--end{% endif %}">
+                                <a href="{{ link_child_item.url }}" class="link" aria-label="link">{{ link_child_item.title }}</a>
+                                {% if linklists[link_child_item.handle] != empty %}
+                                    <span class="icon-dropdown" data-toggle-menu-mb>&#10095;</span>
+                                {% endif %}
+                            </p>
+                            {% if linklists[link_child_item.handle] != empty %}
+                                <div class="dropdown-menu-mobile">
+                                    <div class="nav-title-mobile text-center">
+                                        <span class="icon-dropdown">&#10094;</span>
+                                        {{ link_child_item.title }}
+                                    </div>
+                                    <ul class="site-nav-dropdown">
+                                        <li class="menu-lv-3 hide_pc">
+                                            <a href="{{ link_child_item.url }}" class="nav-action nav-action--end" aria-label="link">
+                                                <span class="text">{{ 'layout.navigation.menu_all' | t }} {{ link_child_item.title }}</span>
+                                            </a>
+                                        </li>
+                                        {% for n in linklists[link_child_item.handle].links %}                
+                                            <li class="menu-lv-3">
+                                                <a href="{{ n.url }}" class="nav-action nav-action--end" aria-label="link">
+                                                    <span class="icon-hover" >&#10095;</span>
+                                                    <span class="text">{{ n.title }}</span>
+                                                </a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="dropdown-megamenu-center--item dropdown-megamenu-center--item--productList">
+                {% if title_featured_product != blank %}
+                    <h3 class="title">{{ title_featured_product }}</h3>
+                    {% if button_type != blank %}
+                        <a class="link" href="{{ collection.url }}">{{ button_type }}</a>
+                    {% endif %}
+                {% endif %}
+                <div class="dropdown-megamenu--carousel">
+                    {% for product in collection.products limit: 2 %}
+                        <div class="items">
+                            {% render 'product-card-grid-3', product : product %}
+                        </div>
+                    {% else %}
+                        {% for i in (1..2) %}
+                            <div class="items">
+                                <div class="product-card product-card--3 text-left">
+                                    <div class="product-card__image">
+                                        <a class="product-card__link" href="#">
+                                            {{ 'product-1' |  placeholder_svg_tag: 'placeholder-svg' }}
+                                        </a>
+                                    </div>
+                                    <div class="product-card__content">
+                                        <h4 class="product-card__title">{{ 'homepage.onboarding.product_title' | t }}</h4>
+                                        {% assign price = 1999 %}
+                                        <div class="product-card__price" data-price>
+                                            <span class="price-item price-item--regular" data-regular-price>
+                                                {{ price | money }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="dropdown-megamenu-right dropdown-megamenu_item">
+
+            <div class="dropdown-megamenu-right--item">
+                {% if banner_image_2 != blank %}
+                    {% assign img_url = banner_image_2 | img_url: '270x' %}
+                    {% assign img_url_2 = banner_image_2 | img_url: '270x' %}
+                    <a href="{{ link_banner_image_2 }}" class="">
+                        <img class="dropdown-megamenu__img lazyload" 
+                        data-srcset="{{ img_url_2 }} 180w, {{ img_url }} 1025w"
+                        data-sizes="auto" alt="" data-image>
+                    </a>
+                {% else %}
+                    <a href="{{ banner_image_2 }}">
+                        <div class="no-image no_image_style4_r">
+                            <div class="placeholder-background">
+                                <span class="recommended_size">270x150</span>
+                                {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                            </div>
+                        </div>
+                    </a>
+                {% endif %}
+                {% if banner_image_3 != blank %}
+                    {% assign img_url = banner_image_3 | img_url: '270x' %}
+                    {% assign img_url_2 = banner_image_3 | img_url: '270x' %}
+                    <a href="{{ link_banner_image_3 }}" class="">
+                        <img class="dropdown-megamenu__img lazyload" 
+                        data-srcset="{{ img_url_2 }} 180w, {{ img_url }} 1025w"
+                        data-sizes="auto" alt="" data-image>
+                    </a>
+                {% else %}
+                    <a href="{{ link_banner_image_3 }}">
+                        <div class="no-image no_image_style4_r">
+                            <div class="placeholder-background">
+                                <span class="recommended_size">270x150</span>
+                                {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                            </div>
+                        </div>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endif %}

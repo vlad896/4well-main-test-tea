@@ -1,0 +1,1417 @@
+<div class="section-header text-left">
+    <h1 class="title">{{ 'cart.general.title' | t }}</h1>
+</div>
+<div {% if cart.item_count == 0 %}class="hide"{% endif %} data-cart-wrapper data-section-type="cart-template" data-section-id="{{ section.id }}" data-ajax-enabled="{{ section.settings.cart_ajax_enable }}">
+    
+    {% if settings.enable_progress_bar_shipping %}
+        <div class="cart__progress_bar{% unless settings.enable_progress_bar_shipping_mb %} cart__progress_bar--disableMobile{% endunless %}">
+            <div class="progress_bar_shipping"></div>
+            <div class="progress_bar_shipping_message"></div>
+        </div>
+    {% endif %}
+    {% if section.settings.cart_countdown_enable %}
+        <div class="cart__count_down alert alert-warning text-center" role="alert">
+            <svg class="icon icon-error" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="24px" width="24px" fill="#000000" version="1.1" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100;" xml:space="preserve"><path d="M53,31c0,1.7-1.3,3-3,3c-1.7,0-3-1.3-3-3c0-1.7,1.3-3,3-3C51.7,28,53,29.3,53,31z M50,37c-1.7,0-3,1.4-3,3v29  c0,1.7,1.3,3,3,3c1.7,0,3-1.4,3-3V40C53,38.3,51.7,37,50,37z M95,50c0,24.8-20.2,45-45,45C25.2,95,5,74.8,5,50C5,25.2,25.2,5,50,5  C74.8,5,95,25.2,95,50z M91,50C91,27.4,72.6,9,50,9S9,27.4,9,50s18.4,41,41,41S91,72.6,91,50z"/></svg>
+            <div class="count_down" data-time="{{ section.settings.time_countdown }}">
+               {{ 'cart.general.cart_countdown' | t }} <span id="time">{{ section.settings.time_countdown }}:00</span> {{ 'cart.general.cart_countdown_minutes' | t }}.
+            </div>
+        </div>
+    {% endif %}
+    <form action="{{ routes.cart_url }}" method="post" novalidate class="cart cart-form">
+        <div class="cart__table">
+            <table>
+                <thead class="cart__row cart__row--heading">
+                    <tr class="cart-flex">
+                        <th class="cart_item_meta" scope="col">{{ 'cart.label.product' | t }}</th>
+                        <th class="text-right medium-up--hide" scope="col">{{ 'cart.label.price' | t }}</th>
+                        <th class="text-left small--hide cart_item_price" scope="col">{{ 'cart.label.price' | t }}</th>
+                        <th class="text-center small--hide cart_item_quantity" scope="col">{{ 'cart.label.qty' | t }}</th>
+                        <th class="text-right small--hide cart_item_total" scope="col">{{ 'cart.label.subtotal' | t }}</th>
+                        <th class="text-right small--hide cart_item_remove" scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody data-cart-line-items>
+                    {%- for item in cart.items -%}
+                        <tr class="cart__row spacer"></tr>
+                        <tr class="cart__row cart-flex" data-cart-item data-cart-item-key="{{ item.key }}" data-cart-item-url="{{ item.url }}" data-cart-item-title="{{ item.title }}" data-cart-item-index="{{ forloop.index }}" data-cart-item-quantity="{{ item.quantity }}">
+                            <td class="cart__meta small--text-left cart_item_meta" data-cart-table-cell>
+                                <div class="cart__product-information">
+                                    <div class="cart__image-wrapper">
+                                        <img class="cart__image{% if item.image == null %} hide{% endif %}" src="{{ item | img_url: 'x190' }}" alt="{{ item.image.alt | escape }}" data-cart-item-image>
+                                    </div>
+                                    <div class="cart__content-wrapper">
+                                        <div class="list-view-item__title">
+                                            <a href="{{ item.url }}" class="cart__product-title" data-cart-item-title>
+                                                {{ item.product.title }}
+                                            </a>
+                                        </div>
+
+                                        {%- assign variant_options = 'template ' | split: ' ' -%}
+                                        {%- if item.product.has_only_default_variant != true -%}
+                                            {%- assign variant_options = item.options_with_values -%}
+                                        {%- endif -%}
+                                        {%- assign property_size = item.properties | size -%}
+                                        <div class="product-details-wrapper">
+                                            <ul class="product-details{% if item.product.has_only_default_variant and property_size == 0 %} hide{% endif %}" data-cart-item-details aria-label="{{ 'cart.label.product_details' | t }}">
+                                                {%- for option in variant_options -%}
+                                                    <li class="product-details__item product-details__item--variant-option{% if item.product.has_only_default_variant %} hide{% endif %}" data-cart-item-option>{{ option.value }}</li>
+                                                {%- endfor -%}
+
+                                                {%- comment -%}
+                                                    Optional, loop through custom product line items if available
+
+                                                    Line item properties come in as having two parts. The first part will be passed with the default form,
+                                                    but p.last is the actual custom property and may be blank. If it is, don't show it.
+
+                                                    For more info on line item properties, visit:
+                                                        - http://docs.shopify.com/support/your-store/products/how-do-I-collect-additional-information-on-the-product-page-Like-for-a-monogram-engraving-or-customization
+                                                {%- endcomment -%}
+
+                                                {%- assign properties = 'template ' | split: ' ' -%}
+                                                {%- if property_size > 0 -%}
+                                                    {%- assign properties = item.properties -%}
+                                                {%- endif -%}
+
+                                                {%- for p in properties -%}
+                                                    {%- unless p.last == blank -%}
+                                                        <li class="product-details__item product-details__item--property{%if property_size == 0%} hide{% endif %}" data-cart-item-property>
+                                                            <span class="product-details__item-label" data-cart-item-property-name>{{ p.first }}: </span>
+
+                                                            {%- comment -%}
+                                                                Check if there was an uploaded file associated
+                                                            {%- endcomment -%}
+                                                            <span data-cart-item-property-value>
+                                                                {%- if p.last contains '/uploads/' -%}
+                                                                    <a href="{{ p.last }}">{{ p.last | split: '/' | last }}</a>
+                                                                {%- else -%}
+                                                                    {{ p.last }}
+                                                                {%- endif -%}
+                                                            </span>
+                                                        </li>
+                                                    {%- endunless -%}
+                                                {%- endfor -%}
+                                            </ul>
+                                            <a href="JavaScript:void(0);" class="product-details__edit{% if item.product.has_only_default_variant and property_size == 0 %} hide{% endif %}" data-cart-edit aria-label="link">
+                                                <svg class="icon"><use xlink:href="#icon-edit" /></svg>
+                                            </a>
+                                        </div>
+                                        <div class="product-details-wrapper">
+                                            <div class="product-details__item">
+                                                {{ item.product.vendor  }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="cart__price text-right medium-up--hide">
+
+                                {%- assign hasDiscount = false -%}
+                                {%- if item.original_price != item.final_price -%}
+                                    {%- assign hasDiscount = true -%}
+                                {%- endif -%}
+
+                                <div data-cart-item-line-price>
+                                    {%- comment -%}
+                                        Markup template for discount item
+                                    {%- endcomment -%}
+                                    <dl {% unless item.original_line_price != item.final_line_price %}class="hide" {% endunless %}data-cart-item-discounted-price-group>
+                                        <dt>
+                                            <span class="visually-hidden">{{ 'cart.label.regular_total' | t }}</span>
+                                        </dt>
+                                        <dd>
+                                            <s data-cart-item-original-price>{{ item.original_line_price | money }}</s>
+                                        </dd>
+                                        <dt>
+                                            <span class="visually-hidden">{{ 'cart.label.discounted_total' | t }}</span>
+                                        </dt>
+                                        <dd>
+                                            <span class="order-discount" data-cart-item-final-price><span class="Bold-theme-hook-DO-NOT-DELETE bold_cart_item_total" style="display:none !important;"></span>{{ item.final_line_price | money }}</span>
+                                        </dd>
+                                    </dl >
+
+                                    {%- comment -%}
+                                        Markup template for regular price item
+                                    {%- endcomment -%}
+                                    <div {% if item.original_line_price != item.final_line_price %}class="hide" {% endif %}data-cart-item-regular-price-group>
+                                        <span data-cart-item-regular-price>{{ item.original_line_price | money }}</span>
+                                    </div>
+                                </div>
+
+                                {%- assign itemDiscounts = 'template ' | split: ' ' -%}
+                                {%- if item.line_level_discount_allocations != blank -%}
+                                    {%- assign itemDiscounts = item.line_level_discount_allocations -%}
+                                {%- endif -%}
+
+                                <ul class="order-discount order-discount--list order-discount--title order-discount--cart{% if item.line_level_discount_allocations == blank %} hide{% endif %}" aria-label="{{ 'customer.order.discount' | t }}" data-cart-item-discount-list>
+                                    {%- for discount_allocation in itemDiscounts -%}
+                                        <li class="order-discount__item" data-cart-item-discount>
+                                            <svg class="icon"><use xlink:href="#icon-saletag" /></svg>
+                                            <span data-cart-item-discount-title>
+                                                {{- discount_allocation.discount_application.title -}}
+                                            </span> (-<span data-cart-item-discount-amount>{{ discount_allocation.amount | money }}</span>)
+                                        </li>
+                                    {%- endfor -%}
+                                </ul>
+
+                                <div class="cart__qty medium-up--hide">
+                                    <label for="updates_{{ item.key }}" class="cart__qty-label" aria-label="{{ 'cart.label.quantity' | t }}" data-quantity-label-mobile>
+                                        {{ 'cart.label.qty' | t }}
+                                    </label>
+                                    <input id="updates_{{ item.key }}" class="cart__qty-input" type="number"
+                                        value="{{ item.quantity }}" min="0"
+                                        data-quantity-input data-quantity-item="{{ forloop.index }}" data-quantity-input-mobile>
+                                </div>
+                                <div class="cart__qty-error-message-wrapper mt-3 cart__qty-error-message-wrapper--mobile hide" role="alert" data-cart-quantity-error-message-wrapper>
+                                    <span class="visually-hidden">{{ 'general.accessibility.error' | t }} </span>
+                                    <svg class="icon"><use xlink:href="#icon-error" /></svg>
+                                    <span class="cart__qty-error-message" data-cart-quantity-error-message></span>
+                                </div>
+                            </td>
+                            <td class="cart__price text-left small--hide cart_item_price">
+
+                                {%- assign hasDiscount = false -%}
+                                {%- if item.original_price != item.final_price -%}
+                                    {%- assign hasDiscount = true -%}
+                                {%- endif -%}
+
+                                <div  class="product-details-price" data-cart-item-price>
+                                    <dl data-cart-item-price-list>
+                                        {%- comment -%}
+                                            Markup template for discount item
+                                        {%- endcomment -%}
+                                        <div {% unless hasDiscount %}class="hide" {% endunless %}data-cart-item-discounted-price-group>
+                                            <dt>
+                                                <span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span>
+                                            </dt>
+                                            <dd>
+                                                <s data-cart-item-original-price>{{ item.original_price | money }}</s>
+                                            </dd>
+                                            <dt>
+                                                <span class="visually-hidden">{{ 'products.product.sale_price' | t }}</span>
+                                            </dt>
+                                            <dd>
+                                                <span class="order-discount" data-cart-item-final-price{% if hasDiscount %}
+                                                data-cart-item-current-price="{{ item.final_price }}"{% endif %}>
+                                                    <span class="Bold-theme-hook-DO-NOT-DELETE bold_cart_item_price" style="display:none !important;"></span>
+                                                    {{ item.final_price | money }}
+                                                </span>
+                                            </dd>
+                                        </div>
+
+                                        {%- comment -%}
+                                            Markup template for regular price item
+                                        {%- endcomment -%}
+                                        <div {% if hasDiscount %}class="hide" {% endif %}data-cart-item-regular-price-group>
+                                            <dt>
+                                                <span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span>
+                                            </dt>
+                                            <dd data-cart-item-regular-price{% unless hasDiscount %} data-cart-item-current-price="{{ item.original_price }}"{% endunless %}>
+                                                {{ item.original_price | money }}
+                                            </dd>
+                                        </div>
+                                    </dl>
+                                </div>
+                            </td>
+                            <td class="cart__quantity-td text-center small--hide cart_item_quantity">
+                                <div class="cart__qty">
+                                    <label for="updates_large_{{ item.key }}" class="cart__qty-label" data-quantity-label-desktop>{{ 'cart.label.quantity' | t }}</label>
+                                    <input type="number" id="updates_large_{{ item.key }}" class="cart__qty-input"
+                                        name="updates[]" value="{{ item.quantity }}" min="0"
+                                        data-quantity-input data-quantity-item="{{ forloop.index }}" data-quantity-input-desktop>
+                                </div>
+                                <div class="cart__qty-error-message-wrapper mt-3 cart__qty-error-message-wrapper--desktop hide" role="alert" data-cart-quantity-error-message-wrapper>
+                                    <span class="visually-hidden">{{ 'general.accessibility.error' | t }} </span>
+                                    <svg class="icon"><use xlink:href="#icon-error" /></svg>
+                                    <span class="cart__qty-error-message" data-cart-quantity-error-message></span>
+                                </div>
+                            </td>
+                            <td class="cart__final-price text-right small--hide cart_item_total" data-cart-item-line-price>
+                                {%- comment -%}
+                                    Markup template for discount item
+                                {%- endcomment -%}
+                                <dl {% unless item.original_line_price != item.final_line_price %}class="hide" {% endunless %}data-cart-item-discounted-price-group>
+                                    <dt>
+                                        <span class="visually-hidden">{{ 'cart.label.regular_total' | t }}</span>
+                                    </dt>
+                                    <dd>
+                                        <s data-cart-item-original-price>{{ item.original_line_price | money }}</s>
+                                    </dd>
+                                    <dt>
+                                        <span class="visually-hidden">{{ 'cart.label.discounted_total' | t }}</span>
+                                    </dt>
+                                    <dd>
+                                        <span class="order-discount" data-cart-item-final-price><span class="Bold-theme-hook-DO-NOT-DELETE bold_cart_item_total" style="display:none !important;"></span>{{ item.final_line_price | money }}</span>
+                                    </dd>
+                                </dl >
+
+                                {%- comment -%}
+                                    Markup template for regular price item
+                                {%- endcomment -%}
+                                <div {% if item.original_line_price != item.final_line_price %}class="hide" {% endif %}data-cart-item-regular-price-group>
+                                    <span data-cart-item-regular-price>{{ item.original_line_price | money }}</span>
+                                </div>
+                            </td>
+                            <td class="cart__remove text-right small--hide cart_item_remove">
+                                <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0" class="text-link text-link--accent" aria-label="{{ 'cart.label.remove' | t: product: item.title }}" data-cart-remove><svg class="icon"><use xlink:href="#icon-close"></use></svg></a>
+                            </td>
+                        </tr>
+                    {%- endfor -%}
+                </tbody>
+            </table>
+            <div class="cart__table--footer">
+                <div class="cart__table__footer--item">
+                    {% if section.settings.trust_img_enable %}
+                        <div class="secure_shopping_guarantee_label">
+                            <span>{{ 'cart.general.secure_shopping_guarantee' | t }}</span>
+                        </div>
+                        {% if section.settings.trust_img %}
+                        <div class="secure_shopping_guarantee_image">
+                            {% assign img_url = section.settings.trust_img | img_url: 'master' %}
+                            <img class="lazyload" data-srcset="{{ img_url }}" data-sizes="auto" alt="" data-image>
+                        </div>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="cart__footer">
+            <div class="box-title">
+                <h3 class="title">{{ 'cart.label.order_summary' | t }}</h3> 
+            </div>
+            <div>
+                {% assign cartDiscounts = 'template ' | split: ' ' %}
+                {% if cart.cart_level_discount_applications.size > 0 %}
+                    {% assign cartDiscounts = cart.cart_level_discount_applications %}
+                {% endif %}
+                <div{% if cart.cart_level_discount_applications.size == 0 %} class="hide"{% endif %} data-cart-discount-wrapper>
+                    <div class="order-discount-card-wrapper" data-cart-discount>
+                        {% for discount_application in cartDiscounts %}
+                            <span class="order-discount order-discount--title order-discount--cart">
+                                <svg class="icon"><use xlink:href="#icon-saletag" /></svg>
+                                <span class="visually-hidden">{{ 'customer.order.discount' | t }}:</span>
+                                <span data-cart-discount-title>{{- discount_application.title -}}</span>
+                            </span>
+                            <span class="order-discount order-discount--cart order-discount--cart-total">
+                                -<span data-cart-discount-amount>{{ discount_application.total_allocated_amount | money }}</span>
+                            </span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="cart-subtotal">
+                    <span class="cart-subtotal__title">{{ 'cart.general.subtotal' | t }}:</span>
+                    <span class="cart-subtotal__price text-right" data-cart-subtotal><span class="Bold-theme-hook-DO-NOT-DELETE bold_cart_total" style="display:none !important;"></span>{{ cart.total_price | money_with_currency }}</span>
+                </div>
+
+                {% if section.settings.cart_notes_enable %}
+                <div class="cart-note">
+                    <label for="CartSpecialInstructions" class="cart-note__label">{{ 'cart.general.note' | t }}</label>
+                    <textarea name="note" id="CartSpecialInstructions" class="cart-note__input form-control" placeholder="{{ 'cart.general.note_placeholder' | t }}">{{ cart.note }}</textarea>
+                </div>
+                {% endif %}
+
+                {% render 'shipping-estimates' %}
+
+                <div class="cart-total">
+                    <span class="cart-total__title">{{ 'cart.label.total' | t }}</span>
+                    <span class="cart-total__price text-right" data-cart-subtotal><span class="Bold-theme-hook-DO-NOT-DELETE bold_cart_total" style="display:none !important;"></span>{{ cart.total_price | money_with_currency }}</span>
+                </div>
+
+                <div class="cart__buttons-container">
+                    <div class="cart__submit-controls">
+                        {% if settings.terms_conditions %}
+                            <div class="product__terms-conditions">
+                                <input type="checkbox" id="terms-conditions-cart" value=""/>
+                                <label class="title" for="terms-conditions-cart" data-terms-conditions>
+                                    {{settings.terms_conditions_text}}
+                                </label>
+                                <!-- <a href="{{ settings.terms_conditions_link  }}">{{ settings.terms_conditions_text_link }}</a> -->
+                                <a data-toggle="modal" data-target="#terms_condition_modal" href="javascript:void(0)" aria-label="link" aria-describedby="a11y-external-message">
+                                    {{ settings.terms_conditions_text_link }}
+                                </a>
+                            </div>
+                        {% endif %}
+                        {% unless section.settings.cart_ajax_enable %}
+                            <input type="submit" name="update" class="cart__submit btn btn--secondary" value="{{ 'cart.general.update' | t }}">
+                        {% endunless %}
+                        <input type="submit" name="checkout" class="cart__submit btn btn--checkout" value="{{ 'cart.general.checkout' | t }}">
+                        <a class="btn btn--primary" href="{{ routes.root_url }}">{{ 'cart.general.continue_shopping' | t }}</a>
+                    </div>
+
+                    <div class="cart__error-message-wrapper hide" role="alert" data-cart-error-message-wrapper>
+                        <span class="visually-hidden">{{ 'general.accessibility.error' | t }} </span>
+                        <svg class="icon"><use xlink:href="#icon-error" /></svg>
+                        <span class="cart__error-message" data-cart-error-message></span>
+                    </div>
+
+                    {% if additional_checkout_buttons %}
+                        <div class="additional-checkout-buttons">{{ content_for_additional_checkout_buttons }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </form>
+    <p class="visually-hidden" data-cart-status aria-live="polite" role="status"></p>
+</div>
+
+<div class="empty-page-content{% if cart.item_count > 0 %} hide{% endif %} text-center" data-empty-page-content>
+    <div class="section-header text-center padding-top-60">
+        <h1 class="title">{{ 'cart.general.title' | t }}</h1>
+        <p class="cart--empty-message">{{ 'cart.general.empty' | t }}</p>
+        <div class="cookie-message">
+            <p>{{ 'cart.general.cookies_required' | t }}</p>
+        </div>
+        <a {% if settings.redirect_button == 'go_back' %}
+            href="javascript:void(0)" onclick="window.history.back();"
+            {% else %} href="{{ settings.link_to_redirect }}"{% endif %} class="btn btn--primary btn--has-icon-after cart__continue-btn">
+            {{ 'cart.general.continue_shopping' | t }}
+        </a>
+    </div>
+</div>
+
+
+{% schema %}
+{
+    "name": "Cart page",
+    "settings": [
+        {
+            "type": "header",
+            "content": "Cart CountDown"
+        },
+        {
+            "type": "checkbox",
+            "id": "cart_countdown_enable",
+            "label": "Enable Count Down",
+            "default": true
+        },
+        {
+            "type": "range",
+            "id": "time_countdown",
+            "label": "Time Count Down",
+            "default": 30,
+            "min": 1,
+            "max": 60,
+            "step": 1,
+            "unit": "min"
+        },
+        {
+            "type": "header",
+            "content": "Cart Updates"
+        },
+        {
+            "type": "checkbox",
+            "id": "cart_ajax_enable",
+            "label": "Enable automatic cart updates?",
+            "info": "Updates the cart as soon as customer changes are made",
+            "default": true
+        },
+        {
+            "type": "header",
+            "content": "Secure Shopping Guarantee"
+        },
+        {
+            "type": "checkbox",
+            "id": "trust_img_enable",
+            "label": "Enable Secure Shopping Guarantee Image?",
+            "default": true
+        },
+        {
+            "type": "image_picker",
+            "id": "trust_img",
+            "label": "Image Trust"
+        },
+        {
+            "type": "header",
+            "content": "Cart Note"
+        },
+        {
+            "type": "checkbox",
+            "id": "cart_notes_enable",
+            "label": "Enable cart notes?",
+            "default": false
+        },
+        {
+            "type": "header",
+            "content": "Get shipping estimates"
+        },
+        {
+            "type": "checkbox",
+            "id": "show_shipping_calculator",
+            "label": "Enable Get shipping estimates?",
+            "default": true
+        },
+        {
+            "type": "select",
+            "id": "shipping_calculator_default_country",
+            "label": "Shipping Rates Calculator default country selection",
+            "options": [
+            {
+                "value": "",
+                "label": "-- Please Select --"
+            },
+            {
+                "value": "Vietnam",
+                "label": "Vietnam"
+            },
+            {
+                "value": "Canada",
+                "label": "Canada"
+            },
+            {
+                "value": "Australia",
+                "label": "Australia"
+            },
+            {
+                "value": "Afghanistan",
+                "label": "Afghanistan"
+            },
+            {
+                "value": "Aland Islands",
+                "label": "Aland Islands"
+            },
+            {
+                "value": "Albania",
+                "label": "Albania"
+            },
+            {
+                "value": "Algeria",
+                "label": "Algeria"
+            },
+            {
+                "value": "Andorra",
+                "label": "Andorra"
+            },
+            {
+                "value": "Angola",
+                "label": "Angola"
+            },
+            {
+                "value": "Anguilla",
+                "label": "Anguilla"
+            },
+            {
+                "value": "Antigua And Barbuda",
+                "label": "Antigua And Barbuda"
+            },
+            {
+                "value": "Argentina",
+                "label": "Argentina"
+            },
+            {
+                "value": "Armenia",
+                "label": "Armenia"
+            },
+            {
+                "value": "Aruba",
+                "label": "Aruba"
+            },
+            {
+                "value": "Austria",
+                "label": "Austria"
+            },
+            {
+                "value": "Azerbaijan",
+                "label": "Azerbaijan"
+            },
+            {
+                "value": "Bahamas",
+                "label": "Bahamas"
+            },
+            {
+                "value": "Bahrain",
+                "label": "Bahrain"
+            },
+            {
+                "value": "Bangladesh",
+                "label": "Bangladesh"
+            },
+            {
+                "value": "Barbados",
+                "label": "Barbados"
+            },
+            {
+                "value": "Belarus",
+                "label": "Belarus"
+            },
+            {
+                "value": "Belgium",
+                "label": "Belgium"
+            },
+            {
+                "value": "Belize",
+                "label": "Belize"
+            },
+            {
+                "value": "Benin",
+                "label": "Benin"
+            },
+            {
+                "value": "Bermuda",
+                "label": "Bermuda"
+            },
+            {
+                "value": "Bhutan",
+                "label": "Bhutan"
+            },
+            {
+                "value": "Bolivia",
+                "label": "Bolivia"
+            },
+            {
+                "value": "Bosnia And Herzegovina",
+                "label": "Bosnia And Herzegovina"
+            },
+            {
+                "value": "Botswana",
+                "label": "Botswana"
+            },
+            {
+                "value": "Bouvet Island",
+                "label": "Bouvet Island"
+            },
+            {
+                "value": "Brazil",
+                "label": "Brazil"
+            },
+            {
+                "value": "British Indian Ocean Territory",
+                "label": "British Indian Ocean Territory"
+            },
+            {
+                "value": "Brunei",
+                "label": "Brunei"
+            },
+            {
+                "value": "Bulgaria",
+                "label": "Bulgaria"
+            },
+            {
+                "value": "Burkina Faso",
+                "label": "Burkina Faso"
+            },
+            {
+                "value": "Burma",
+                "label": "Burma"
+            },
+            {
+                "value": "Burundi",
+                "label": "Burundi"
+            },
+            {
+                "value": "Cambodia",
+                "label": "Cambodia"
+            },
+            {
+                "value": "Cape Verde",
+                "label": "Cape Verde"
+            },
+            {
+                "value": "Cayman Islands",
+                "label": "Cayman Islands"
+            },
+            {
+                "value": "Central African Republic",
+                "label": "Central African Republic"
+            },
+            {
+                "value": "Chad",
+                "label": "Chad"
+            },
+            {
+                "value": "Chile",
+                "label": "Chile"
+            },
+            {
+                "value": "China",
+                "label": "China"
+            },
+            {
+                "value": "Christmas Island",
+                "label": "Christmas Island"
+            },
+            {
+                "value": "Cocos (Keeling) Islands",
+                "label": "Cocos (Keeling) Islands"
+            },
+            {
+                "value": "Colombia",
+                "label": "Colombia"
+            },
+            {
+                "value": "Comoros",
+                "label": "Comoros"
+            },
+            {
+                "value": "Congo",
+                "label": "Congo"
+            },
+            {
+                "value": "Congo, The Democratic Republic Of The",
+                "label": "Congo, The Democratic Republic Of The"
+            },
+            {
+                "value": "Cook Islands",
+                "label": "Cook Islands"
+            },
+            {
+                "value": "Costa Rica",
+                "label": "Costa Rica"
+            },
+            {
+                "value": "Croatia",
+                "label": "Croatia"
+            },
+            {
+                "value": "Cuba",
+                "label": "Cuba"
+            },
+            {
+                "value": "Curaçao",
+                "label": "Curaçao"
+            },
+            {
+                "value": "Cyprus",
+                "label": "Cyprus"
+            },
+            {
+                "value": "Czech Republic",
+                "label": "Czech Republic"
+            },
+            {
+                "value": "Côte d'Ivoire",
+                "label": "Côte d'Ivoire"
+            },
+            {
+                "value": "Denmark",
+                "label": "Denmark"
+            },
+            {
+                "value": "Djibouti",
+                "label": "Djibouti"
+            },
+            {
+                "value": "Dominica",
+                "label": "Dominica"
+            },
+            {
+                "value": "Dominican Republic",
+                "label": "Dominican Republic"
+            },
+            {
+                "value": "Ecuador",
+                "label": "Ecuador"
+            },
+            {
+                "value": "Egypt",
+                "label": "Egypt"
+            },
+            {
+                "value": "El Salvador",
+                "label": "El Salvador"
+            },
+            {
+                "value": "Equatorial Guinea",
+                "label": "Equatorial Guinea"
+            },
+            {
+                "value": "Eritrea",
+                "label": "Eritrea"
+            },
+            {
+                "value": "Estonia",
+                "label": "Estonia"
+            },
+            {
+                "value": "Ethiopia",
+                "label": "Ethiopia"
+            },
+            {
+                "value": "Falkland Islands (Malvinas)",
+                "label": "Falkland Islands (Malvinas)"
+            },
+            {
+                "value": "Faroe Islands",
+                "label": "Faroe Islands"
+            },
+            {
+                "value": "Fiji",
+                "label": "Fiji"
+            },
+            {
+                "value": "Finland",
+                "label": "Finland"
+            },
+            {
+                "value": "France",
+                "label": "France"
+            },
+            {
+                "value": "French Guiana",
+                "label": "French Guiana"
+            },
+            {
+                "value": "French Polynesia",
+                "label": "French Polynesia"
+            },
+            {
+                "value": "French Southern Territories",
+                "label": "French Southern Territories"
+            },
+            {
+                "value": "Gabon",
+                "label": "Gabon"
+            },
+            {
+                "value": "Gambia",
+                "label": "Gambia"
+            },
+            {
+                "value": "Georgia",
+                "label": "Georgia"
+            },
+            {
+                "value": "Germany",
+                "label": "Germany"
+            },
+            {
+                "value": "Ghana",
+                "label": "Ghana"
+            },
+            {
+                "value": "Gibraltar",
+                "label": "Gibraltar"
+            },
+            {
+                "value": "Greece",
+                "label": "Greece"
+            },
+            {
+                "value": "Greenland",
+                "label": "Greenland"
+            },
+            {
+                "value": "Grenada",
+                "label": "Grenada"
+            },
+            {
+                "value": "Guadeloupe",
+                "label": "Guadeloupe"
+            },
+            {
+                "value": "Guatemala",
+                "label": "Guatemala"
+            },
+            {
+                "value": "Guernsey",
+                "label": "Guernsey"
+            },
+            {
+                "value": "Guinea",
+                "label": "Guinea"
+            },
+            {
+                "value": "Guinea Bissau",
+                "label": "Guinea Bissau"
+            },
+            {
+                "value": "Guyana",
+                "label": "Guyana"
+            },
+            {
+                "value": "Haiti",
+                "label": "Haiti"
+            },
+            {
+                "value": "Heard Island And Mcdonald Islands",
+                "label": "Heard Island And Mcdonald Islands"
+            },
+            {
+                "value": "Holy See (Vatican City State)",
+                "label": "Holy See (Vatican City State)"
+            },
+            {
+                "value": "Honduras",
+                "label": "Honduras"
+            },
+            {
+                "value": "Hong Kong",
+                "label": "Hong Kong"
+            },
+            {
+                "value": "Hungary",
+                "label": "Hungary"
+            },
+            {
+                "value": "Iceland",
+                "label": "Iceland"
+            },
+            {
+                "value": "India",
+                "label": "India"
+            },
+            {
+                "value": "Indonesia",
+                "label": "Indonesia"
+            },
+            {
+                "value": "Iran, Islamic Republic Of",
+                "label": "Iran, Islamic Republic Of"
+            },
+            {
+                "value": "Iraq",
+                "label": "Iraq"
+            },
+            {
+                "value": "Ireland",
+                "label": "Ireland"
+            },
+            {
+                "value": "Isle Of Man",
+                "label": "Isle Of Man"
+            },
+            {
+                "value": "Israel",
+                "label": "Israel"
+            },
+            {
+                "value": "Italy",
+                "label": "Italy"
+            },
+            {
+                "value": "Jamaica",
+                "label": "Jamaica"
+            },
+            {
+                "value": "Japan",
+                "label": "Japan"
+            },
+            {
+                "value": "Jersey",
+                "label": "Jersey"
+            },
+            {
+                "value": "Jordan",
+                "label": "Jordan"
+            },
+            {
+                "value": "Kazakhstan",
+                "label": "Kazakhstan"
+            },
+            {
+                "value": "Kenya",
+                "label": "Kenya"
+            },
+            {
+                "value": "Kiribati",
+                "label": "Kiribati"
+            },
+            {
+                "value": "Korea, Democratic People's Republic Of",
+                "label": "Korea, Democratic People's Republic Of"
+            },
+            {
+                "value": "Kosovo",
+                "label": "Kosovo"
+            },
+            {
+                "value": "Kuwait",
+                "label": "Kuwait"
+            },
+            {
+                "value": "Kyrgyzstan",
+                "label": "Kyrgyzstan"
+            },
+            {
+                "value": "Lao People's Democratic Republic",
+                "label": "Lao People's Democratic Republic"
+            },
+            {
+                "value": "Latvia",
+                "label": "Latvia"
+            },
+            {
+                "value": "Lebanon",
+                "label": "Lebanon"
+            },
+            {
+                "value": "Lesotho",
+                "label": "Lesotho"
+            },
+            {
+                "value": "Liberia",
+                "label": "Liberia"
+            },
+            {
+                "value": "Libyan Arab Jamahiriya",
+                "label": "Libyan Arab Jamahiriya"
+            },
+            {
+                "value": "Liechtenstein",
+                "label": "Liechtenstein"
+            },
+            {
+                "value": "Lithuania",
+                "label": "Lithuania"
+            },
+            {
+                "value": "Luxembourg",
+                "label": "Luxembourg"
+            },
+            {
+                "value": "Macao",
+                "label": "Macao"
+            },
+            {
+                "value": "Macedonia, Republic Of",
+                "label": "Macedonia, Republic Of"
+            },
+            {
+                "value": "Madagascar",
+                "label": "Madagascar"
+            },
+            {
+                "value": "Malawi",
+                "label": "Malawi"
+            },
+            {
+                "value": "Malaysia",
+                "label": "Malaysia"
+            },
+            {
+                "value": "Maldives",
+                "label": "Maldives"
+            },
+            {
+                "value": "Mali",
+                "label": "Mali"
+            },
+            {
+                "value": "Malta",
+                "label": "Malta"
+            },
+            {
+                "value": "Martinique",
+                "label": "Martinique"
+            },
+            {
+                "value": "Mauritania",
+                "label": "Mauritania"
+            },
+            {
+                "value": "Mauritius",
+                "label": "Mauritius"
+            },
+            {
+                "value": "Mayotte",
+                "label": "Mayotte"
+            },
+            {
+                "value": "Mexico",
+                "label": "Mexico"
+            },
+            {
+                "value": "Moldova, Republic of",
+                "label": "Moldova, Republic of"
+            },
+            {
+                "value": "Monaco",
+                "label": "Monaco"
+            },
+            {
+                "value": "Mongolia",
+                "label": "Mongolia"
+            },
+            {
+                "value": "Montenegro",
+                "label": "Montenegro"
+            },
+            {
+                "value": "Montserrat",
+                "label": "Montserrat"
+            },
+            {
+                "value": "Morocco",
+                "label": "Morocco"
+            },
+            {
+                "value": "Mozambique",
+                "label": "Mozambique"
+            },
+            {
+                "value": "Namibia",
+                "label": "Namibia"
+            },
+            {
+                "value": "Nauru",
+                "label": "Nauru"
+            },
+            {
+                "value": "Nepal",
+                "label": "Nepal"
+            },
+            {
+                "value": "Netherlands",
+                "label": "Netherlands"
+            },
+            {
+                "value": "Netherlands Antilles",
+                "label": "Netherlands Antilles"
+            },
+            {
+                "value": "New Caledonia",
+                "label": "New Caledonia"
+            },
+            {
+                "value": "New Zealand",
+                "label": "New Zealand"
+            },
+            {
+                "value": "Nicaragua",
+                "label": "Nicaragua"
+            },
+            {
+                "value": "Niger",
+                "label": "Niger"
+            },
+            {
+                "value": "Nigeria",
+                "label": "Nigeria"
+            },
+            {
+                "value": "Niue",
+                "label": "Niue"
+            },
+            {
+                "value": "Norfolk Island",
+                "label": "Norfolk Island"
+            },
+            {
+                "value": "Norway",
+                "label": "Norway"
+            },
+            {
+                "value": "Oman",
+                "label": "Oman"
+            },
+            {
+                "value": "Pakistan",
+                "label": "Pakistan"
+            },
+            {
+                "value": "Palestinian Territory, Occupied",
+                "label": "Palestinian Territory, Occupied"
+            },
+            {
+                "value": "Panama",
+                "label": "Panama"
+            },
+            {
+                "value": "Papua New Guinea",
+                "label": "Papua New Guinea"
+            },
+            {
+                "value": "Paraguay",
+                "label": "Paraguay"
+            },
+            {
+                "value": "Peru",
+                "label": "Peru"
+            },
+            {
+                "value": "Philippines",
+                "label": "Philippines"
+            },
+            {
+                "value": "Pitcairn",
+                "label": "Pitcairn"
+            },
+            {
+                "value": "Poland",
+                "label": "Poland"
+            },
+            {
+                "value": "Portugal",
+                "label": "Portugal"
+            },
+            {
+                "value": "Qatar",
+                "label": "Qatar"
+            },
+            {
+                "value": "Republic of Cameroon",
+                "label": "Republic of Cameroon"
+            },
+            {
+                "value": "Reunion",
+                "label": "Reunion"
+            },
+            {
+                "value": "Romania",
+                "label": "Romania"
+            },
+            {
+                "value": "Russia",
+                "label": "Russia"
+            },
+            {
+                "value": "Rwanda",
+                "label": "Rwanda"
+            },
+            {
+                "value": "Saint Barthélemy",
+                "label": "Saint Barthélemy"
+            },
+            {
+                "value": "Saint Helena",
+                "label": "Saint Helena"
+            },
+            {
+                "value": "Saint Kitts And Nevis",
+                "label": "Saint Kitts And Nevis"
+            },
+            {
+                "value": "Saint Lucia",
+                "label": "Saint Lucia"
+            },
+            {
+                "value": "Saint Martin",
+                "label": "Saint Martin"
+            },
+            {
+                "value": "Saint Pierre And Miquelon",
+                "label": "Saint Pierre And Miquelon"
+            },
+            {
+                "value": "Samoa",
+                "label": "Samoa"
+            },
+            {
+                "value": "San Marino",
+                "label": "San Marino"
+            },
+            {
+                "value": "Sao Tome And Principe",
+                "label": "Sao Tome And Principe"
+            },
+            {
+                "value": "Saudi Arabia",
+                "label": "Saudi Arabia"
+            },
+            {
+                "value": "Senegal",
+                "label": "Senegal"
+            },
+            {
+                "value": "Serbia",
+                "label": "Serbia"
+            },
+            {
+                "value": "Seychelles",
+                "label": "Seychelles"
+            },
+            {
+                "value": "Sierra Leone",
+                "label": "Sierra Leone"
+            },
+            {
+                "value": "Singapore",
+                "label": "Singapore"
+            },
+            {
+                "value": "Slovakia",
+                "label": "Slovakia"
+            },
+            {
+                "value": "Slovenia",
+                "label": "Slovenia"
+            },
+            {
+                "value": "Solomon Islands",
+                "label": "Solomon Islands"
+            },
+            {
+                "value": "Somalia",
+                "label": "Somalia"
+            },
+            {
+                "value": "South Africa",
+                "label": "South Africa"
+            },
+            {
+                "value": "South Georgia And The South Sandwich Islands",
+                "label": "South Georgia And The South Sandwich Islands"
+            },
+            {
+                "value": "South Korea",
+                "label": "South Korea"
+            },
+            {
+                "value": "Spain",
+                "label": "Spain"
+            },
+            {
+                "value": "Sri Lanka",
+                "label": "Sri Lanka"
+            },
+            {
+                "value": "St. Vincent",
+                "label": "St. Vincent"
+            },
+            {
+                "value": "Sudan",
+                "label": "Sudan"
+            },
+            {
+                "value": "Suriname",
+                "label": "Suriname"
+            },
+            {
+                "value": "Svalbard And Jan Mayen",
+                "label": "Svalbard And Jan Mayen"
+            },
+            {
+                "value": "Swaziland",
+                "label": "Swaziland"
+            },
+            {
+                "value": "Sweden",
+                "label": "Sweden"
+            },
+            {
+                "value": "Switzerland",
+                "label": "Switzerland"
+            },
+            {
+                "value": "Syria",
+                "label": "Syria"
+            },
+            {
+                "value": "Taiwan",
+                "label": "Taiwan"
+            },
+            {
+                "value": "Tajikistan",
+                "label": "Tajikistan"
+            },
+            {
+                "value": "Tanzania, United Republic Of",
+                "label": "Tanzania, United Republic Of"
+            },
+            {
+                "value": "Thailand",
+                "label": "Thailand"
+            },
+            {
+                "value": "Timor Leste",
+                "label": "Timor Leste"
+            },
+            {
+                "value": "Togo",
+                "label": "Togo"
+            },
+            {
+                "value": "Tokelau",
+                "label": "Tokelau"
+            },
+            {
+                "value": "Tonga",
+                "label": "Tonga"
+            },
+            {
+                "value": "Trinidad and Tobago",
+                "label": "Trinidad and Tobago"
+            },
+            {
+                "value": "Tunisia",
+                "label": "Tunisia"
+            },
+            {
+                "value": "Turkey",
+                "label": "Turkey"
+            },
+            {
+                "value": "Turkmenistan",
+                "label": "Turkmenistan"
+            },
+            {
+                "value": "Turks and Caicos Islands",
+                "label": "Turks and Caicos Islands"
+            },
+            {
+                "value": "Tuvalu",
+                "label": "Tuvalu"
+            },
+            {
+                "value": "Uganda",
+                "label": "Uganda"
+            },
+            {
+                "value": "Ukraine",
+                "label": "Ukraine"
+            },
+            {
+                "value": "United Arab Emirates",
+                "label": "United Arab Emirates"
+            },
+            {
+                "value": "United Kingdom",
+                "label": "United Kingdom"
+            },
+            {
+                "value": "United States",
+                "label": "United States"
+            },
+            {
+                "value": "United States Minor Outlying Islands",
+                "label": "United States Minor Outlying Islands"
+            },
+            {
+                "value": "Uruguay",
+                "label": "Uruguay"
+            },
+            {
+                "value": "Uzbekistan",
+                "label": "Uzbekistan"
+            },
+            {
+                "value": "Vanuatu",
+                "label": "Vanuatu"
+            },
+            {
+                "value": "Venezuela",
+                "label": "Venezuela"
+            },
+            {
+                "value": "Virgin Islands, British",
+                "label": "Virgin Islands, British"
+            },
+            {
+                "value": "Wallis And Futuna",
+                "label": "Wallis And Futuna"
+            },
+            {
+                "value": "Western Sahara",
+                "label": "Western Sahara"
+            },
+            {
+                "value": "Yemen",
+                "label": "Yemen"
+            },
+            {
+                "value": "Zambia",
+                "label": "Zambia"
+            },
+            {
+                "value": "Zimbabwe",
+                "label": "Zimbabwe"
+            }],
+            "default": "Canada"
+        },
+        {
+            "type": "paragraph",
+            "content": "If your customer is logged-in, the country in his default shipping address will be selected. If you are not sure about the spelling to use above, refer to your first checkout page."
+        }
+
+    ]
+}
+{% endschema %}

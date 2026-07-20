@@ -1,0 +1,71 @@
+{% if settings.enable_shopify_payments_currencies %}
+    <div class="currency-dropdown dropdown" data-currency-switcher>
+        <button class="dropdown-toggle dropdown-label" data-toggle="{{ dropdown }}" data-currency-label title="{{ 'general.currency.title' | t }}" aria-expanded="false">
+            <span class="icon">
+                {% if cart.currency.iso_code == 'XAF' or cart.currency.iso_code == 'XOF' or cart.currency.iso_code == 'XPF' %}
+                <img src="https://cdn.shopifycloud.com/web/assets/4714259873a1c6de6957c5a3c61bf7b4.svg" alt="{{ cart.currency.iso_code }}" />
+                {% else %}
+                <img src="https://www.countryflags.io/{{cart.currency.iso_code | handleize | slice: 0, 2}}/flat/64.png" alt="{{ cart.currency.iso_code }}" />
+                {% endif %}
+            </span>
+            <span class="text">{{ cart.currency.iso_code }}</span>
+            <svg class="icon icon-arrow"><use xlink:href="#icon-chevron-down" /></svg>
+        </button>
+        <div class="currency-menu" id="currencies">
+            <div class="dropdown-item dropdown-item--full">{{ 'general.currency.title' | t }}</div>
+            {%- for currency in shop.enabled_currencies -%}
+            <a class="dropdown-item{% if currency == cart.currency %} active {% endif %}" href="#" data-currency="{{currency.iso_code}}" aria-label="link">
+                <span class="icon">
+                    {% if currency.iso_code == 'XAF' or currency.iso_code == 'XOF' or currency.iso_code == 'XPF' %}
+                    <img src="https://cdn.shopifycloud.com/web/assets/4714259873a1c6de6957c5a3c61bf7b4.svg" alt="{{ currency.iso_code }}" />
+                    {% else %}
+                    <img src="https://www.countryflags.io/{{currency.iso_code | handleize | slice: 0, 2}}/flat/64.png" alt="{{ currency.iso_code }}" />
+                    {% endif %}
+                </span>
+                <span class="text">{{currency.iso_code}}</span>
+                <svg class="icon icon-arrow"><use xlink:href="#icon-chevron-down" /></svg>
+            </a>      
+            {%- endfor -%}
+        </div>
+    </div>
+    {% form 'currency' %}
+        <select name="currency" style="display:none;">
+            {%- for currency in shop.enabled_currencies -%}
+                {%- if currency == cart.currency -%}
+                    <option selected="true">{{currency.iso_code}}</option>
+                {%- else -%}
+                    <option>{{currency.iso_code}}</option>
+                {%- endif -%}
+            {%- endfor -%}
+        </select>
+    {% endform %}
+{% else %}
+    {% if settings.enable_multiple_currencies %}
+        <div class="currency-dropdown dropdown" data-currency-switcher>
+            <button class="dropdown-toggle dropdown-label" data-toggle="{{ dropdown }}" data-currency-label title="{{ 'general.currency.title' | t }}" aria-expanded="false">
+                {% if settings[currency_icon] != blank %}
+                    <span class="icon">{{ settings[currency_icon] }}</span>
+                {% endif %}
+                <span class="text">{{ settings.currency_1_unit }}</span>
+                <svg class="icon icon-arrow"><use xlink:href="#icon-chevron-down" /></svg>
+            </button>
+            <div class="currency-menu" id="currencies">
+                <div class="dropdown-item dropdown-item--full">{{ 'general.currency.title' | t }}</div>
+                {% for i in (1..10) %}
+                    {% capture currency_unit %}currency_{{ i }}_unit{% endcapture %}
+                    {% assign currency_length = settings[currency_unit] | size %}
+                    {% capture currency_icon %}currency_{{ i }}_icon{% endcapture %}
+                    {% if currency_length > 0 %}
+                        <a class="dropdown-item{% if shop.currency == settings[currency_unit] %} active {% endif %}" href="#" data-currency="{{ settings[currency_unit] }}" aria-label="link">
+                            {% if settings[currency_icon] != blank %}
+                                <span class="icon">{{ settings[currency_icon] }}</span>
+                            {% endif %}
+                            <span class="text">{{ settings[currency_unit] }}</span>
+                            <svg class="icon icon-arrow"><use xlink:href="#icon-chevron-down" /></svg>
+                        </a>
+                    {% endif %}  
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+{% endif %}

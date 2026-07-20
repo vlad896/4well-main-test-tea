@@ -1,0 +1,22 @@
+{% if pagename == 'customers-register' or pagename == 'customers-login' or pagename == 'customers-account' or pagename == 'customers-addresses' or pagename == 'customers-activate_account' or pagename == 'customers-order' or pagename == 'customers-reset_password' %}
+    {% if customer %}
+        <a class="navUser-action" href="{{ routes.account_url }}" aria-label="link">
+            <svg class="icon"><use xlink:href="#icon-user"></use></svg>
+        </a>
+    {% else %}
+        <a class="navUser-action" href="{{ routes.account_login_url }}" aria-label="link">
+            <svg class="icon"><use xlink:href="#icon-user"></use></svg>
+        </a>
+    {% endif %}
+{% else %}
+    {% if customer %}
+        <a class="navUser-action" href="{{ routes.account_url }}" aria-label="link">
+            <svg class="icon"><use xlink:href="#icon-user"></use></svg>
+        </a>
+    {% else %}
+        <a class="navUser-action" href="{{ routes.account_login_url }}" aria-label="link" data-login-form-pc>
+            <svg class="icon"><use xlink:href="#icon-user"></use></svg>
+        </a>
+        {% render 'login-form' %}
+    {% endif %}
+{% endif %}

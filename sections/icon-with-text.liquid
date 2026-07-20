@@ -1,0 +1,237 @@
+{%- liquid
+    if section.settings.background-color
+    assign background_color = 'halo-section-background-gray'
+    endif
+    if section.settings.border-top
+    assign border_top = 'halo-section-border-top'
+    endif
+    if section.settings.border-bottom
+    assign border_bottom = 'halo-section-border-bottom'
+    endif
+    assign top = top | default: section.settings.top
+    assign bottom = bottom | default: section.settings.bottom
+-%}
+
+{%- if section.settings.custom_color -%}
+<style>
+    [data-section-id='{{ section.id }}'] .section-header .title {
+        color: {{ section.settings.color_heading }};
+    }
+
+    [data-section-id='{{ section.id }}'] .section-header > p {
+        color: {{ section.settings.color_text }};
+    }
+
+    [data-section-id='{{ section.id }}'] .section-header .btn {
+        color: {{ section.settings.color_btn_text }};
+        border-color: {{ section.settings.color_btn_border }};
+        background-color: {{ section.settings.color_btn_bg }};
+    }
+
+    [data-section-id='{{ section.id }}'] .section-header .btn:hover {
+        filter: brightness(85%);
+    }
+</style>
+{%- endif -%}
+
+<div class="halo-section padding-top-{{ top }} padding-bottom-{{ bottom }} {{ background_color }} {{ border_top }} {{ border_bottom }}" data-section-id="{{ section.id }}" data-section-type="icon-with-text">
+    <div class="container">
+        <div class="halo-row halo-wrapper column-{{ section.settings.column }}" data-slick='{
+            "dots": false,
+            "arrows": true,
+            "infinite": false,
+            "mobileFirst": true,
+            "adaptiveHeight": true,
+            "slidesToShow": 1,
+            "slidesToScroll": 1,
+            "autoplay": true,
+            "autoplaySpeed": 5000,
+            "prevArrow": "<div class=&apos;slick-prev slick-arrow&apos;><svg class=&apos;icon&apos;><use xlink:href=&apos;#icon-chevron-left&apos; /></svg></div>", 
+            "nextArrow": "<div class=&apos;slick-next slick-arrow&apos;><svg class=&apos;icon&apos;><use xlink:href=&apos;#icon-chevron-right&apos; /></svg></div>",
+            "responsive": [
+                {
+                    "breakpoint": 180,
+                    "settings": {
+                        "slidesToShow": 1,
+                        "dots": true,
+                        "arrows": false
+                    }
+                },
+                {
+                    "breakpoint": 551,
+                    "settings": {
+                        "slidesToShow": 2,
+                        "dots": true,
+                        "arrows": false
+                    }
+                },
+                {
+                    "breakpoint": 991,
+                    "settings": {
+                        "slidesToShow": 3,
+                        "dots": true,
+                        "arrows": false
+                    }
+                },
+                {
+                    "breakpoint": 1100,
+                    "settings": {
+                        "slidesToShow": {{ section.settings.column }},
+                        "dots": true,
+                        "arrows": false
+                    }
+                }
+            ]}'>
+            {%- for block in section.blocks -%}
+                <div class="halo-row__item text-center">
+                    <div class="icon-with-text text-left">
+                        <div class="icon-with-text__icon"{%- if section.settings.color_icon != '' -%} style="color: {{ section.settings.color_icon }}; fill: {{ section.settings.color_icon }}"{%- endif -%}>
+                            {%- if block.settings.icon != blank -%}
+                                {{ block.settings.icon }}
+                            {%- else -%}
+                                <img src="{{ 'loading.svg' | asset_url }}" alt="" data-image-loading>
+                            {%- endif -%}
+                        </div>
+                        <div class="icon-with-text__content">
+                            {%- if block.settings.title != blank -%}
+                                <h3 class="title"{%- if section.settings.color_title != '' -%} style="color: {{ section.settings.color_title }}"{%- endif -%}>{{ block.settings.title }}</h3>
+                            {%- endif -%}
+                            {%- if block.settings.description != blank -%}
+                                <p class="description"{%- if section.settings.color_description != '' -%} style="color: {{ section.settings.color_description }}"{%- endif -%}>{{ block.settings.description }}</p>
+                            {%- endif -%}
+                        </div>
+                    </div>
+                </div>
+            {%- endfor -%}
+        </div>
+    </div>
+</div>
+
+{% schema %}
+{
+    "name": "Icon With Text",
+    "max_blocks": 20,
+    "settings": [
+        {
+            "type": "header",
+            "content": "Section Layout"
+        },
+        {
+            "type": "checkbox",
+            "id": "background-color",
+            "label": "Background Color Custom",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "border-top",
+            "label": "show border top",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "border-bottom",
+            "label": "show border bottom",
+            "default": false
+        },
+        {
+            "type": "range",
+            "id": "top",
+            "label": "Spacing Top",
+            "default": 30,
+            "min": 0,
+            "max": 100,
+            "step": 10,
+            "unit": "px"
+        },
+        {
+            "type": "range",
+            "id": "bottom",
+            "label": "Spacing bottom",
+            "default": 30,
+            "min": 0,
+            "max": 100,
+            "step": 10,
+            "unit": "px"
+        },
+        {
+            "type": "header",
+            "content": "Layout"
+        },
+        {
+            "type": "range",
+            "id": "column",
+            "label": "Column show",
+            "min": 1,
+            "max": 6,
+            "step": 1,
+            "default": 4
+        },
+        {
+            "type": "header",
+            "content": "Custom Color For Icon Block"
+        },
+        {
+            "type": "color",
+            "id": "color_icon",
+            "label": "Icon Block - Icon Color"
+        },
+        {
+            "type": "color",
+            "id": "color_title",
+            "label": "Icon Block - Title Color"
+        },
+        {
+            "type": "color",
+            "id": "color_description",
+            "label": "Icon Block - Description Color"
+        }
+    ],
+    "blocks": [
+        {
+            "type": "icon_item",
+            "name": "Another image",
+            "settings": [
+                {
+                    "type": "text",
+                    "id": "icon",
+                    "label": "Icon",
+                    "info": "Use SVG Icon to load pages faster [(Where do I find SVG Icon)](https:\/\/www.flaticon.com)"
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Title",
+                    "default": "Icon With text"
+                },
+                {
+                    "type": "text",
+                    "id": "description",
+                    "label": "Description",
+                    "default": "Description For Icon With text"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Icon With Text",
+            "category": "Icons",
+            "blocks": [
+                {
+                    "type": "icon_item"
+                },
+                {
+                    "type": "icon_item"
+                },
+                {
+                    "type": "icon_item"
+                },
+                {
+                    "type": "icon_item"
+                }
+            ]
+        }
+    ]
+}
+{% endschema %}

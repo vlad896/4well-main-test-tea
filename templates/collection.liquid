@@ -1,0 +1,22 @@
+{% comment %}
+    The contents of the collection.liquid template can be found in /sections/collection-template.liquid
+{% endcomment %}
+
+{% section 'collection-hero' %}
+
+{% render 'breadcrumb', breadcrumb_top: true %}
+
+<div class="container">
+    <div class="section-header text-left" id="section-header">
+        <h1 class="title">
+            {{ collection.title }}
+        </h1>
+    </div>
+    <div class="page page-collection">
+        {% section 'sidebar-collection' %}
+        {% section 'collection-template' %}
+    </div>
+    {% section 'collection-customhtml' %}
+	{% section 'recently-viewed-products' %}
+</div>
+{% section 'collection-banner' %}

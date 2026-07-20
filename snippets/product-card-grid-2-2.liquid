@@ -1,0 +1,54 @@
+{% assign show_product_variant = show_product_variant | default: settings.show_product_variant %}
+<div class="product-card product-card--2 product-card--3 text-left {% unless product.available %} product-card--sold-out{% endunless %}">
+    <div class="product-card__image">
+        <a class="product-card__link" href="{{ product.url | within: collection }}" aria-label="link">
+            <img class="product-card__img lazyload"
+                data-srcset="{{ product.featured_image | img_url: '80x' }}"
+                data-sizes="auto" alt="{{ product.featured_image.alt }}" data-image>
+        </a>
+    </div>
+    <div class="product-card__content">
+        {% if settings.show_product_title  %}
+            <h4 class="product-card__title">
+                <a href="{{ product.url | within: collection }}" aria-label="title">{{ product.title }}</a>
+            </h4>
+        {% endif %}
+        {% if settings.show_product_price %}
+            <div class="product-card__price {% if product.compare_at_price > product.price %}price--on-sale{% endif %}" data-price>
+                {% if product.compare_at_price > product.price %}
+                    <span class="price-item price-item--regular" data-regular-price>
+                        {{ product.compare_at_price | money }}
+                    </span>
+                    <span class="price-item price-item--sale" data-sale-price>
+                        {% if product.price_varies %}
+                            <em>{{ 'products.product.from_text_html' | t }}</em>
+                        {% endif %}
+                        {{ product.price | money }}
+                    </span>
+                {% else %}
+                    <span class="price-item price-item--regular" data-regular-price>
+                        {% if product.price_varies %}
+                            <em>{{ 'products.product.from_text_html' | t }}</em>
+                        {% endif %}
+                        {{ product.price | money }}
+                    </span>
+                    <span class="price-item price-item--sale" data-sale-price></span>
+                {% endif %}
+            </div>
+        {% endif %}
+        {% render 'product-variant-color', product: product, show_product_variant: show_product_variant %}
+        {% if settings.show_product_button %}
+            <div class="product-card__button">
+                {% if product.available %}
+                    <a class="product-card__btn--plus" href="{{ product.url | within: collection }}" aria-label="button">
+                        <span>{{ 'products.product.detail' | t }}</span>
+                    </a>
+                {% else %}
+                    <button class="product-card__btn-soldOut" type="submit" disabled="disabled">
+                        {{ 'products.product.unavailable' | t }}
+                    </button>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>
